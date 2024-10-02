@@ -1,0 +1,201 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    margin-top: 30px;
+    font-family: Arial, sans-serif;
+}
+
+
+header {
+    padding: 1px 10px;
+    width: 100%;
+    position: fixed; 
+    top: 0; 
+    left: 0;
+    z-index: 1000; 
+    background-color: white; 
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); 
+}
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-left: 60px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+.logo {
+  width: 180px;
+  margin-left: 70px ;
+}
+
+.search-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex: 1; 
+    justify-content: center; 
+}
+
+.search-container input[type="text"] {
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    height: 35px;
+    width: 600px; 
+}
+
+.search-container button {
+    margin-left: 10px;
+    padding: 10px 15px;
+    border: none;
+    background-color: rgba(0, 0, 0, 0);
+    color: #0b0909;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+/* buttons */
+.auth-buttons {
+    margin-right: 20px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    
+}
+
+/* pembagi*/
+.auth-buttons .divider {
+    width: 1px;
+    height: 30px;
+    background-color: #170404;
+}
+
+.login-container,
+.signup-container {
+    display: flex;
+    align-items: center;
+}
+
+/*login button*/
+.auth-buttons button {
+    padding: 10px 10px;
+    border: none;
+    background-color: white;
+    color: #0a0909;
+    border-radius: 5px;
+    border: 1px solid black;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+/*signup*/
+.signup-container button {
+    padding: 10px 10px;
+    border: none;
+    background-color: #427CC7;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+}
+.signup-container button:hover {
+    background-color: #6094D7;
+}
+
+/* carousel 1*/
+.carousel-gambar {
+    max-width: 1300px;
+    margin: 120px auto 60px;
+    border-radius: 12px;
+}
+
+/*carousel 2*/
+.container {
+    margin-top: 60px;
+    background-color: #4285f4;
+    border-radius: 15px;
+    padding: 30px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+.carousel-inner {
+    overflow-x:hidden;
+    white-space: nowrap;
+}
+
+.carousel-item {
+    display: flex; /* Use flex to align items correctly */
+    justify-content: center;
+    align-items: stretch; /* Stretch items to the same height */
+    height: 250px; /* Set a fixed height for carousel items */
+    
+}
+
+.carousel-item:last-child {
+    margin-right: 0; /* hapus margin kanan untuk card terakhir */
+}
+.card-img-top {  
+    width: 100%;
+    height: 50px; /* Adjust height as needed */
+    object-fit: cover; /* Make the image cover the area */
+    border-radius: 15px 15px 0 0; /* Keep the top corners rounded */
+}
+.card-content {
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    background-color: white;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.card-content p {
+    margin: 5px 0;
+}
+
+.card {
+    background-color: #90C0F0;
+    color:white;
+    width: 200px;
+    height: 300px;
+    border-radius: 15px;
+    padding: 40px;
+    box-sizing: border-box;
+    position: relative;
+    margin:10px;
+}
+
+.card-body {
+    background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent background */
+    border-radius: 0 0 15px 15px; /* Keep bottom corners rounded */
+    padding: 10px;
+    text-align: center; /* Center text */
+}
+
+.card-text {
+    width: 80px;
+    text-align: center;
+    background-color: #cbd1d7;
+    color: #0a0909;
+}
+   
+h2 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.d-flex {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+
+
+
+
