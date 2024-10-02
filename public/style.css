@@ -112,6 +112,7 @@ header {
 .carousel-gambar {
     max-width: 1300px;
     margin: 120px auto 60px;
+    border-radius: 12px;
 }
 
 /*carousel 2*/
