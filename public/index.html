@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"> 
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="/assets/logo.png" type="image/x-icon">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <title>Medan Food HUB - Your Favourite Web</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!--navbar-->
+    <header>
+        <div class="navbar">
+            <img src="/assets/Logo/text_logo.png" alt="Medan Food Hub" class="logo">
+            <div class="search-container">
+                <input type="text" class="form-control" placeholder="Temukan tempat makan sekitarmu..">
+                <div class="dropdown">
+                    <button class="btn btn-filter" type="button" id="filterDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                        FILTER <i class="bi bi-filter"></i>
+                    </button>
+                
+                    <ul class="dropdown-menu" aria-labelledby="filterDropdown" id="dropdownMenu">
+                        <ul class="dropdown-item">Rating</ul>
+                        <ul class="dropdown-item">Alphabet</ul>
+                        <li class="alphabet-option"><a class="dropdown-item" href="#">A</a></li>
+                        <li class="alphabet-option"><a class="dropdown-item" href="#">B</a></li>
+                        <li class="alphabet-option"><a class="dropdown-item" href="#">C</a></li>
+                        <li class="alphabet-option"><a class="dropdown-item" href="#">D</a></li>
+                        <li class="alphabet-option"><a class="dropdown-item" href="#">E</a></li>
+                        <li class="alphabet-option"><a class="dropdown-item" href="#">F</a></li>
+                        <li class="alphabet-option"><a class="dropdown-item" href="#">G</a></li>
+                        <li class="alphabet-option"><a class="dropdown-item" href="#">H</a></li>
+                        <li id="showMore" class="alphabet-option"><a class="dropdown-item" href="#">Show More</a></li>
+                        <li class="alphabet-option" style="display: none;"><a class="dropdown-item" href="#">I</a></li>
+                        <li class="alphabet-option" style="display: none;"><a class="dropdown-item" href="#">J</a></li>
+                        <li class="alphabet-option" style="display: none;"><a class="dropdown-item" href="#">K</a></li>
+                        <li class="alphabet-option" style="display: none;"><a class="dropdown-item" href="#">L</a></li>
+                        <li class="alphabet-option" style="display: none;"><a class="dropdown-item" href="#">M</a></li>
+                        <li class="alphabet-option" style="display: none;"><a class="dropdown-item" href="#">N</a></li>
+                        <li class="alphabet-option" style="display: none;"><a class="dropdown-item" href="#">O</a></li>
+                        <li class="alphabet-option" style="display: none;"><a class="dropdown-item" href="#">P</a></li>
+                        <li class="alphabet-option" style="display: none;"><a class="dropdown-item" href="#">Q</a></li>
+                        <li class="alphabet-option" style="display: none;"><a class="dropdown-item" href="#">R</a></li>
+                        <li class="alphabet-option" style="display: none;"><a class="dropdown-item" href="#">S</a></li>
+                        <li class="alphabet-option" style="display: none;"><a class="dropdown-item" href="#">T</a></li>
+                        <li class="alphabet-option" style="display: none;"><a class="dropdown-item" href="#">U</a></li>
+                        <li class="alphabet-option" style="display: none;"><a class="dropdown-item" href="#">V</a></li>
+                        <li class="alphabet-option" style="display: none;"><a class="dropdown-item" href="#">W</a></li>
+                        <li class="alphabet-option" style="display: none;"><a class="dropdown-item" href="#">X</a></li>
+                        <li class="alphabet-option" style="display: none;"><a class="dropdown-item" href="#">Y</a></li>
+                        <li class="alphabet-option" style="display: none;"><a class="dropdown-item" href="#">Z</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="auth-buttons">
+                <div class="login-container">
+                    <button>Masuk</button>
+                </div>
+                <div class="divider"></div>
+                <div class="signup-container">
+                    <button>Daftar</button>
+                </div>
+            </div>
+        </div>
+    </header>
+    <main>
+    <!-- card-->
+    <div class="container"> 
+            <h2 class="section-title">Tempat-Tempat Terkenal</h2>
+    <div class="card">
+        <div class="resto-logo">
+            <img src="/assets/gambar1.jpeg" alt="Logo Loopline Coffee">
+        </div>
+        <h3 class="resto-name">Loopline Coffee</h3>
+        <div class="resto-location">
+            <span class="location-icon">📍</span>
+            <span class="location-text">Penjaringan, Jakarta Utara</span>
+        </div>
+        <div class="resto-rating">
+            <!-- Rating Bintang yang Bisa Diklik -->
+            <div class="rating">
+                <span class="star" data-value="1">&#9733;</span>
+                <span class="star" data-value="2">&#9733;</span>
+                <span class="star" data-value="3">&#9733;</span>
+                <span class="star" data-value="4">&#9733;</span>
+                <span class="star" data-value="5">&#9733;</span>
+            </div>
+            <span class="rating-text">(1)</span>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="resto-logo">
+            <img src="/assets/gambar1.jpeg" alt="Logo Loopline Coffee">
+        </div>
+        <h3 class="resto-name">Loopline Coffee</h3>
+        <div class="resto-location">
+            <span class="location-icon">📍</span>
+            <span class="location-text">Penjaringan, Jakarta Utara</span>
+        </div>
+        <div class="resto-rating">
+            <!-- Rating Bintang yang Bisa Diklik -->
+            <div class="rating">
+                <span class="star" data-value="1">&#9733;</span>
+                <span class="star" data-value="2">&#9733;</span>
+                <span class="star" data-value="3">&#9733;</span>
+                <span class="star" data-value="4">&#9733;</span>
+                <span class="star" data-value="5">&#9733;</span>
+            </div>
+            <span class="rating-text">(1)</span>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="resto-logo">
+            <img src="/assets/gambar1.jpeg" alt="Logo Loopline Coffee">
+        </div>
+        <h3 class="resto-name">Loopline Coffee</h3>
+        <div class="resto-location">
+            <span class="location-icon">📍</span>
+            <span class="location-text">Penjaringan, Jakarta Utara</span>
+        </div>
+        <div class="resto-rating">
+            <!-- Rating Bintang yang Bisa Diklik -->
+            <div class="rating">
+                <span class="star" data-value="1">&#9733;</span>
+                <span class="star" data-value="2">&#9733;</span>
+                <span class="star" data-value="3">&#9733;</span>
+                <span class="star" data-value="4">&#9733;</span>
+                <span class="star" data-value="5">&#9733;</span>
+            </div>
+            <span class="rating-text">(1)</span>
+        </div>
+    </div>
+    
+    <div class="card">
+        <div class="resto-logo">
+            <img src="/assets/gambar1.jpeg" alt="Logo Loopline Coffee">
+        </div>
+        <h3 class="resto-name">Loopline Coffee</h3>
+        <div class="resto-location">
+            <span class="location-icon">📍</span>
+            <span class="location-text">Penjaringan, Jakarta Utara</span>
+        </div>
+        <div class="resto-rating">
+            <!-- Rating Bintang yang Bisa Diklik -->
+            <div class="rating">
+                <span class="star" data-value="1">&#9733;</span>
+                <span class="star" data-value="2">&#9733;</span>
+                <span class="star" data-value="3">&#9733;</span>
+                <span class="star" data-value="4">&#9733;</span>
+                <span class="star" data-value="5">&#9733;</span>
+            </div>
+            <span class="rating-text">(1)</span>
+        </div>
+    </div>
+    </div>
+    </main>
+
+    <script>
+        //filter
+         const showMoreButton = document.getElementById('showMore');
+            const dropdownMenu = document.getElementById('dropdownMenu');
+            const alphabetOptions = dropdownMenu.querySelectorAll('.alphabet-option');
+        
+            // Hide alphabet options by default
+            function hideAlphabetOptions() {
+                alphabetOptions.forEach(item => {
+                    
+                    item.style.display = 'none'; // Sembunyikan semua opsi huruf
+                });
+                showMoreButton.style.display = 'none'; // Sembunyikan tombol "Show More"
+            }
+        
+            // Menampilkan opsi A-H ketika "Alphabet" diklik
+            dropdownMenu.addEventListener('click', function(event) {
+                if (event.target.innerText === "Alphabet") {
+                    alphabetOptions.forEach((item, index) => {
+                        item.style.display = index < 8 ? 'block' : 'none'; // Tampilkan A-H
+                    });
+                    showMoreButton.style.display = 'block'; // Tampilkan tombol "Show More"
+                }
+            });
+        
+            // Menampilkan item tambahan ketika "Show More" diklik
+            showMoreButton.addEventListener('click', function(event) {
+                alphabetOptions.forEach((item, index) => {
+                    if (index >= 8) { // Tampilkan item setelah index ke-8
+                        item.style.display = 'block'; // Tampilkan item tambahan
+                    }
+                });
+                showMoreButton.style.display = 'none'; // Sembunyikan tombol "Show More"
+                event.stopPropagation(); // Mencegah event bubbling
+            });
+        
+            // Menutup dropdown jika klik di luar dropdown
+            document.addEventListener('click', function(event) {
+                if (!dropdownMenu.contains(event.target) && event.target !== showMoreButton) {
+                    dropdownMenu.style.display = 'none'; // Sembunyikan dropdown
+                    hideAlphabetOptions(); // Sembunyikan opsi huruf saat dropdown ditutup
+                }
+            });
+        
+            // Tampilkan dropdown ketika tombol filter diklik
+            document.getElementById('filterDropdown').addEventListener('click', function(event) {
+                dropdownMenu.style.display = dropdownMenu.style.display === 'flex' ? 'none' : 'flex';
+                hideAlphabetOptions(); // Sembunyikan opsi huruf saat dropdown ditampilkan
+                event.stopPropagation(); // Mencegah event bubbling
+            });
+        
+            // Inisialisasi tampilan dropdown
+            dropdownMenu.style.display = 'none'; 
+            hideAlphabetOptions();
+
+        // bintang
+        const cards = document.querySelectorAll('.card');
+
+        // Tambah event listener untuk setiap kartu
+        cards.forEach(card => {
+            const stars = card.querySelectorAll('.star');
+
+            // Tambah event listener untuk setiap bintang di kartu tersebut
+            stars.forEach(star => {
+                star.addEventListener('click', function() {
+                    // Hapus kelas 'selected' dari semua bintang di kartu ini saja
+                    stars.forEach(s => s.classList.remove('selected'));
+
+                    // Tambah kelas 'selected' ke bintang yang diklik dan yang sebelumnya di kartu ini
+                    for (let i = 0; i < this.dataset.value; i++) {
+                        stars[i].classList.add('selected');
+                    }
+                });
+            });
+        });
+    </script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
