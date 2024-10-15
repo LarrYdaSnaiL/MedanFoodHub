@@ -11,19 +11,22 @@
 </head>
 <body>
     <!--navbar-->
-    <header>
-        <div class="navbar">
-            <img src="/assets/Logo/text_logo.png" alt="Medan Food Hub" class="logo">
-            <div class="search-container">
-                <input type="text" class="form-control" placeholder="Temukan tempat makan sekitarmu..">
-                <div class="dropdown">
+    <header class="sticky-lg-top border shadow-sm">
+    <nav class="navbar bg-body-tertiary p-2 background-color border-bottom">
+        <div class="container-fluid">
+        <a class="navbar-brand ms-5 me-5"><img src="/assets/Logo/text_logo.png" alt=""></a>
+        <form class="d-flex flex-fill" role="search">
+            <input class="form-control ms-5 me-2" type="search" placeholder="Search" aria-label="Search">
+            <button class="btn btn-outline-primary" type="submit">Search</button>
+        </form>
+
+        <div class="dropdown ms-2 me-5">
                     <button class="btn btn-filter" type="button" id="filterDropdown" data-bs-toggle="dropdown" aria-expanded="false">
                         FILTER <i class="bi bi-filter"></i>
                     </button>
-                
                     <ul class="dropdown-menu" aria-labelledby="filterDropdown" id="dropdownMenu">
-                        <ul class="dropdown-item">Rating</ul>
-                        <ul class="dropdown-item">Alphabet</ul>
+                        <li class="dropdown-item">Rating</li>
+                        <li class="dropdown-item">Alphabet</li>
                         <li class="alphabet-option"><a class="dropdown-item" href="#">A</a></li>
                         <li class="alphabet-option"><a class="dropdown-item" href="#">B</a></li>
                         <li class="alphabet-option"><a class="dropdown-item" href="#">C</a></li>
@@ -53,115 +56,321 @@
                         <li class="alphabet-option" style="display: none;"><a class="dropdown-item" href="#">Z</a></li>
                     </ul>
                 </div>
-            </div>
-            <div class="auth-buttons">
+                
+                <div class="auth-buttons d-flex align-items-center">
                 <div class="login-container">
-                    <button>Masuk</button>
+                    <button type="button" class="btn border me-3">Masuk</button>
                 </div>
-                <div class="divider"></div>
+                <div class="divider me-3"></div>
                 <div class="signup-container">
-                    <button>Daftar</button>
+                    <button type="button" class="btn btn-primary me-5">Daftar</button>
+                </div>
+                </div>
+        </div>
+    </nav>
+    </header>
+
+    <main>
+    <!-- carousel -->
+    <div class="contaner-fluid bg-light" >
+        <div id="carouselExampleAutoplaying" class="carousel slide" data-bs-ride="carousel">
+          <div class="carousel-inner">
+            <div class="carousel-item active">
+              <img src="/assets/gambar.jpeg" class="d-block w-100" alt="..." />
+            </div>
+            <div class="carousel-item">
+              <img src="/assets/gambar.png" class="d-block w-100" alt="..." />
+            </div>
+            <div class="carousel-item">
+              <img src="/assets/gambar1.jpeg" class="d-block w-100" alt="..." />
+            </div>
+          </div>
+          <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleAutoplaying" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+          </button>
+          <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleAutoplaying" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+          </button>
+        </div>
+    </div>
+
+    <!-- tempat terkenal -->
+    <div class="container-fluid mb-5 p-5 bg-light">
+        <div class="container rounded-4 bg-primary">
+        <h2 class="section-title text-center pt-4 " >Tempat-Tempat Terkenal</h2>
+        <div class="container d-flex flex-wrap justify-content-around p-3" >
+          <div class="card">
+                <div class="resto-logo">
+                    <img src="/assets/gambar1.jpeg" alt="Logo Loopline Coffee">
+                </div>
+                <h3 class="resto-name">Loopline Coffee</h3>
+                <div class="resto-location">
+                    <span class="location-icon">📍</span>
+                    <span class="location-text">Penjaringan, Jakarta Utara</span>
+                </div>
+                <div class="resto-rating">
+                    <!-- Rating Bintang yang Bisa Diklik -->
+                    <div class="rating">
+                        <span class="star" data-value="1">&#9733;</span>
+                        <span class="star" data-value="2">&#9733;</span>
+                        <span class="star" data-value="3">&#9733;</span>
+                        <span class="star" data-value="4">&#9733;</span>
+                        <span class="star" data-value="5">&#9733;</span>
+                    </div>
+                    <span class="rating-text">(1)</span>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="resto-logo">
+                    <img src="/assets/gambar1.jpeg" alt="Logo Loopline Coffee">
+                </div>
+                <h3 class="resto-name">Loopline Coffee</h3>
+                <div class="resto-location">
+                    <span class="location-icon">📍</span>
+                    <span class="location-text">Penjaringan, Jakarta Utara</span>
+                </div>
+                <div class="resto-rating">
+                    <!-- Rating Bintang yang Bisa Diklik -->
+                    <div class="rating">
+                        <span class="star" data-value="1">&#9733;</span>
+                        <span class="star" data-value="2">&#9733;</span>
+                        <span class="star" data-value="3">&#9733;</span>
+                        <span class="star" data-value="4">&#9733;</span>
+                        <span class="star" data-value="5">&#9733;</span>
+                    </div>
+                    <span class="rating-text">(1)</span>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="resto-logo">
+                    <img src="/assets/gambar1.jpeg" alt="Logo Loopline Coffee">
+                </div>
+                <h3 class="resto-name">Loopline Coffee</h3>
+                <div class="resto-location">
+                    <span class="location-icon">📍</span>
+                    <span class="location-text">Penjaringan, Jakarta Utara</span>
+                </div>
+                <div class="resto-rating">
+                    <!-- Rating Bintang yang Bisa Diklik -->
+                    <div class="rating">
+                        <span class="star" data-value="1">&#9733;</span>
+                        <span class="star" data-value="2">&#9733;</span>
+                        <span class="star" data-value="3">&#9733;</span>
+                        <span class="star" data-value="4">&#9733;</span>
+                        <span class="star" data-value="5">&#9733;</span>
+                    </div>
+                    <span class="rating-text">(1)</span>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="resto-logo">
+                    <img src="/assets/gambar1.jpeg" alt="Logo Loopline Coffee">
+                </div>
+                <h3 class="resto-name">Loopline Coffee</h3>
+                <div class="resto-location">
+                    <span class="location-icon">📍</span>
+                    <span class="location-text">Penjaringan, Jakarta Utara</span>
+                </div>
+                <div class="resto-rating">
+                    <!-- Rating Bintang yang Bisa Diklik -->
+                    <div class="rating">
+                        <span class="star" data-value="1">&#9733;</span>
+                        <span class="star" data-value="2">&#9733;</span>
+                        <span class="star" data-value="3">&#9733;</span>
+                        <span class="star" data-value="4">&#9733;</span>
+                        <span class="star" data-value="5">&#9733;</span>
+                    </div>
+                    <span class="rating-text">(1)</span>
+                </div>
+            </div>
+            </div>
+            </div>
+    </div>
+
+    <!-- semua tempat -->
+    <div class="container-fluid">
+        <h1 class="ms-5 p-5">Mau Kemana Hari Ini?</h1>
+        <div class="container d-flex flex-wrap justify-content-around">
+          <div class="card">
+                <div class="resto-logo">
+                    <img src="/assets/gambar1.jpeg" alt="Logo Loopline Coffee">
+                </div>
+                <h3 class="resto-name">Loopline Coffee</h3>
+                <div class="resto-location">
+                    <span class="location-icon">📍</span>
+                    <span class="location-text">Penjaringan, Jakarta Utara</span>
+                </div>
+                <div class="resto-rating">
+                    <!-- Rating Bintang yang Bisa Diklik -->
+                    <div class="rating">
+                        <span class="star" data-value="1">&#9733;</span>
+                        <span class="star" data-value="2">&#9733;</span>
+                        <span class="star" data-value="3">&#9733;</span>
+                        <span class="star" data-value="4">&#9733;</span>
+                        <span class="star" data-value="5">&#9733;</span>
+                    </div>
+                    <span class="rating-text">(1)</span>
+                </div>
+            </div>
+          <div class="card">
+                <div class="resto-logo">
+                    <img src="/assets/gambar1.jpeg" alt="Logo Loopline Coffee">
+                </div>
+                <h3 class="resto-name">Loopline Coffee</h3>
+                <div class="resto-location">
+                    <span class="location-icon">📍</span>
+                    <span class="location-text">Penjaringan, Jakarta Utara</span>
+                </div>
+                <div class="resto-rating">
+                    <!-- Rating Bintang yang Bisa Diklik -->
+                    <div class="rating">
+                        <span class="star" data-value="1">&#9733;</span>
+                        <span class="star" data-value="2">&#9733;</span>
+                        <span class="star" data-value="3">&#9733;</span>
+                        <span class="star" data-value="4">&#9733;</span>
+                        <span class="star" data-value="5">&#9733;</span>
+                    </div>
+                    <span class="rating-text">(1)</span>
+                </div>
+            </div>
+          <div class="card">
+                <div class="resto-logo">
+                    <img src="/assets/gambar1.jpeg" alt="Logo Loopline Coffee">
+                </div>
+                <h3 class="resto-name">Loopline Coffee</h3>
+                <div class="resto-location">
+                    <span class="location-icon">📍</span>
+                    <span class="location-text">Penjaringan, Jakarta Utara</span>
+                </div>
+                <div class="resto-rating">
+                    <!-- Rating Bintang yang Bisa Diklik -->
+                    <div class="rating">
+                        <span class="star" data-value="1">&#9733;</span>
+                        <span class="star" data-value="2">&#9733;</span>
+                        <span class="star" data-value="3">&#9733;</span>
+                        <span class="star" data-value="4">&#9733;</span>
+                        <span class="star" data-value="5">&#9733;</span>
+                    </div>
+                    <span class="rating-text">(1)</span>
+                </div>
+            </div>
+          <div class="card">
+                <div class="resto-logo">
+                    <img src="/assets/gambar1.jpeg" alt="Logo Loopline Coffee">
+                </div>
+                <h3 class="resto-name">Loopline Coffee</h3>
+                <div class="resto-location">
+                    <span class="location-icon">📍</span>
+                    <span class="location-text">Penjaringan, Jakarta Utara</span>
+                </div>
+                <div class="resto-rating">
+                    <!-- Rating Bintang yang Bisa Diklik -->
+                    <div class="rating">
+                        <span class="star" data-value="1">&#9733;</span>
+                        <span class="star" data-value="2">&#9733;</span>
+                        <span class="star" data-value="3">&#9733;</span>
+                        <span class="star" data-value="4">&#9733;</span>
+                        <span class="star" data-value="5">&#9733;</span>
+                    </div>
+                    <span class="rating-text">(1)</span>
+                </div>
+            </div>
+          <div class="card">
+                <div class="resto-logo">
+                    <img src="/assets/gambar1.jpeg" alt="Logo Loopline Coffee">
+                </div>
+                <h3 class="resto-name">Loopline Coffee</h3>
+                <div class="resto-location">
+                    <span class="location-icon">📍</span>
+                    <span class="location-text">Penjaringan, Jakarta Utara</span>
+                </div>
+                <div class="resto-rating">
+                    <!-- Rating Bintang yang Bisa Diklik -->
+                    <div class="rating">
+                        <span class="star" data-value="1">&#9733;</span>
+                        <span class="star" data-value="2">&#9733;</span>
+                        <span class="star" data-value="3">&#9733;</span>
+                        <span class="star" data-value="4">&#9733;</span>
+                        <span class="star" data-value="5">&#9733;</span>
+                    </div>
+                    <span class="rating-text">(1)</span>
+                </div>
+            </div>
+          <div class="card">
+                <div class="resto-logo">
+                    <img src="/assets/gambar1.jpeg" alt="Logo Loopline Coffee">
+                </div>
+                <h3 class="resto-name">Loopline Coffee</h3>
+                <div class="resto-location">
+                    <span class="location-icon">📍</span>
+                    <span class="location-text">Penjaringan, Jakarta Utara</span>
+                </div>
+                <div class="resto-rating">
+                    <!-- Rating Bintang yang Bisa Diklik -->
+                    <div class="rating">
+                        <span class="star" data-value="1">&#9733;</span>
+                        <span class="star" data-value="2">&#9733;</span>
+                        <span class="star" data-value="3">&#9733;</span>
+                        <span class="star" data-value="4">&#9733;</span>
+                        <span class="star" data-value="5">&#9733;</span>
+                    </div>
+                    <span class="rating-text">(1)</span>
+                </div>
+            </div>
+          <div class="card">
+                <div class="resto-logo">
+                    <img src="/assets/gambar1.jpeg" alt="Logo Loopline Coffee">
+                </div>
+                <h3 class="resto-name">Loopline Coffee</h3>
+                <div class="resto-location">
+                    <span class="location-icon">📍</span>
+                    <span class="location-text">Penjaringan, Jakarta Utara</span>
+                </div>
+                <div class="resto-rating">
+                    <!-- Rating Bintang yang Bisa Diklik -->
+                    <div class="rating">
+                        <span class="star" data-value="1">&#9733;</span>
+                        <span class="star" data-value="2">&#9733;</span>
+                        <span class="star" data-value="3">&#9733;</span>
+                        <span class="star" data-value="4">&#9733;</span>
+                        <span class="star" data-value="5">&#9733;</span>
+                    </div>
+                    <span class="rating-text">(1)</span>
+                </div>
+            </div>
+          <div class="card">
+                <div class="resto-logo">
+                    <img src="/assets/gambar1.jpeg" alt="Logo Loopline Coffee">
+                </div>
+                <h3 class="resto-name">Loopline Coffee</h3>
+                <div class="resto-location">
+                    <span class="location-icon">📍</span>
+                    <span class="location-text">Penjaringan, Jakarta Utara</span>
+                </div>
+                <div class="resto-rating">
+                    <!-- Rating Bintang yang Bisa Diklik -->
+                    <div class="rating">
+                        <span class="star" data-value="1">&#9733;</span>
+                        <span class="star" data-value="2">&#9733;</span>
+                        <span class="star" data-value="3">&#9733;</span>
+                        <span class="star" data-value="4">&#9733;</span>
+                        <span class="star" data-value="5">&#9733;</span>
+                    </div>
+                    <span class="rating-text">(1)</span>
                 </div>
             </div>
         </div>
-    </header>
-    <main>
-    <!-- card-->
-    <div class="container"> 
-            <h2 class="section-title">Tempat-Tempat Terkenal</h2>
-    <div class="card">
-        <div class="resto-logo">
-            <img src="/assets/gambar1.jpeg" alt="Logo Loopline Coffee">
-        </div>
-        <h3 class="resto-name">Loopline Coffee</h3>
-        <div class="resto-location">
-            <span class="location-icon">📍</span>
-            <span class="location-text">Penjaringan, Jakarta Utara</span>
-        </div>
-        <div class="resto-rating">
-            <!-- Rating Bintang yang Bisa Diklik -->
-            <div class="rating">
-                <span class="star" data-value="1">&#9733;</span>
-                <span class="star" data-value="2">&#9733;</span>
-                <span class="star" data-value="3">&#9733;</span>
-                <span class="star" data-value="4">&#9733;</span>
-                <span class="star" data-value="5">&#9733;</span>
-            </div>
-            <span class="rating-text">(1)</span>
-        </div>
-    </div>
-
-    <div class="card">
-        <div class="resto-logo">
-            <img src="/assets/gambar1.jpeg" alt="Logo Loopline Coffee">
-        </div>
-        <h3 class="resto-name">Loopline Coffee</h3>
-        <div class="resto-location">
-            <span class="location-icon">📍</span>
-            <span class="location-text">Penjaringan, Jakarta Utara</span>
-        </div>
-        <div class="resto-rating">
-            <!-- Rating Bintang yang Bisa Diklik -->
-            <div class="rating">
-                <span class="star" data-value="1">&#9733;</span>
-                <span class="star" data-value="2">&#9733;</span>
-                <span class="star" data-value="3">&#9733;</span>
-                <span class="star" data-value="4">&#9733;</span>
-                <span class="star" data-value="5">&#9733;</span>
-            </div>
-            <span class="rating-text">(1)</span>
-        </div>
-    </div>
-
-    <div class="card">
-        <div class="resto-logo">
-            <img src="/assets/gambar1.jpeg" alt="Logo Loopline Coffee">
-        </div>
-        <h3 class="resto-name">Loopline Coffee</h3>
-        <div class="resto-location">
-            <span class="location-icon">📍</span>
-            <span class="location-text">Penjaringan, Jakarta Utara</span>
-        </div>
-        <div class="resto-rating">
-            <!-- Rating Bintang yang Bisa Diklik -->
-            <div class="rating">
-                <span class="star" data-value="1">&#9733;</span>
-                <span class="star" data-value="2">&#9733;</span>
-                <span class="star" data-value="3">&#9733;</span>
-                <span class="star" data-value="4">&#9733;</span>
-                <span class="star" data-value="5">&#9733;</span>
-            </div>
-            <span class="rating-text">(1)</span>
-        </div>
-    </div>
-    
-    <div class="card">
-        <div class="resto-logo">
-            <img src="/assets/gambar1.jpeg" alt="Logo Loopline Coffee">
-        </div>
-        <h3 class="resto-name">Loopline Coffee</h3>
-        <div class="resto-location">
-            <span class="location-icon">📍</span>
-            <span class="location-text">Penjaringan, Jakarta Utara</span>
-        </div>
-        <div class="resto-rating">
-            <!-- Rating Bintang yang Bisa Diklik -->
-            <div class="rating">
-                <span class="star" data-value="1">&#9733;</span>
-                <span class="star" data-value="2">&#9733;</span>
-                <span class="star" data-value="3">&#9733;</span>
-                <span class="star" data-value="4">&#9733;</span>
-                <span class="star" data-value="5">&#9733;</span>
-            </div>
-            <span class="rating-text">(1)</span>
-        </div>
-    </div>
     </div>
     </main>
 
     <script>
         //filter
-         const showMoreButton = document.getElementById('showMore');
+        const showMoreButton = document.getElementById('showMore');
             const dropdownMenu = document.getElementById('dropdownMenu');
             const alphabetOptions = dropdownMenu.querySelectorAll('.alphabet-option');
         
@@ -236,6 +445,6 @@
         });
     </script>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
