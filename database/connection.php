@@ -8,3 +8,4 @@ $pass = $env['DB_PASS'];
 $db = $env['DB_NAME'];
 
 $conn = pg_connect("host=$host dbname=$db user=$user password=$pass");
+

@@ -26,5 +26,34 @@
 .divider {
       width: 1px;
       height: 30px;
-      background-color: #170404;
+      background-color: #007bff;
   }
+  /* Footer */
+footer {
+    background-color: #f8f9fa; /* Latar belakang abu-abu muda */
+    color: #f8f9fa; /* Warna teks gelap */
+    margin-top: 2rem;
+    border-top: 1px solid #dee2e6; /* Garis tipis di atas footer */
+    padding: 20px 10px; /* Padding untuk ruang dalam */
+    text-align: center; /* Center align text */
+}
+
+footer a {
+    color: #007bff; /* Warna link biru */
+    text-decoration: none; /* Hilangkan garis bawah */
+}
+
+footer a:hover {
+    color: #0056b3; /* Warna link saat hover */
+    text-decoration: underline;
+}
+
+.social-icons a {
+    font-size: 1.5rem;
+    color: #6c757d; /* Warna ikon media sosial */
+    margin: 0 10px; /* Spasi antar ikon */
+}
+
+.social-icons a:hover {
+    color: #007bff; /* Warna ikon saat hover */
+}
