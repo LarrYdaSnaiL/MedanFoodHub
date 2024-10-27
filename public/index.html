@@ -9,7 +9,7 @@
     <title>Medan Food HUB - Your Favourite Web Recommendation</title>
     <link rel="stylesheet" href="style.css">
 </head>
-<body>
+<body class="bg-light">
     <!--navbar-->
     <header class="sticky-lg-top border shadow-sm">
     <nav class="navbar bg-body-tertiary p-2 background-color border-bottom">
@@ -72,7 +72,7 @@
   <!-- Modal Login -->
 <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content bg-primary text-white" style="border-radius: 1rem;">
+        <div class="modal-content bg-primary-subtle text-dark" style="border-radius: 1rem;">
             <div class="modal-header position-relative">
                 <div class="w-100 d-flex justify-content-center">
                     <img src="/assets/Logo/text logo.png" alt="logo" style="height: 40px;">
@@ -81,7 +81,7 @@
             </div>    
             <div class="modal-body">
                 <div class="text-center">
-                    <p class="text-white mb-4">Please enter your login and password!</p>
+                    <p class="text-dark mb-4">Please enter your login and password!</p>
                 </div>
                 <form>
                     <div data-mdb-input-init class="form-outline form-white mb-4">
@@ -93,11 +93,11 @@
                         <input type="password" id="loginPassword" class="form-control form-control-lg" required />
                     </div>
                     <div class="d-flex justify-content-center">
-                        <button data-mdb-button-init data-mdb-ripple-init class="btn btn-outline-light btn-lg px-5" type="submit">Login</button>
+                        <button data-mdb-button-init data-mdb-ripple-init class="btn btn-outline-dark btn-lg px-5" type="submit">Login</button>
                     </div>  
                 </form>
                 <div class="text-center mt-3">
-                    <p class="mb-0">Don't have an account? <a href="#signupModal" data-bs-toggle="modal" data-bs-target="#signupModal" class="text-white fw-bold">Sign Up</a></p>
+                    <p class="mb-0">Don't have an account? <a href="#signupModal" data-bs-toggle="modal" data-bs-target="#signupModal" class="text-dark fw-bold">Sign Up</a></p>
                 </div>
             </div>
         </div>
@@ -107,7 +107,7 @@
 <!-- Sign Up Modal -->
 <div class="modal fade" id="signupModal" tabindex="-1" aria-labelledby="signupModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content bg-primary text-white" style="border-radius: 1rem;">
+        <div class="modal-content bg-primary-subtle text-dark" style="border-radius: 1rem;">
             <div class="modal-header position-relative">
                 <div class="w-100 d-flex justify-content-center">
                     <img src="/assets/Logo/text logo.png" alt="logo" style="height: 40px;">
@@ -116,7 +116,7 @@
             </div>              
             <div class="modal-body">
                 <div class="text-center">
-                    <p class="text-white mb-4">Please enter your details to create an account!</p>
+                    <p class="text-dark mb-4">Please enter your details to create an account!</p>
                 </div>
                 <form>
                     <div data-mdb-input-init class="form-outline form-white mb-4">
@@ -132,11 +132,11 @@
                         <input type="password" id="signupPassword" class="form-control form-control-lg" required />
                     </div>
                     <div class="d-flex justify-content-center">
-                        <button data-mdb-button-init data-mdb-ripple-init class="btn btn-outline-light btn-lg px-5" type="submit">Sign Up</button>
+                        <button data-mdb-button-init data-mdb-ripple-init class="btn btn-outlined-dark btn-lg px-5" type="submit">Sign Up</button>
                     </div>                    
                 </form>
                 <div class="text-center mt-3">
-                    <p class="mb-0">Already have an account? <a href="#loginModal" data-bs-toggle="modal" data-bs-target="#loginModal" class="text-white fw-bold">Login</a></p>
+                    <p class="mb-0">Already have an account? <a href="#loginModal" data-bs-toggle="modal" data-bs-target="#loginModal" class="text-dark fw-bold">Login</a></p>
                 </div>
             </div>
         </div>
@@ -145,10 +145,10 @@
         </div>
     </nav>
     </header>
-  
+
     <main>
     <!-- carousel -->
-    <div class="contaner-fluid bg-light" >
+    <div class="contaner-fluid bg-light">
         <div id="carouselExampleAutoplaying" class="carousel slide" data-bs-ride="carousel">
           <div class="carousel-inner">
             <div class="carousel-item active">
@@ -173,9 +173,9 @@
     </div>
 
     <!-- tempat terkenal -->
-    <div class="container-fluid mb-5 p-5 bg-light">
-        <div class="container rounded-4 bg-primary">
-        <h2 class="section-title text-center pt-4 " >Tempat-Tempat Terkenal</h2>
+    <div class="container-fluid p-5 bg-light">
+        <div class="container rounded-4 bg-primary m-5">
+        <h2 class="section-title text-center pt-4 text-light" >Tempat-Tempat Terkenal</h2>
         <div class="container d-flex flex-wrap justify-content-around p-3">
             <div class="card" style="width: 22%; margin: 10px;">
               <div class="resto-logo">
@@ -183,7 +183,7 @@
               </div>
               <h3 class="resto-name">Loopline Coffee</h3>
               <div class="resto-location">
-                <span class="location-icon">📍</span>
+                <span class="location-icon"><i class="bi bi-geo-alt link-primary"></i></span>
                 <span class="location-text">Penjaringan, Jakarta Utara</span>
               </div>
               <div class="resto-rating">
@@ -204,7 +204,7 @@
                 </div>
                 <h3 class="resto-name">Loopline Coffee</h3>
                 <div class="resto-location">
-                  <span class="location-icon">📍</span>
+                  <span class="location-icon"><i class="bi bi-geo-alt link-primary"></i></span>
                   <span class="location-text">Penjaringan, Jakarta Utara</span>
                 </div>
                 <div class="resto-rating">
@@ -225,7 +225,7 @@
                 </div>
                 <h3 class="resto-name">Loopline Coffee</h3>
                 <div class="resto-location">
-                  <span class="location-icon">📍</span>
+                  <span class="location-icon"><i class="bi bi-geo-alt link-primary"></i></span>
                   <span class="location-text">Penjaringan, Jakarta Utara</span>
                 </div>
                 <div class="resto-rating">
@@ -246,7 +246,7 @@
                 </div>
                 <h3 class="resto-name">Loopline Coffee</h3>
                 <div class="resto-location">
-                  <span class="location-icon">📍</span>
+                  <span class="location-icon"><i class="bi bi-geo-alt link-primary"></i></span>
                   <span class="location-text">Penjaringan, Jakarta Utara</span>
                 </div>
                 <div class="resto-rating">
@@ -267,8 +267,8 @@
     
 
     <!-- semua tempat -->
-    <div class="container-fluid">
-        <h1 class="ms-5 p-5">Mau Kemana Hari Ini?</h1>
+    <div class="container-fluid bg-primary-subtle p-5">
+        <h1 class="ms-4 p-5">Mau Kemana Hari Ini?</h1>
         <div class="container d-flex flex-wrap justify-content-around">
             <div class="card" style="width: 22%; margin: 10px;">
                 <div class="resto-logo">
@@ -276,7 +276,7 @@
                 </div>
                 <h3 class="resto-name">Loopline Coffee</h3>
                 <div class="resto-location">
-                  <span class="location-icon">📍</span>
+                  <span class="location-icon"><i class="bi bi-geo-alt link-primary"></i></span>
                   <span class="location-text">Penjaringan, Jakarta Utara</span>
                 </div>
                 <div class="resto-rating">
@@ -297,7 +297,7 @@
               </div>
               <h3 class="resto-name">Loopline Coffee</h3>
               <div class="resto-location">
-                <span class="location-icon">📍</span>
+                <span class="location-icon"><i class="bi bi-geo-alt link-primary"></i></span>
                 <span class="location-text">Penjaringan, Jakarta Utara</span>
               </div>
               <div class="resto-rating">
@@ -318,7 +318,7 @@
               </div>
               <h3 class="resto-name">Loopline Coffee</h3>
               <div class="resto-location">
-                <span class="location-icon">📍</span>
+                <span class="location-icon"><i class="bi bi-geo-alt link-primary"></i></span>
                 <span class="location-text">Penjaringan, Jakarta Utara</span>
               </div>
               <div class="resto-rating">
@@ -339,7 +339,7 @@
                 </div>
                 <h3 class="resto-name">Loopline Coffee</h3>
                 <div class="resto-location">
-                  <span class="location-icon">📍</span>
+                  <span class="location-icon"><i class="bi bi-geo-alt link-primary"></i></span>
                   <span class="location-text">Penjaringan, Jakarta Utara</span>
                 </div>
                 <div class="resto-rating">
@@ -360,7 +360,7 @@
               </div>
               <h3 class="resto-name">Loopline Coffee</h3>
               <div class="resto-location">
-                <span class="location-icon">📍</span>
+                <span class="location-icon"><i class="bi bi-geo-alt link-primary"></i></span>
                 <span class="location-text">Penjaringan, Jakarta Utara</span>
               </div>
               <div class="resto-rating">
@@ -381,7 +381,7 @@
               </div>
               <h3 class="resto-name">Loopline Coffee</h3>
               <div class="resto-location">
-                <span class="location-icon">📍</span>
+                <span class="location-icon"><i class="bi bi-geo-alt link-primary"></i></span>
                 <span class="location-text">Penjaringan, Jakarta Utara</span>
               </div>
               <div class="resto-rating">
@@ -402,7 +402,7 @@
                 </div>
                 <h3 class="resto-name">Loopline Coffee</h3>
                 <div class="resto-location">
-                  <span class="location-icon">📍</span>
+                  <span class="location-icon"><i class="bi bi-geo-alt link-primary"></i></span>
                   <span class="location-text">Penjaringan, Jakarta Utara</span>
                 </div>
                 <div class="resto-rating">
@@ -423,7 +423,7 @@
                 </div>
                 <h3 class="resto-name">Loopline Coffee</h3>
                 <div class="resto-location">
-                  <span class="location-icon">📍</span>
+                  <span class="location-icon"><i class="bi bi-geo-alt link-primary"></i></span>
                   <span class="location-text">Penjaringan, Jakarta Utara</span>
                 </div>
                 <div class="resto-rating">
