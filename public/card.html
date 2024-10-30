@@ -140,9 +140,9 @@
                 </div>
             </div>
         </div>
+     </div>
     </div>
-</div>
-        </div>
+ </div>
     </nav>
     </header>
 
@@ -174,11 +174,10 @@
                 <img src="/assets/loopin cafe.jpeg" alt="" style="width: 600px; border-top-left-radius: 12px; border-bottom-left-radius: 12px;">
             </div>
             <div class="gambar-kecil">
-                <img src="/assets/loopin cafe.jpeg cafe.jpeg" alt="">
                 <img src="/assets/loopin cafe.jpeg" alt="">
-                <img src="/assets/loopin cafe.jpeg" alt=""style="border-top-right-radius: 12px;">
+                <img src="/assets/loopin cafe.jpeg" alt="" >
                 <img src="/assets/loopin cafe.jpeg" alt="">
-                <img src="/assets/loopin cafe.jpeg" alt=""style="border-bottom-right-radius: 12px;">
+                <img src="/assets/loopin cafe.jpeg" alt="">
             </div>
         </div>
     </div>
@@ -370,6 +369,34 @@
                 });
             });
         });
+
+        // Fungsi ini dipanggil saat login berhasil
+function showUserProfile(name, imageUrl) {
+    // Set nama dan gambar profil
+    document.querySelector("#user-profile .user-name").textContent = name;
+    document.querySelector("#user-profile .profile-image").src = imageUrl;
+
+    // Sembunyikan tombol "Masuk" dan "Daftar", tampilkan profil
+    document.getElementById("auth-buttons").classList.add("d-none");
+    document.getElementById("user-profile").classList.remove("d-none");
+}
+
+// Contoh login (simulasi) untuk demonstrasi
+document.querySelector("#loginModal form").addEventListener("submit", function (e) {
+    e.preventDefault();
+    
+    // Ambil data dari input form login
+    const userName = "Nama Pengguna"; // Dapatkan nama dari sistem backend atau form login
+    const profileImageUrl = "user-profile.jpg"; // URL gambar profil pengguna
+    
+    // Panggil fungsi untuk menampilkan profil
+    showUserProfile(userName, profileImageUrl);
+
+    // Tutup modal setelah login
+    const loginModal = new bootstrap.Modal(document.getElementById("loginModal"));
+    loginModal.hide();
+});
+
     </script>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
