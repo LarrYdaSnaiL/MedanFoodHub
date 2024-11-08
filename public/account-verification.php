@@ -1,3 +1,37 @@
+<?php
+include "../database/connection.php";
+session_start();
+
+// Check if the user is logged in
+if (!isset($_SESSION['login']) || !$_SESSION['login']) {
+    header("Location: ../");
+    exit();
+}
+
+try {
+    // Query to get full_name using uid
+    $sql = "SELECT * FROM users WHERE uid = :uid";
+    $stmt = $pdo->prepare($sql);
+    $stmt->bindParam(':uid', $_SESSION['uid']);
+    $stmt->execute();
+
+    $user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if ($user) {
+        $full_name = $user['full_name'];
+        $profilePic = $user['profile_pic'];
+        $email = $user['email'];
+        $phone = $user['phone'];
+        $bio = $user['bio'];
+        $is_owner = $user['is_owner'];
+    }
+} catch (Exception $e) {
+    echo "Error: " . $e->getMessage();
+    exit();
+}
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
