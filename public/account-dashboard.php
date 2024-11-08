@@ -1,3 +1,37 @@
+<?php
+include "../database/connection.php";
+session_start();
+
+use Cloudinary\Api\Upload\UploadApi;
+
+// Check if the user is logged in
+if (!isset($_SESSION['login']) || !$_SESSION['login']) {
+    header("Location: ../");
+    exit();
+}
+
+try {
+    $sql = "SELECT * FROM users WHERE uid = :uid";
+    $stmt = $pdo->prepare($sql);
+    $stmt->bindParam(':uid', $_SESSION['uid']);
+    $stmt->execute();
+
+    $user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if ($user) {
+        $full_name = $user['full_name'];
+        $profilePic = $user['profile_pic'];
+        $email = $user['email'];
+        $phone = $user['phone'];
+        $bio = $user['bio'];
+        $is_owner = $user['is_owner'];
+    }
+} catch (Exception $e) {
+    echo "Error: " . $e->getMessage();
+    exit();
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -66,7 +100,8 @@
                 <h3 class="text-2xl font-semibold text-gray-800 mb-6">Profile Settings</h3>
                 <form action="" method="POST" enctype="multipart/form-data">
                     <div class="mb-4">
-                        <img src="../Assets/blankPic.png" alt="Current Profile Picture" id="profilePic"
+                        <img src="<?php echo $profilePic != null ? $profilePic : '../Assets/blankPic.png' ?>"
+                            alt="Current Profile Picture" id="profilePic"
                             class="w-32 h-32 rounded-full mx-auto object-cover mb-3">
                         <input type="file" id="profilePicture" name="profilePicture"
                             class="block w-full text-sm text-gray-500 border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-600">
@@ -76,53 +111,125 @@
                         <label for="full_name" class="block text-gray-700 font-medium mb-2">Name</label>
                         <input type="text" id="full_name" name="full_name"
                             class="block w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-600"
-                            placeholder="New Name..." value="">
+                            placeholder="New Name..." value="<?php echo htmlspecialchars($full_name); ?>">
                     </div>
 
                     <div class="mb-4">
                         <label for="bio" class="block text-gray-700 font-medium mb-2">Bio</label>
                         <textarea id="bio" name="bio" rows="3"
                             class="block w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-600"
-                            placeholder="Write something about yourself..."></textarea>
+                            placeholder="Write something about yourself..."><?php echo htmlspecialchars($bio != null ? $bio : ''); ?></textarea>
                     </div>
 
                     <div class="mb-4">
                         <label for="email" class="block text-gray-700 font-medium mb-2">Email</label>
                         <input type="email" id="email" name="email"
                             class="block w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-600"
-                            placeholder="example@gmail.com" value="">
+                            placeholder="example@gmail.com" value="<?php echo htmlspecialchars($email); ?>">
                     </div>
 
                     <div class="mb-4">
                         <label for="phone" class="block text-gray-700 font-medium mb-2">Phone Number</label>
                         <input type="tel" id="phone" name="phone"
                             class="block w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-600"
-                            placeholder="Phone Number" value="">
+                            placeholder="Phone Number"
+                            value="<?php echo htmlspecialchars($phone != null ? $phone : ''); ?>">
                     </div>
 
                     <button type="submit"
                         class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-500 transition duration-200">Save
                         Changes</button>
                 </form>
+
+                <?php
+                if ($_SERVER["REQUEST_METHOD"] == "POST") {
+                    $full_name = trim($_POST['full_name']);
+                    $bio = $_POST['bio'];
+                    $email = trim($_POST['email']);
+                    $phone = $_POST['phone'];
+                    $uid = md5($email);
+                    $downloadUrl = $profilePic;
+                    try {
+                        if (isset($_FILES['profilePicture']) && $_FILES['profilePicture']['error'] === UPLOAD_ERR_OK) {
+                            $fileTmpPath = $_FILES['profilePicture']['tmp_name'];
+                            $fileName = $_FILES['profilePicture'][$full_name];
+
+                            try {
+                                $upload = new UploadApi();
+                                $result = $upload->upload($fileTmpPath, [
+                                    "folder" => "MedanFoodHub/Profile Picture/",
+                                    "public_id" => $uid
+                                ]);
+
+                                $downloadUrl = $result['secure_url'];
+
+                            } catch (Exception $e) {
+                                echo 'Upload Error: ' . $e->getMessage();
+                            }
+
+                        } else {
+                            echo "No file uploaded or an error occurred during upload.";
+                        }
+
+                        if ($uid == $_SESSION['uid']) {
+                            $stmt = $pdo->prepare("UPDATE users SET full_name = :full_name, bio = :bio, email = :email, phone = :phone, profile_pic = :profile_pic WHERE uid = :uid");
+                        } else {
+                            $stmt = $pdo->prepare("UPDATE users SET uid = :new_uid, full_name = :full_name, bio = :bio, email = :email, phone = :phone, profile_pic = :profile_pic WHERE uid = :uid");
+                            $stmt->bindParam(':new_uid', $uid);
+                        }
+
+                        $stmt->bindParam(':full_name', $full_name);
+                        $stmt->bindParam(':bio', $bio);
+                        $stmt->bindParam(':email', $email);
+                        $stmt->bindParam(':phone', $phone);
+                        $stmt->bindParam(':profile_pic', $downloadUrl);
+                        $stmt->bindParam(':uid', $_SESSION['uid']);
+
+                        if ($stmt->execute()) {
+                            $_SESSION['uid'] = $uid;
+                            echo "<script> window.location.href = './account-dashboard.php';</script>";
+                        } else {
+                            echo "<script>alert('Failed to update profile.');</script>";
+                        }
+                    } catch (Exception $e) {
+                        echo "Error: " . $e->getMessage();
+                    }
+                }
+                ?>
             </section>
 
             <!-- Verify Account Section -->
             <section id="verifyAccount" class="bg-white p-6 rounded-lg shadow-md mt-6">
                 <h3 class="text-2xl font-semibold text-gray-800 mb-4">Verify Account</h3>
-                <p class='text-gray-700 mb-6'>
-                    Account verification is required if you are a restaurant or cafe owner and want to list your
-                    business on our platform. Verifying your account allows you to manage your restaurant's details,
-                    including menu items, hours, and special offers.
-                    Verified owners gain control over their establishment's profile, ensuring accurate and up-to-date
-                    information for users. To get verified, please submit your business documentation, and our team will
-                    review and approve your request within a few business days.
-                </p>
 
-                <!-- Button to start verification process -->
-                <button class='bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-500 transition duration-200'
-                    onclick='verif()'>
-                    Start Verification Process
-                </button>
+                <?php if (!$is_owner) {
+                    echo "
+                    <p class='text-gray-700 mb-6'>
+                        Account verification is required if you are a restaurant or cafe owner and want to list your
+                        business on our platform. Verifying your account allows you to manage your restaurant's details,
+                        including menu items, hours, and special offers.
+                        Verified owners gain control over their establishment's profile, ensuring accurate and up-to-date
+                        information for users. To get verified, please submit your business documentation, and our team will
+                        review and approve your request within a few business days.
+                    </p>
+
+                    <!-- Button to start verification process -->
+                    <button class='bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-500 transition duration-200'
+                        onclick='verif()'>
+                        Start Verification Process
+                    </button>";
+                } else {
+                    echo "
+                    <p class='text-gray-700 mb-6'>
+                        You are verified!
+                    </p>
+
+                    <!-- Button to start verification process -->
+                    <button class='bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-500 transition duration-200'
+                        onclick='business()'>
+                        Manage Your Business
+                    </button>";
+                } ?>
             </section>
 
         </main>
