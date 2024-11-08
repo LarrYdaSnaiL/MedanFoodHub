@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MedanFoodHub</title>
+    <title>Restaurant Details - MedanFoodHub</title>
     <link rel="icon" href="/assets/Logo/icon.png" type="image/x-icon">
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link rel="stylesheet" href="../Assets/style.css">
@@ -118,89 +118,206 @@
         </div>
     </div>
 
-    <!-- Dashboard Content -->
+    <!-- Restaurant Details Content -->
     <div class="container mx-auto py-8">
-        <!-- Carousel Section -->
-        <section id="carousel" class="mb-8 relative">
-            <div class="overflow-hidden rounded-lg shadow-lg">
-                <div class="carousel-images flex transition-transform duration-500">
-                    <img src="https://via.placeholder.com/800x400?text=1200x384" class="w-full h-64 object-cover">
-                    <img src="https://via.placeholder.com/800x400?text=1200x384"
-                        class="w-full h-64 object-cover hidden">
-                    <img src="https://via.placeholder.com/800x400?text=1200x384"
-                        class="w-full h-64 object-cover hidden">
+        <!-- Restaurant Header -->
+        <div class="flex justify-between items-center mb-4">
+            <div>
+                <h1 class="text-3xl font-bold text-gray-800">Restaurant Name</h1>
+                <div class="text-gray-600 flex items-center space-x-2">
+                    <span>★★★★☆</span>
+                    <span>|</span>
+                    <span>Category: Cafe</span>
+                </div>
+            </div>
+            <button class="bg-blue-600 text-white px-4 py-2 rounded-lg">Share</button>
+        </div>
+
+        <!-- Restaurant Gallery with Thumbnails -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
+            <img src="https://via.placeholder.com/300x200" alt="Gallery Image"
+                class="thumbnail w-full h-32 object-cover rounded-md cursor-pointer"
+                data-full="https://via.placeholder.com/800x600">
+            <img src="https://via.placeholder.com/300x200" alt="Gallery Image"
+                class="thumbnail w-full h-32 object-cover rounded-md cursor-pointer"
+                data-full="https://via.placeholder.com/800x600/ff0000">
+            <img src="https://via.placeholder.com/300x200" alt="Gallery Image"
+                class="thumbnail w-full h-32 object-cover rounded-md cursor-pointer"
+                data-full="https://via.placeholder.com/800x600/00ff00">
+            <img src="https://via.placeholder.com/300x200" alt="Gallery Image"
+                class="thumbnail w-full h-32 object-cover rounded-md cursor-pointer"
+                data-full="https://via.placeholder.com/800x600/0000ff">
+            <button class="col-span-full text-center py-2 text-blue-600 hover:underline" id="showMoreButton">Show
+                More</button>
+        </div>
+
+        <!-- Full-Screen Modal -->
+        <div id="modalGallery" class="modalGallery flex">
+            <span class="close absolute top-4 right-4 text-white text-2xl cursor-pointer">&times;</span>
+            <img id="modalImage" src="" alt="Full Image">
+        </div>
+
+        <!-- Owner Information Section -->
+        <section id="ownerInfo" class="flex items-center mb-4 mt-4">
+            <!-- Owner Profile Picture -->
+            <div class="flex-shrink-0 mr-4">
+                <img src="https://via.placeholder.com/100" alt="Owner Profile Picture"
+                    class="w-16 h-16 rounded-full object-cover">
+            </div>
+
+            <!-- Owner Name -->
+            <div>
+                <h3 class="text-xl font-semibold text-gray-800">Alexandra</h3>
+            </div>
+        </section>
+
+        <!-- Description Section -->
+        <section class="mb-4">
+            <div class="bg-white p-6 rounded-lg shadow-lg">
+                <h2 class="text-2xl font-semibold text-gray-800 mb-4">About This Restaurant/Cafe</h2>
+                <p class="text-gray-700 leading-relaxed">
+                    <!-- Description text for the restaurant goes here -->
+                    Located in the heart of the city, this restaurant offers a unique blend of modern and traditional
+                    flavors. Known for its cozy atmosphere and quality ingredients, this spot is perfect for casual
+                    diners and food enthusiasts alike. The menu features a variety of dishes that highlight fresh,
+                    locally-sourced produce and innovative culinary techniques.
+                </p>
+                <p class="text-gray-700 mt-4 leading-relaxed">
+                    With a commitment to sustainability and customer satisfaction, this establishment is proud to serve
+                    delicious meals in a welcoming environment. Whether you’re stopping by for a quick coffee or a full
+                    meal, you'll find an inviting space where you can relax and enjoy great food.
+                </p>
+            </div>
+        </section>
+
+        <!-- Ratings and Comments Section -->
+        <div class="bg-white rounded-lg shadow-lg p-4">
+            <h2 class="text-2xl font-semibold mb-4">Ratings and Comments</h2>
+
+            <!-- Ratings Summary -->
+            <div class="mb-6">
+                <h3 class="text-lg font-semibold text-gray-800">Rating Breakdown</h3>
+                <div class="space-y-2 mt-4">
+                    <div class="flex items-center">
+                        <span class="text-yellow-500 mr-2">★★★★★</span>
+                        <div class="w-64 bg-gray-200 rounded-full h-2 mr-2">
+                            <div class="bg-yellow-500 h-2 rounded-full" style="width: 80%;"></div>
+                        </div>
+                        <span>80%</span> <!-- Example percentage -->
+                    </div>
+                    <div class="flex items-center">
+                        <span class="text-yellow-500 mr-2">★★★★</span>
+                        <div class="w-64 bg-gray-200 rounded-full h-2 mr-2">
+                            <div class="bg-yellow-500 h-2 rounded-full" style="width: 10%;"></div>
+                        </div>
+                        <span>10%</span>
+                    </div>
+                    <div class="flex items-center">
+                        <span class="text-yellow-500 mr-2">★★★</span>
+                        <div class="w-64 bg-gray-200 rounded-full h-2 mr-2">
+                            <div class="bg-yellow-500 h-2 rounded-full" style="width: 5%;"></div>
+                        </div>
+                        <span>5%</span>
+                    </div>
+                    <div class="flex items-center">
+                        <span class="text-yellow-500 mr-2">★★</span>
+                        <div class="w-64 bg-gray-200 rounded-full h-2 mr-2">
+                            <div class="bg-yellow-500 h-2 rounded-full" style="width: 3%;"></div>
+                        </div>
+                        <span>3%</span>
+                    </div>
+                    <div class="flex items-center">
+                        <span class="text-yellow-500 mr-2">★</span>
+                        <div class="w-64 bg-gray-200 rounded-full h-2 mr-2">
+                            <div class="bg-yellow-500 h-2 rounded-full" style="width: 2%;"></div>
+                        </div>
+                        <span>2%</span>
+                    </div>
                 </div>
             </div>
 
-            <!-- Carousel Navigation Buttons -->
-            <button id="prev"
-                class="absolute left-0 top-1/2 transform -translate-y-1/2 px-4 py-2 bg-blue-600 text-white rounded-r-lg">‹</button>
-            <button id="next"
-                class="absolute right-0 top-1/2 transform -translate-y-1/2 px-4 py-2 bg-blue-600 text-white rounded-l-lg">›</button>
-        </section>
+            <!-- New Comment Section -->
+            <h3 class="text-xl font-semibold text-gray-800 mb-3">Add Your Comment</h3>
 
-        <!-- Famous and Random Restaurant Sections (as in previous example) -->
-        <!-- Famous Restaurants Section -->
-        <section id="famous" class="mb-8">
-            <h2 class="text-2xl font-semibold text-gray-800 mb-4">Famous Restaurants</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                <!-- Famous Restaurant Card -->
-                <div class="bg-white rounded-lg shadow-lg p-4 cursor-pointer" onclick="movePage('famous1')">
-                    <img src="https://via.placeholder.com/300x200" alt="Restaurant Image"
-                        class="w-full h-32 object-cover rounded-md">
-                    <h3 class="text-lg font-semibold mt-2">Restaurant Name</h3>
-                    <p class="text-gray-600">Category: Cafe</p>
-                    <p class="text-yellow-500">Rating: ★★★★☆</p>
-                </div>
-                <!-- Additional cards for other famous restaurants can be added here -->
-            </div>
-        </section>
+            <form action="#" method="POST" class="space-y-4 mb-5">
+                <!-- Comment Input -->
+                <textarea name="newComment" id="newComment" rows="5"
+                    class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+                    placeholder="Write your comment here..." required></textarea>
 
-        <!-- Random Restaurants Section -->
-        <section id="random" class="mb-8">
-            <h2 class="text-2xl font-semibold text-gray-800 mb-4">Random Restaurants</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                <!-- Random Restaurant Card -->
-                <div class="bg-white rounded-lg shadow-lg p-4 cursor-pointer" onclick="movePage('random1')">
-                    <img src="https://via.placeholder.com/300x200" alt="Restaurant Image"
-                        class="w-full h-32 object-cover rounded-md">
-                    <h3 class="text-lg font-semibold mt-2">Random Restaurant Name</h3>
-                    <p class="text-gray-600">Category: Diner</p>
-                    <p class="text-yellow-500">Rating: ★★★☆☆</p>
+                <!-- Submit Button -->
+                <button type="submit"
+                    class="bg-blue-600 text-white py-2 px-6 rounded-lg hover:bg-blue-500 transition duration-200">
+                    Submit Comment
+                </button>
+            </form>
+
+            <!-- Individual Comments with Profile Pictures -->
+            <div class="space-y-4">
+                <!-- Single Comment -->
+                <div class="flex items-start space-x-4 border-b pb-4">
+                    <!-- Profile Picture -->
+                    <img src="https://via.placeholder.com/50" alt="User Profile"
+                        class="w-12 h-12 rounded-full object-cover">
+
+                    <!-- Comment Content -->
+                    <div>
+                        <p class="text-gray-700 font-semibold">User Name</p>
+                        <p class="text-yellow-500">Rating: ★★★★★</p>
+                        <p class="text-gray-600 mt-2">"Great food and ambiance!"</p>
+                    </div>
                 </div>
-                <!-- Additional cards for other random restaurants can be added here -->
+                <!-- Additional comments can be added here -->
             </div>
-        </section>
+        </div>
     </div>
 
-    <!-- Carousel JavaScript -->
+    <!-- JavaScript for Show More Gallery and Image Slider -->
     <script>
-        let currentSlide = 0;
-        const slides = document.querySelectorAll(".carousel-images img");
-        const totalSlides = slides.length;
-        const nextButton = document.getElementById("next");
-        const prevButton = document.getElementById("prev");
-        const carouselImagesContainer = document.querySelector(".carousel-images");
+        const showMoreButton = document.getElementById('showMoreButton');
+        const extraImages = [
+            "https://via.placeholder.com/300x200",
+            "https://via.placeholder.com/300x200",
+            "https://via.placeholder.com/300x200",
+            "https://via.placeholder.com/300x200"
+        ];
+        let galleryContainer = document.querySelector(".grid");
+        let modalGallery = document.getElementById('modalGallery');
+        let modalImage = document.getElementById('modalImage');
+        let thumbnails = document.querySelectorAll('.thumbnail');
 
-        function updateSlidePosition() {
-            carouselImagesContainer.style.transform = `translateX(-${currentSlide * 100}%)`;
-        }
+        showMoreButton.addEventListener("click", function () {
+            extraImages.forEach((imgUrl) => {
+                const imgElement = document.createElement("img");
+                imgElement.src = imgUrl;
+                imgElement.alt = "Additional Gallery Image";
+                imgElement.className = "thumbnail w-full h-32 object-cover rounded-md cursor-pointer";
+                imgElement.setAttribute('data-full', imgUrl);
+                galleryContainer.appendChild(imgElement);
+            });
+            showMoreButton.style.display = "none";
+        });
 
-        function nextSlide() {
-            currentSlide = (currentSlide + 1) % totalSlides;
-            updateSlidePosition();
-        }
+        // Open modal on thumbnail click
+        thumbnails.forEach(thumbnail => {
+            thumbnail.addEventListener('click', function () {
+                const fullImageSrc = thumbnail.getAttribute('data-full');
+                modalImage.src = fullImageSrc;
+                modalGallery.style.display = 'flex'; // Show the modal
+            });
+        });
 
-        function prevSlide() {
-            currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
-            updateSlidePosition();
-        }
+        // Close modal on clicking the close button
+        document.querySelector('.close').addEventListener('click', function () {
+            modalGallery.style.display = 'none'; // Hide the modal
+        });
 
-        nextButton.addEventListener("click", nextSlide);
-        prevButton.addEventListener("click", prevSlide);
-
-        // Auto-slide every 3 seconds
-        setInterval(nextSlide, 3000);
+        // Optional: Close modal on outside click
+        modalGallery.addEventListener('click', function (event) {
+            if (event.target === modalGallery) {
+                modalGallery.style.display = 'none';
+            }
+        });
 
         // Modal functionality
         const openModalButton = document.getElementById('openModal');
@@ -271,12 +388,6 @@
 
         function movePage(name) {
             switch (name) {
-                case 'famous1':
-                    window.location.href = "restaurant.php";
-                    break;
-                case 'random1':
-                    window.location.href = "restaurant.php";
-                    break;
                 case 'account':
                     window.location.href = "account-dashboard.php";
                     break;
