@@ -1,3 +1,37 @@
+<?php
+include "../database/connection.php";
+session_start();
+
+// Check if the user is logged in
+if (!isset($_SESSION['login'])) {
+    header("Location: ../");
+    exit();
+}
+
+try {
+    // Query to get full_name using uid
+    $sql = "SELECT * FROM users WHERE uid = :uid";
+    $stmt = $pdo->prepare($sql);
+    $stmt->bindParam(':uid', $_SESSION['uid']);
+    $stmt->execute();
+
+    $user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if ($user) {
+        $full_name = $user['full_name'];
+        $profilePic = $user['profile_pic'];
+        $email = $user['email'];
+        $phone = $user['phone'];
+        $bio = $user['bio'];
+        $is_owner = $user['is_owner'];
+    }
+} catch (Exception $e) {
+    echo "Error: " . $e->getMessage();
+    exit();
+}
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -22,7 +56,7 @@
                     class="border rounded-lg px-4 py-1 mr-4 focus:outline-none focus:border-blue-600">
                 <button class="bg-blue-600 text-white px-4 py-1 rounded-lg">Search</button>
             </div>
-            <div class="text-gray-700">
+            <div class="text-gray-700 <?php echo !$_SESSION['login'] ? '' : 'hidden'; ?>">
                 <button class="px-4 py-1 bg-blue-600 text-white rounded-lg hover:bg-blue-500 transition duration-200"
                     id="openModal">Login</button>
                 <span>|</span>
@@ -31,10 +65,10 @@
 
             <!-- Profile Section (displayed when logged in) -->
             <div id="profileSection"
-                class="flex items-center space-x-2 cursor-pointer hidden"
+                class="flex items-center space-x-2 cursor-pointer <?php echo $_SESSION['login'] ? '' : 'hidden'; ?>"
                 onclick="movePage('account')">
-                <span class="text-black font-medium">Username</span>
-                <img src="../Assets/blankPic.png"
+                <span class="text-black font-medium"><?php echo $full_name; ?></span>
+                <img src="<?php echo $profilePic != null ? $profilePic : '../Assets/blankPic.png' ?>"
                     alt="User Profile Picture" class="w-8 h-8 rounded-full">
             </div>
         </div>
