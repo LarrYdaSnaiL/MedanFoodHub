@@ -1,6 +1,5 @@
 .env
 vendor/
 database/*.sql
-database/*.json
 composer.json
 composer.lock
