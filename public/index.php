@@ -174,7 +174,7 @@ try {
 
         <!-- Famous and Random Restaurant Sections (as in previous example) -->
         <!-- Famous Restaurants Section -->
-        <section id="famous" class="mb-8">
+        <section id="famous" class="mb-8 m-5">
             <h2 class="text-2xl font-semibold text-gray-800 mb-4">Famous Restaurants</h2>
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                 <!-- Famous Restaurant Card -->
@@ -190,7 +190,7 @@ try {
         </section>
 
         <!-- Random Restaurants Section -->
-        <section id="random" class="mb-8">
+        <section id="random" class="mb-8 m-5">
             <h2 class="text-2xl font-semibold text-gray-800 mb-4">Random Restaurants</h2>
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                 <!-- Random Restaurant Card -->
@@ -205,6 +205,109 @@ try {
             </div>
         </section>
     </div>
+
+     <!-- Filter Buttons -->
+     <div class="flex justify-center space-x-4 mb-6">
+    <button id="all" onclick="filterCategory('all', this)" class="px-4 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300">Semua</button>
+    <button id="indonesia" onclick="filterCategory('indonesia', this)" class="px-4 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300">Indonesia</button>
+    <button id="china" onclick="filterCategory('china', this)" class="px-4 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300">China</button>
+    <button id="western" onclick="filterCategory('western', this)" class="px-4 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300">Western</button>
+    <button id="asian" onclick="filterCategory('asian', this)" class="px-4 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300">Asian</button>
+    </div>
+
+  <!-- Cards Container -->
+  <div id="card-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 m-5">
+    <!-- Example Card for Makanan Cina -->
+    <div class="card china bg-white shadow-lg rounded-lg p-4 w-[300px] h-[200px]">
+      <img src="https://via.placeholder.com/300x100" alt="Claypot Popo" class="w-full h-[100px] object-cover rounded-md mb-4">
+      <h3 class="text-lg font-semibold mt-2">Random POPO MENTENG</h3>
+      <p class="text-gray-600">Category: Diner</p>
+      <p class="text-yellow-500">Rating: ★★★☆☆</p>
+    </div>
+
+    <!-- Add more cards for other restaurants -->
+    <div class="card asian bg-white shadow-lg rounded-lg p-4 w-[300px] h-[200px]">
+      <img src="https://via.placeholder.com/300x100" alt="Chummy Tummy" class="w-full h-[100px] object-cover rounded-md mb-4">
+      <h2 class="font-bold text-md">Chummy Tummy Tanjung Duren</h2>
+      <p class="text-gray-600">Category: Diner</p>
+      <p class="text-yellow-500">Rating: ★★★☆☆</p>
+    </div>
+
+    <div class="card western bg-white shadow-lg rounded-lg p-4 w-[300px] h-[200px]">
+      <img src="https://via.placeholder.com/300x100" alt="Chummy Tummy" class="w-full h-[100px] object-cover rounded-md mb-4">
+      <h2 class="font-bold text-md">Chummy Tummy Tanjung Duren</h2>
+      <p class="text-gray-600">Category: Diner</p>
+      <p class="text-yellow-500">Rating: ★★★☆☆</p>
+    </div>
+
+    <div class="card indonesia bg-white shadow-lg rounded-lg p-4 ">
+      <img src="https://via.placeholder.com/300x100" alt="Chummy Tummy" class="w-full h-[100px] object-cover rounded-md mb-4">
+      <h2 class="font-bold text-md">Chummy Tummy Tanjung Duren</h2>
+      <p class="text-gray-600">Category: Diner</p>
+      <p class="text-yellow-500">Rating: ★★★☆☆</p>
+    </div>
+
+    <!-- Add more cards as needed -->
+  </div>
+
+  <!-- Footer Section -->
+  <footer class="bg-blue-600 text-gray-100 py-8 mt-12">
+    <div class="container mx-auto grid grid-cols-1 md:grid-cols-2 gap-6 px-6 justify-center items-center text-center">
+        <!-- About Us Section -->
+        <div>
+            <h3 class="text-lg font-semibold mb-2">About MedanFoodHub</h3>
+            <p class="text-white text-sm">MedanFoodHub is your go-to platform to discover the best restaurants around Medan. Find top-rated, trending, and unique eateries all in one place.</p>
+        </div>
+
+        <!-- Contact Section -->
+        <div>
+            <h3 class="text-lg font-semibold mb-2">Contact Us</h3>
+            <p class="text-white text-sm">Email: <a href="mailto:info@medanfoodhub.com" class="hover:text-white">info@medanfoodhub.com</a></p>
+            <p class="text-white text-sm">Phone: <a href="tel:+620123456789" class="hover:text-white">+62 012 345 6789</a></p>
+            <div class="flex space-x-4 mt-4 justify-center">
+                <a href="https://facebook.com" target="_blank" class="text-gray-400 hover:text-white">
+                    <i class="fab fa-facebook-f"></i>
+                </a>
+                <a href="https://twitter.com" target="_blank" class="text-gray-400 hover:text-white">
+                    <i class="fab fa-twitter"></i>
+                </a>
+                <a href="https://instagram.com" target="_blank" class="text-gray-400 hover:text-white">
+                    <i class="fab fa-instagram"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="border-t border-gray-300 mt-6 pt-4 text-center text-white text-sm">
+    &copy; 2024 MedanFoodHub. All rights reserved.
+</div>
+</footer>
+
+  <!-- JavaScript to filter the cards based on category -->
+  <script>
+function filterCategory(category, button) {
+    // Filter cards by category
+    const cards = document.querySelectorAll('.card');
+    cards.forEach(card => {
+        if (category === 'all' || card.classList.contains(category)) {
+            card.style.display = 'block';
+        } else {
+            card.style.display = 'none';
+        }
+    });
+
+    // Highlight active button
+    const buttons = document.querySelectorAll('.flex button');
+    buttons.forEach(btn => {
+        btn.classList.remove('bg-gray-300', 'font-bold'); // Remove active styles
+        btn.classList.add('bg-gray-200', 'text-gray-800'); // Reset to default styles
+    });
+
+    button.classList.add('bg-gray-300', 'font-bold'); // Add active styles
+    button.classList.remove('bg-gray-200', 'text-gray-800'); // Remove default styles
+}
+
+  </script>
 
     <!-- Carousel JavaScript -->
     <script>
