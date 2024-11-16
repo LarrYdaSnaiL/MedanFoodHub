@@ -41,6 +41,7 @@ try {
     <title>Restaurant Details - MedanFoodHub</title>
     <link rel="icon" href="/assets/Logo/icon.png" type="image/x-icon">
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" rel="stylesheet">
     <link rel="stylesheet" href="../Assets/style.css">
 </head>
 
@@ -153,7 +154,7 @@ try {
     </div>
 
     <!-- Restaurant Details Content -->
-    <div class="container mx-auto py-8">
+    <div class="container mx-auto py-8 mb-12">
         <!-- Restaurant Header -->
         <div class="flex justify-between items-center mb-4">
             <div>
@@ -164,7 +165,12 @@ try {
                     <span>Category: Cafe</span>
                 </div>
             </div>
-            <button class="bg-blue-600 text-white px-4 py-2 rounded-lg">Share</button>
+            <div>
+                <button class="bg-blue-600 text-white px-4 py-2 rounded-lg"><i
+                        class="fa-solid fa-share"></i>&nbsp;&nbsp;Share</button>
+                <button class="bg-blue-600 text-white px-4 py-2 rounded-lg"><i
+                        class="fa-regular fa-bookmark"></i>&nbsp;&nbsp;Bookmark</button>
+            </div>
         </div>
 
         <!-- Restaurant Gallery with Thumbnails -->
@@ -181,8 +187,6 @@ try {
             <img src="https://via.placeholder.com/300x200" alt="Gallery Image"
                 class="thumbnail w-full h-32 object-cover rounded-md cursor-pointer"
                 data-full="https://via.placeholder.com/800x600/0000ff">
-            <button class="col-span-full text-center py-2 text-blue-600 hover:underline" id="showMoreButton">Show
-                More</button>
         </div>
 
         <!-- Full-Screen Modal -->
@@ -273,6 +277,16 @@ try {
             <!-- New Comment Section -->
             <h3 class="text-xl font-semibold text-gray-800 mb-3">Add Your Comment</h3>
 
+            <!-- Star Rating -->
+            <div class="flex space-x-1 mb-4">
+                <!-- Stars with click functionality -->
+                <span onclick="setRating(1)" class="star text-gray-400 text-2xl cursor-pointer" id="star1">★</span>
+                <span onclick="setRating(2)" class="star text-gray-400 text-2xl cursor-pointer" id="star2">★</span>
+                <span onclick="setRating(3)" class="star text-gray-400 text-2xl cursor-pointer" id="star3">★</span>
+                <span onclick="setRating(4)" class="star text-gray-400 text-2xl cursor-pointer" id="star4">★</span>
+                <span onclick="setRating(5)" class="star text-gray-400 text-2xl cursor-pointer" id="star5">★</span>
+            </div>
+
             <form action="#" method="POST" class="space-y-4 mb-5">
                 <!-- Comment Input -->
                 <textarea name="newComment" id="newComment" rows="5"
@@ -306,65 +320,48 @@ try {
         </div>
     </div>
 
-     <!-- Footer Section -->
-  <footer class="bg-blue-600 text-gray-100 py-8 mt-12">
-    <div class="container mx-auto grid grid-cols-1 md:grid-cols-2 gap-6 px-6 justify-center items-center text-center">
-        <!-- About Us Section -->
-        <div>
-            <h3 class="text-lg font-semibold mb-2">About MedanFoodHub</h3>
-            <p class="text-white text-sm">MedanFoodHub is your go-to platform to discover the best restaurants around Medan. Find top-rated, trending, and unique eateries all in one place.</p>
-        </div>
+    <!-- Footer Section -->
+    <footer class="bg-blue-600 text-gray-100 py-8">
+        <div
+            class="container mx-auto grid grid-cols-1 md:grid-cols-2 gap-6 px-6 justify-center items-center text-center">
+            <!-- About Us Section -->
+            <div>
+                <h3 class="text-lg font-semibold mb-2">About MedanFoodHub</h3>
+                <p class="text-white text-sm">MedanFoodHub is your go-to platform to discover the best restaurants
+                    around Medan. Find top-rated, trending, and unique eateries all in one place.</p>
+            </div>
 
-        <!-- Contact Section -->
-        <div>
-            <h3 class="text-lg font-semibold mb-2">Contact Us</h3>
-            <p class="text-white text-sm">Email: <a href="mailto:info@medanfoodhub.com" class="hover:text-white">info@medanfoodhub.com</a></p>
-            <p class="text-white text-sm">Phone: <a href="tel:+620123456789" class="hover:text-white">+62 012 345 6789</a></p>
-            <div class="flex space-x-4 mt-4 justify-center">
-                <a href="https://facebook.com" target="_blank" class="text-gray-400 hover:text-white">
-                    <i class="fab fa-facebook-f"></i>
-                </a>
-                <a href="https://twitter.com" target="_blank" class="text-gray-400 hover:text-white">
-                    <i class="fab fa-twitter"></i>
-                </a>
-                <a href="https://instagram.com" target="_blank" class="text-gray-400 hover:text-white">
-                    <i class="fab fa-instagram"></i>
-                </a>
+            <!-- Contact Section -->
+            <div>
+                <h3 class="text-lg font-semibold mb-2">Contact Us</h3>
+                <p class="text-white text-sm">Email: <a href="mailto:info@medanfoodhub.com"
+                        class="hover:text-white">info@medanfoodhub.com</a></p>
+                <p class="text-white text-sm">Phone: <a href="tel:+620123456789" class="hover:text-white">+62 012 345
+                        6789</a></p>
+                <div class="flex space-x-4 mt-4 justify-center">
+                    <a href="https://facebook.com" target="_blank" class="text-gray-400 hover:text-white">
+                        <i class="fab fa-facebook-f"></i>
+                    </a>
+                    <a href="https://twitter.com" target="_blank" class="text-gray-400 hover:text-white">
+                        <i class="fab fa-twitter"></i>
+                    </a>
+                    <a href="https://instagram.com" target="_blank" class="text-gray-400 hover:text-white">
+                        <i class="fab fa-instagram"></i>
+                    </a>
+                </div>
             </div>
         </div>
-    </div>
 
-    <div class="border-t border-gray-300 mt-6 pt-4 text-center text-white text-sm">
-    &copy; 2024 MedanFoodHub. All rights reserved.
-</div>
-</footer>
-
+        <div class="border-t border-gray-300 mt-6 pt-4 text-center text-white text-sm">
+            &copy; 2024 MedanFoodHub. All rights reserved.
+        </div>
+    </footer>
 
     <!-- JavaScript for Show More Gallery and Image Slider -->
     <script>
-        const showMoreButton = document.getElementById('showMoreButton');
-        const extraImages = [
-            "https://via.placeholder.com/300x200",
-            "https://via.placeholder.com/300x200",
-            "https://via.placeholder.com/300x200",
-            "https://via.placeholder.com/300x200"
-        ];
-        let galleryContainer = document.querySelector(".grid");
         let modalGallery = document.getElementById('modalGallery');
         let modalImage = document.getElementById('modalImage');
         let thumbnails = document.querySelectorAll('.thumbnail');
-
-        showMoreButton.addEventListener("click", function () {
-            extraImages.forEach((imgUrl) => {
-                const imgElement = document.createElement("img");
-                imgElement.src = imgUrl;
-                imgElement.alt = "Additional Gallery Image";
-                imgElement.className = "thumbnail w-full h-32 object-cover rounded-md cursor-pointer";
-                imgElement.setAttribute('data-full', imgUrl);
-                galleryContainer.appendChild(imgElement);
-            });
-            showMoreButton.style.display = "none";
-        });
 
         // Open modal on thumbnail click
         thumbnails.forEach(thumbnail => {
@@ -454,10 +451,29 @@ try {
             }
         }
 
+        // Function to set the rating
+        let currentRating = 0;
+
+        function setRating(rating) {
+            currentRating = rating;
+
+            // Update star colors based on rating
+            for (let i = 1; i <= 5; i++) {
+                const star = document.getElementById('star' + i);
+                if (i <= rating) {
+                    star.classList.remove('text-gray-400');
+                    star.classList.add('text-yellow-400'); // Filled color
+                } else {
+                    star.classList.remove('text-yellow-400');
+                    star.classList.add('text-gray-400'); // Unfilled color
+                }
+            }
+        }
+
         function movePage(name) {
             switch (name) {
                 case 'account':
-                    window.location.href = "account-dashboard.php";
+                    window.location.href = "profile.php";
                     break;
                 default:
                     break;

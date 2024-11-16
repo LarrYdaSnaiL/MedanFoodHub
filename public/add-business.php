@@ -10,28 +10,18 @@
 
 <body class="bg-gray-100">
     <div class="flex min-h-screen">
-
         <!-- Sidebar -->
         <aside class="w-64 bg-white shadow-lg">
             <div class="p-6">
                 <h2 class="text-2xl font-semibold text-gray-800">Dashboard</h2>
                 <nav class="mt-8 space-y-4">
-                    <a href="index.php"
-                        class="block px-4 py-2 text-gray-700 hover:bg-blue-600 hover:text-white rounded-lg">Home</a>
-                    <a href="#profileSettings"
+                    <a href="business-dashboard.php"
+                        class="block px-4 py-2 text-gray-700 hover:bg-blue-600 hover:text-white rounded-lg">Back</a>
+                    <a href="account-dashboard.php"
                         class="block px-4 py-2 text-gray-700 hover:bg-blue-600 hover:text-white rounded-lg">Profile
                         Settings</a>
-                    <a href="#verifyAccount"
-                        class="block px-4 py-2 text-gray-700 hover:bg-blue-600 hover:text-white rounded-lg <?php echo $is_owner ? 'hidden' : ''; ?>">Verify
-                        Account</a>
-                    <a href="#" onclick="business()"
-                        class="block px-4 py-2 text-gray-700 hover:bg-blue-600 hover:text-white rounded-lg <?php echo $is_owner ? '' : 'hidden'; ?>">Your
-                        Business</a>
                     <a href="../config/logout.php"
                         class="block px-4 py-2 text-gray-700 hover:bg-red-600 hover:text-white rounded-lg">Log Out</a>
-                    <a id="deleteAccount" href="#"
-                        class="block px-4 py-2 text-gray-700 hover:bg-red-600 hover:text-white rounded-lg text-red-600">Delete
-                        Account</a>
                 </nav>
             </div>
         </aside>
@@ -106,38 +96,42 @@
         </main>
     </div>
 
-     <!-- Footer Section -->
-  <footer class="bg-blue-600 text-gray-100 py-8 mt-12">
-    <div class="container mx-auto grid grid-cols-1 md:grid-cols-2 gap-6 px-6 justify-center items-center text-center">
-        <!-- About Us Section -->
-        <div>
-            <h3 class="text-lg font-semibold mb-2">About MedanFoodHub</h3>
-            <p class="text-white text-sm">MedanFoodHub is your go-to platform to discover the best restaurants around Medan. Find top-rated, trending, and unique eateries all in one place.</p>
-        </div>
+    <!-- Footer Section -->
+    <footer class="bg-blue-600 text-gray-100 py-8">
+        <div
+            class="container mx-auto grid grid-cols-1 md:grid-cols-2 gap-6 px-6 justify-center items-center text-center">
+            <!-- About Us Section -->
+            <div>
+                <h3 class="text-lg font-semibold mb-2">About MedanFoodHub</h3>
+                <p class="text-white text-sm">MedanFoodHub is your go-to platform to discover the best restaurants
+                    around Medan. Find top-rated, trending, and unique eateries all in one place.</p>
+            </div>
 
-        <!-- Contact Section -->
-        <div>
-            <h3 class="text-lg font-semibold mb-2">Contact Us</h3>
-            <p class="text-white text-sm">Email: <a href="mailto:info@medanfoodhub.com" class="hover:text-white">info@medanfoodhub.com</a></p>
-            <p class="text-white text-sm">Phone: <a href="tel:+620123456789" class="hover:text-white">+62 012 345 6789</a></p>
-            <div class="flex space-x-4 mt-4 justify-center">
-                <a href="https://facebook.com" target="_blank" class="text-gray-400 hover:text-white">
-                    <i class="fab fa-facebook-f"></i>
-                </a>
-                <a href="https://twitter.com" target="_blank" class="text-gray-400 hover:text-white">
-                    <i class="fab fa-twitter"></i>
-                </a>
-                <a href="https://instagram.com" target="_blank" class="text-gray-400 hover:text-white">
-                    <i class="fab fa-instagram"></i>
-                </a>
+            <!-- Contact Section -->
+            <div>
+                <h3 class="text-lg font-semibold mb-2">Contact Us</h3>
+                <p class="text-white text-sm">Email: <a href="mailto:info@medanfoodhub.com"
+                        class="hover:text-white">info@medanfoodhub.com</a></p>
+                <p class="text-white text-sm">Phone: <a href="tel:+620123456789" class="hover:text-white">+62 012 345
+                        6789</a></p>
+                <div class="flex space-x-4 mt-4 justify-center">
+                    <a href="https://facebook.com" target="_blank" class="text-gray-400 hover:text-white">
+                        <i class="fab fa-facebook-f"></i>
+                    </a>
+                    <a href="https://twitter.com" target="_blank" class="text-gray-400 hover:text-white">
+                        <i class="fab fa-twitter"></i>
+                    </a>
+                    <a href="https://instagram.com" target="_blank" class="text-gray-400 hover:text-white">
+                        <i class="fab fa-instagram"></i>
+                    </a>
+                </div>
             </div>
         </div>
-    </div>
 
-    <div class="border-t border-gray-300 mt-6 pt-4 text-center text-white text-sm">
-    &copy; 2024 MedanFoodHub. All rights reserved.
-</div>
-</footer>
+        <div class="border-t border-gray-300 mt-6 pt-4 text-center text-white text-sm">
+            &copy; 2024 MedanFoodHub. All rights reserved.
+        </div>
+    </footer>
 
 
     <script>

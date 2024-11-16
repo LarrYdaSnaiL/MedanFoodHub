@@ -17,6 +17,7 @@ try {
     $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
     if ($user) {
+        $bio = $user['bio'];
         $full_name = $user['full_name'];
         $profilePic = $user['profile_pic'] ?? '../Assets/blankPic.png';
     }
@@ -59,11 +60,16 @@ try {
     </nav>
 
     <!-- Main Content -->
-    <div class="container mx-auto py-8">
+    <div class="container mx-auto py-8  mb-12">
         <!-- Profile Picture Section -->
         <div class="flex flex-col items-center mb-6">
             <img src="<?php echo $profilePic; ?>" alt="Profile Picture" class="w-40 h-40 rounded-full mb-4">
             <h2 class="text-2xl font-semibold text-gray-800"><?php echo $full_name; ?></h2>
+
+            <!-- Bio Section -->
+            <p class="text-gray-600 text-center mt-2 px-4">
+                <?php echo $bio ?>
+            </p>
 
             <!-- Edit Profile Button -->
             <button id="editProfile"
@@ -127,73 +133,78 @@ try {
                     user's feedback.</p>
             </div>
         </div>
-
-         <!-- Footer Section -->
-  <footer class="bg-blue-600 text-gray-100 py-8 mt-12">
-    <div class="container mx-auto grid grid-cols-1 md:grid-cols-2 gap-6 px-6 justify-center items-center text-center">
-        <!-- About Us Section -->
-        <div>
-            <h3 class="text-lg font-semibold mb-2">About MedanFoodHub</h3>
-            <p class="text-white text-sm">MedanFoodHub is your go-to platform to discover the best restaurants around Medan. Find top-rated, trending, and unique eateries all in one place.</p>
-        </div>
-
-        <!-- Contact Section -->
-        <div>
-            <h3 class="text-lg font-semibold mb-2">Contact Us</h3>
-            <p class="text-white text-sm">Email: <a href="mailto:info@medanfoodhub.com" class="hover:text-white">info@medanfoodhub.com</a></p>
-            <p class="text-white text-sm">Phone: <a href="tel:+620123456789" class="hover:text-white">+62 012 345 6789</a></p>
-            <div class="flex space-x-4 mt-4 justify-center">
-                <a href="https://facebook.com" target="_blank" class="text-gray-400 hover:text-white">
-                    <i class="fab fa-facebook-f"></i>
-                </a>
-                <a href="https://twitter.com" target="_blank" class="text-gray-400 hover:text-white">
-                    <i class="fab fa-twitter"></i>
-                </a>
-                <a href="https://instagram.com" target="_blank" class="text-gray-400 hover:text-white">
-                    <i class="fab fa-instagram"></i>
-                </a>
-            </div>
-        </div>
     </div>
 
-    <div class="border-t border-gray-300 mt-6 pt-4 text-center text-white text-sm">
-    &copy; 2024 MedanFoodHub. All rights reserved.
-</div>
-</footer>
+    <!-- Footer Section -->
+    <footer class="bg-blue-600 text-gray-100 py-8">
+        <div
+            class="container mx-auto grid grid-cols-1 md:grid-cols-2 gap-6 px-6 justify-center items-center text-center">
+            <!-- About Us Section -->
+            <div>
+                <h3 class="text-lg font-semibold mb-2">About MedanFoodHub</h3>
+                <p class="text-white text-sm">MedanFoodHub is your go-to platform to discover the best restaurants
+                    around Medan. Find top-rated, trending, and unique eateries all in one place.</p>
+            </div>
 
+            <!-- Contact Section -->
+            <div>
+                <h3 class="text-lg font-semibold mb-2">Contact Us</h3>
+                <p class="text-white text-sm">Email: <a href="mailto:info@medanfoodhub.com"
+                        class="hover:text-white">info@medanfoodhub.com</a></p>
+                <p class="text-white text-sm">Phone: <a href="tel:+620123456789" class="hover:text-white">+62 012
+                        345
+                        6789</a></p>
+                <div class="flex space-x-4 mt-4 justify-center">
+                    <a href="https://facebook.com" target="_blank" class="text-gray-400 hover:text-white">
+                        <i class="fab fa-facebook-f"></i>
+                    </a>
+                    <a href="https://twitter.com" target="_blank" class="text-gray-400 hover:text-white">
+                        <i class="fab fa-twitter"></i>
+                    </a>
+                    <a href="https://instagram.com" target="_blank" class="text-gray-400 hover:text-white">
+                        <i class="fab fa-instagram"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
 
-        <script>
-            // Tab functionality for Bookmarks and Comments
-            function showSection(section) {
-                // Hide both sections
-                document.getElementById('bookmarksSection').classList.add('hidden');
-                document.getElementById('commentsSection').classList.add('hidden');
+        <div class="border-t border-gray-300 mt-6 pt-4 text-center text-white text-sm">
+            &copy; 2024 MedanFoodHub. All rights reserved.
+        </div>
+    </footer>
 
-                // Reset tab styles
-                document.getElementById('bookmarksTab').classList.remove('text-blue-600', 'border-blue-600');
-                document.getElementById('commentsTab').classList.remove('text-blue-600', 'border-blue-600');
-                document.getElementById('bookmarksTab').classList.add('text-gray-600', 'border-transparent');
-                document.getElementById('commentsTab').classList.add('text-gray-600', 'border-transparent');
+    <script>
+        // Tab functionality for Bookmarks and Comments
+        function showSection(section) {
+            // Hide both sections
+            document.getElementById('bookmarksSection').classList.add('hidden');
+            document.getElementById('commentsSection').classList.add('hidden');
 
-                // Show the selected section and add active styles to the selected tab
-                if (section === 'bookmarks') {
-                    document.getElementById('bookmarksSection').classList.remove('hidden');
-                    document.getElementById('bookmarksTab').classList.add('text-blue-600', 'border-blue-600');
-                } else {
-                    document.getElementById('commentsSection').classList.remove('hidden');
-                    document.getElementById('commentsTab').classList.add('text-blue-600', 'border-blue-600');
-                }
+            // Reset tab styles
+            document.getElementById('bookmarksTab').classList.remove('text-blue-600', 'border-blue-600');
+            document.getElementById('commentsTab').classList.remove('text-blue-600', 'border-blue-600');
+            document.getElementById('bookmarksTab').classList.add('text-gray-600', 'border-transparent');
+            document.getElementById('commentsTab').classList.add('text-gray-600', 'border-transparent');
+
+            // Show the selected section and add active styles to the selected tab
+            if (section === 'bookmarks') {
+                document.getElementById('bookmarksSection').classList.remove('hidden');
+                document.getElementById('bookmarksTab').classList.add('text-blue-600', 'border-blue-600');
+            } else {
+                document.getElementById('commentsSection').classList.remove('hidden');
+                document.getElementById('commentsTab').classList.add('text-blue-600', 'border-blue-600');
             }
+        }
 
-            // Load Bookmarks tab as default
-            document.addEventListener('DOMContentLoaded', () => {
-                showSection('bookmarks');
-            });
+        // Load Bookmarks tab as default
+        document.addEventListener('DOMContentLoaded', () => {
+            showSection('bookmarks');
+        });
 
-            document.getElementById("editProfile").addEventListener("click", () => {
-                window.location.href = "account-dashboard.php";
-            });
-        </script>
+        document.getElementById("editProfile").addEventListener("click", () => {
+            window.location.href = "account-dashboard.php";
+        });
+    </script>
 
 </body>
 
