@@ -195,15 +195,17 @@ try {
             <!-- Filter Buttons -->
             <div class="flex justify-center space-x-4 mb-6">
                 <button id="all" onclick="filterCategory('all', this)"
-                    class="px-4 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300">Semua</button>
+                    class="px-4 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300">All</button>
                 <button id="indonesia" onclick="filterCategory('indonesia', this)"
-                    class="px-4 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300">Indonesia</button>
-                <button id="china" onclick="filterCategory('china', this)"
-                    class="px-4 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300">China</button>
+                    class="px-4 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300">Indonesian</button>
                 <button id="western" onclick="filterCategory('western', this)"
                     class="px-4 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300">Western</button>
-                <button id="asian" onclick="filterCategory('asian', this)"
-                    class="px-4 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300">Asian</button>
+                <button id="Chinese" onclick="filterCategory('Chinese', this)"
+                    class="px-4 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300">Chinese</button>
+                <button id="middle_east" onclick="filterCategory('middle_east', this)"
+                    class="px-4 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300">Middle East</button>
+                <button id="Others" onclick="filterCategory('Others', this)"
+                    class="px-4 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300">Others</button>
             </div>
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                 <?php
