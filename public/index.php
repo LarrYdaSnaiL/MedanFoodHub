@@ -206,6 +206,27 @@ try {
                     class="px-4 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300">Asian</button>
             </div>
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                <?php
+
+                // Query to get full_name using uid
+                $sql = "SELECT * FROM restaurants";
+                $stmt = $pdo->prepare($sql);
+                $stmt->execute();
+
+                $restaurants = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+                foreach ($restaurants as $restaurant) {
+                    echo "
+                    <div class='bg-white rounded-lg shadow-lg p-4 cursor-pointer' onclick='movePage('famous1')'>
+                        <img src='{$restaurant['pictures']}' alt='Restaurant Image'
+                            class='w-full h-32 object-cover rounded-md'>
+                        <h3 class='text-lg font-semibold mt-2'>{$restaurant['restaurant_name']}</h3>
+                        <p class='text-gray-600'>Category: {$restaurant['categories']}</p>
+                        <p class='text-yellow-500'>Rating: ★★★★☆</p>
+                    </div>
+                    ";
+                }
+                ?>
                 <!-- Random Restaurant Card -->
                 <div class="china bg-white rounded-lg shadow-lg p-4 cursor-pointer" onclick="movePage('famous1')">
                     <img src="https://via.placeholder.com/300x200" alt="Restaurant Image"

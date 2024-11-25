@@ -168,15 +168,39 @@ try {
                                     echo 'Upload Error: ' . $e->getMessage();
                                 }
 
-                            } else {
-                                echo "No file uploaded or an error occurred during upload.";
                             }
 
                             if ($uid == $_SESSION['uid']) {
                                 $stmt = $pdo->prepare("UPDATE users SET full_name = :full_name, bio = :bio, email = :email, phone = :phone, profile_pic = :profile_pic WHERE uid = :uid");
                             } else {
-                                $stmt = $pdo->prepare("UPDATE users SET uid = :new_uid, full_name = :full_name, bio = :bio, email = :email, phone = :phone, profile_pic = :profile_pic WHERE uid = :uid");
-                                $stmt->bindParam(':new_uid', $uid);
+
+                                // Prepare a SQL statement to retrieve the user
+                                $checkValidation = $pdo->prepare("SELECT * FROM users WHERE uid = :uid");
+                                $checkValidation->bindParam(':uid', $uid);
+                                $checkValidation->execute();
+
+                                // Fetch the user data
+                                $user = $checkValidation->fetch();
+
+                                if (!$user) {
+                                    $upload = new UploadApi();
+                                    $result = $upload->rename(
+                                        "MedanFoodHub/Profile Picture/" . $_SESSION['uid'],
+                                        "MedanFoodHub/Profile Picture/" . $uid
+                                    );
+
+                                    $downloadUrl = $result["secure_url"];
+
+                                    $stmt = $pdo->prepare("UPDATE users SET uid = :new_uid, full_name = :full_name, bio = :bio, email = :email, phone = :phone, profile_pic = :profile_pic WHERE uid = :uid");
+                                    $stmt->bindParam(':new_uid', $uid);
+                                } else {
+                                    echo "
+                                    <script>
+                                        alert('Email Exists');
+                                        window.location.href = './account-dashboard.php';
+                                    </script>
+                                    ";
+                                }
                             }
 
                             $stmt->bindParam(':full_name', $full_name);
@@ -193,7 +217,12 @@ try {
                                 echo "<script>alert('Failed to update profile.');</script>";
                             }
                         } catch (Exception $e) {
-                            echo "Error: " . $e->getMessage();
+                            if (strpos($e->getMessage(), "already exists") !== false) {
+                                echo "<script>
+                                    alert('Email already exists.');
+                                    window.location.href = './account-dashboard.php';
+                                </script>";
+                            }
                         }
                     }
                     ?>
