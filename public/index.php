@@ -173,7 +173,7 @@ try {
         </section>
 
         <!-- Famous and Random Restaurant Sections (as in previous example) -->
-        <!-- Famous Restaurants Section -->
+        <!-- Famous Restaurants Section --> 
         <section id="famous" class="mb-8 m-5">
             <h2 class="text-2xl font-semibold text-gray-800 mb-4">Famous Restaurants</h2>
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -194,24 +194,46 @@ try {
             <h2 class="text-2xl font-semibold text-gray-800 mb-4">Random Restaurants</h2>
             <!-- Filter Buttons -->
             <div class="flex justify-center space-x-4 mb-6">
-                <button id="all" onclick="filterCategory('all', this)"
+                <button id="All" onclick="filterCategory('All', this)"
                     class="px-4 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300">All</button>
-                <button id="indonesia" onclick="filterCategory('indonesia', this)"
+                <button id="Indonesian" onclick="filterCategory('Indonesian', this)"
                     class="px-4 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300">Indonesian</button>
-                <button id="western" onclick="filterCategory('western', this)"
+                <button id="Western" onclick="filterCategory('Western', this)"
                     class="px-4 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300">Western</button>
                 <button id="Chinese" onclick="filterCategory('Chinese', this)"
                     class="px-4 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300">Chinese</button>
-                <button id="middle_east" onclick="filterCategory('middle_east', this)"
+                <button id="ME" onclick="filterCategory('ME', this)"
                     class="px-4 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300">Middle East</button>
                 <button id="Others" onclick="filterCategory('Others', this)"
                     class="px-4 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300">Others</button>
             </div>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div class="Card-Filter All grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                 <?php
-
                 // Query to get full_name using uid
-                $sql = "SELECT * FROM restaurants";
+                $sql = "SELECT * FROM restaurants ORDER BY RANDOM()";
+                $stmt = $pdo->prepare($sql);
+                $stmt->execute();
+                
+                $restaurants = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                
+
+                foreach ($restaurants as $restaurant) {
+                    echo "
+                    <div class='bg-white rounded-lg shadow-lg p-4 cursor-pointer' onclick='movePage('famous1')'>
+                        <img src='{$restaurant['pictures']}' alt='Restaurant Image'
+                            class='w-full h-32 object-cover rounded-md'>
+                        <h3 class='text-lg font-semibold mt-2'>{$restaurant['restaurant_name']}</h3>
+                        <p class='text-gray-600'>Category: {$restaurant['categories']}</p>
+                        <p class='text-yellow-500'>Rating: ★★★★☆</p>
+                    </div>
+                    ";
+                }
+                ?>
+            </div>
+            <div class="Card-Filter Indonesian grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                <?php
+                // Query to get full_name using uid
+                $sql = "SELECT * FROM restaurants WHERE categories ILIKE 'Indonesian'";
                 $stmt = $pdo->prepare($sql);
                 $stmt->execute();
 
@@ -229,40 +251,94 @@ try {
                     ";
                 }
                 ?>
-                <!-- Random Restaurant Card -->
-                <div class="china bg-white rounded-lg shadow-lg p-4 cursor-pointer" onclick="movePage('famous1')">
-                    <img src="https://via.placeholder.com/300x200" alt="Restaurant Image"
-                        class="w-full h-32 object-cover rounded-md">
-                    <h3 class="text-lg font-semibold mt-2">Restaurant Name</h3>
-                    <p class="text-gray-600">Category: Cafe</p>
-                    <p class="text-yellow-500">Rating: ★★★★☆</p>
-                </div>
+            </div>
+            <div class="Card-Filter Western grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 hidden">
+                <?php
+                // Query to get full_name using uid
+                $sql = "SELECT * FROM restaurants WHERE categories ILIKE 'Western'";
+                $stmt = $pdo->prepare($sql);
+                $stmt->execute();
 
-                <!-- Add more cards for other restaurants -->
-                <div class="asian bg-white rounded-lg shadow-lg p-4 cursor-pointer" onclick="movePage('famous1')">
-                    <img src="https://via.placeholder.com/300x200" alt="Restaurant Image"
-                        class="w-full h-32 object-cover rounded-md">
-                    <h3 class="text-lg font-semibold mt-2">Restaurant Name</h3>
-                    <p class="text-gray-600">Category: Cafe</p>
-                    <p class="text-yellow-500">Rating: ★★★★☆</p>
-                </div>
+                $restaurants = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-                <div class="western bg-white rounded-lg shadow-lg p-4 cursor-pointer" onclick="movePage('famous1')">
-                    <img src="https://via.placeholder.com/300x200" alt="Restaurant Image"
-                        class="w-full h-32 object-cover rounded-md">
-                    <h3 class="text-lg font-semibold mt-2">Restaurant Name</h3>
-                    <p class="text-gray-600">Category: Cafe</p>
-                    <p class="text-yellow-500">Rating: ★★★★☆</p>
-                </div>
+                foreach ($restaurants as $restaurant) {
+                    echo "
+                    <div class='bg-white rounded-lg shadow-lg p-4 cursor-pointer' onclick='movePage('famous1')'>
+                        <img src='{$restaurant['pictures']}' alt='Restaurant Image'
+                            class='w-full h-32 object-cover rounded-md'>
+                        <h3 class='text-lg font-semibold mt-2'>{$restaurant['restaurant_name']}</h3>
+                        <p class='text-gray-600'>Category: {$restaurant['categories']}</p>
+                        <p class='text-yellow-500'>Rating: ★★★★☆</p>
+                    </div>
+                    ";
+                }
+                ?>
+            </div>
+            <div class="Card-Filter Chinese grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 hidden">
+                <?php
+                // Query to get full_name using uid
+                $sql = "SELECT * FROM restaurants WHERE categories ILIKE 'Chinese'";
+                $stmt = $pdo->prepare($sql);
+                $stmt->execute();
 
-                <div class="indonesia bg-white rounded-lg shadow-lg p-4 cursor-pointer" onclick="movePage('famous1')">
-                    <img src="https://via.placeholder.com/300x200" alt="Restaurant Image"
-                        class="w-full h-32 object-cover rounded-md">
-                    <h3 class="text-lg font-semibold mt-2">Restaurant Name</h3>
-                    <p class="text-gray-600">Category: Cafe</p>
-                    <p class="text-yellow-500">Rating: ★★★★☆</p>
-                </div>
-                <!-- Additional cards for other random restaurants can be added here -->
+                $restaurants = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+                foreach ($restaurants as $restaurant) {
+                    echo "
+                    <div class='bg-white rounded-lg shadow-lg p-4 cursor-pointer' onclick='movePage('famous1')'>
+                        <img src='{$restaurant['pictures']}' alt='Restaurant Image'
+                            class='w-full h-32 object-cover rounded-md'>
+                        <h3 class='text-lg font-semibold mt-2'>{$restaurant['restaurant_name']}</h3>
+                        <p class='text-gray-600'>Category: {$restaurant['categories']}</p>
+                        <p class='text-yellow-500'>Rating: ★★★★☆</p>
+                    </div>
+                    ";
+                }
+                ?>
+            </div>
+            <div class="Card-Filter ME grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 hidden">
+                <?php
+                // Query to get full_name using uid
+                $sql = "SELECT * FROM restaurants WHERE categories ILIKE 'Middle East'";
+                $stmt = $pdo->prepare($sql);
+                $stmt->execute();
+
+                $restaurants = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+                foreach ($restaurants as $restaurant) {
+                    echo "
+                    <div class='bg-white rounded-lg shadow-lg p-4 cursor-pointer' onclick='movePage('famous1')'>
+                        <img src='{$restaurant['pictures']}' alt='Restaurant Image'
+                            class='w-full h-32 object-cover rounded-md'>
+                        <h3 class='text-lg font-semibold mt-2'>{$restaurant['restaurant_name']}</h3>
+                        <p class='text-gray-600'>Category: {$restaurant['categories']}</p>
+                        <p class='text-yellow-500'>Rating: ★★★★☆</p>
+                    </div>
+                    ";
+                }
+                ?>
+            </div>
+            <div class="Card-Filter Others grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 hidden">
+                <?php
+                // Query to get full_name using uid
+                $sql = "SELECT * FROM restaurants WHERE categories ILIKE 'Others'";
+                $stmt = $pdo->prepare($sql);
+                $stmt->execute();
+
+                $restaurants = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+                foreach ($restaurants as $restaurant) {
+                    echo "
+                    <div class='bg-white rounded-lg shadow-lg p-4 cursor-pointer' onclick='movePage('famous1')'>
+                        <img src='{$restaurant['pictures']}' alt='Restaurant Image'
+                            class='w-full h-32 object-cover rounded-md'>
+                        <h3 class='text-lg font-semibold mt-2'>{$restaurant['restaurant_name']}</h3>
+                        <p class='text-gray-600'>Category: {$restaurant['categories']}</p>
+                        <p class='text-yellow-500'>Rating: ★★★★☆</p>
+                    </div>
+                    ";
+                }
+                ?>
             </div>
         </section>
     </div>
@@ -308,12 +384,12 @@ try {
     <script>
         function filterCategory(category, button) {
             // Filter cards by category
-            const cards = document.querySelectorAll('.card');
+            const cards = document.querySelectorAll('.Card-Filter');
             cards.forEach(card => {
-                if (category === 'all' || card.classList.contains(category)) {
-                    card.style.display = 'block';
+                if (card.classList.contains(category)) {
+                    card.classList.remove('hidden');
                 } else {
-                    card.style.display = 'none';
+                    card.classList.add('hidden');
                 }
             });
 
@@ -327,6 +403,12 @@ try {
             button.classList.add('bg-gray-300', 'font-bold'); // Add active styles
             button.classList.remove('bg-gray-200', 'text-gray-800'); // Remove default styles
         }
+
+        // Set initial state
+        document.addEventListener('DOMContentLoaded', () => {
+            const allButton = document.getElementById('All');
+            filterCategory('All', allButton);
+        });
 
         let currentSlide = 0;
         const slides = document.querySelectorAll(".carousel-images img");
