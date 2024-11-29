@@ -39,7 +39,7 @@
                 Home</a>
             <a href="search"
                 class="bg-gray-300 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-400 transition duration-200">Search
-                for a restaurant</a>
+                for another restaurant</a>
         </div>
     </div>
 </body>
