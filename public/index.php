@@ -69,21 +69,22 @@ try {
 
                 <!-- Auth Section -->
                 <?php if (!$_SESSION['login']) { ?>
-                <div class="flex items-center space-x-2">
-                    <button id="openModal"
-                        class="px-4 py-1 bg-blue-600 !text-white rounded-lg hover:bg-blue-500 transition duration-200" style="color : white;">Login</button>
-                    <span>|</span>
-                    <button id="openSignUp"
-                        class="px-4 py-1 border border-blue-600 text-blue-600 rounded-lg hover:bg-blue-600 hover:text-white transition duration-200">Register</button>
-                </div>
+                    <div class="flex items-center space-x-2">
+                        <button id="openModal"
+                            class="px-4 py-1 bg-blue-600 !text-white rounded-lg hover:bg-blue-500 transition duration-200"
+                            style="color : white;">Login</button>
+                        <span>|</span>
+                        <button id="openSignUp"
+                            class="px-4 py-1 border border-blue-600 text-blue-600 rounded-lg hover:bg-blue-600 hover:text-white transition duration-200">Register</button>
+                    </div>
                 <?php } else { ?>
-                <!-- Profile Section -->
-                <div id="profileSection" class="flex items-center space-x-2 cursor-pointer"
-                    onclick="movePage('account')">
-                    <span class="text-black font-medium"><?php echo $full_name; ?></span>
-                    <img src="<?php echo $profilePic != null ? $profilePic : '../Assets/blankPic.png'; ?>"
-                        alt="User Profile Picture" class="w-10 h-10 rounded-full">
-                </div>
+                    <!-- Profile Section -->
+                    <div id="profileSection" class="flex items-center space-x-2 cursor-pointer"
+                        onclick="movePage('account')">
+                        <span class="text-black font-medium"><?php echo $full_name; ?></span>
+                        <img src="<?php echo $profilePic != null ? $profilePic : '../Assets/blankPic.png'; ?>"
+                            alt="User Profile Picture" class="w-10 h-10 rounded-full">
+                    </div>
                 <?php } ?>
             </div>
         </div>
@@ -101,25 +102,27 @@ try {
                 <div>
                     <input type="text" placeholder="Search..."
                         class="border rounded-lg px-4 py-1 w-full focus:outline-none focus:border-blue-600">
-                    <button class="bg-blue-600 text-white px-4 py-1 rounded-lg w-full mt-2" style="color : white;">Search</button>
+                    <button class="bg-blue-600 text-white px-4 py-1 rounded-lg w-full mt-2"
+                        style="color : white;">Search</button>
                 </div>
 
                 <!-- Auth Section -->
                 <?php if (!$_SESSION['login']) { ?>
-                <div class="flex flex-row items-center gap-2 content-center item-center">
-                    <button id="openModalResponsive"
-                        class="w-30 bg-blue-600  px-4 py-1 rounded-lg hover:bg-blue-500 transition duration-200" style="color : white;">Login</button>
-                    <button id="openSignUpResponsive"
-                        class="w-30 border border-blue-600 text-blue-600 px-4 py-1 rounded-lg hover:bg-blue-600 hover:text-white transition duration-200">Register</button>
-                </div>
+                    <div class="flex flex-row items-center gap-2 content-center item-center">
+                        <button id="openModalResponsive"
+                            class="w-30 bg-blue-600  px-4 py-1 rounded-lg hover:bg-blue-500 transition duration-200"
+                            style="color : white;">Login</button>
+                        <button id="openSignUpResponsive"
+                            class="w-30 border border-blue-600 text-blue-600 px-4 py-1 rounded-lg hover:bg-blue-600 hover:text-white transition duration-200">Register</button>
+                    </div>
                 <?php } else { ?>
-                <!-- Profile Section -->
-                <div id="profileSection" class="flex items-center space-x-2 cursor-pointer"
-                    onclick="movePage('account')">
-                    <span class="text-black font-medium"><?php echo $full_name; ?></span>
-                    <img src="<?php echo $profilePic != null ? $profilePic : '../Assets/blankPic.png'; ?>"
-                        alt="User Profile Picture" class="w-10 h-10 rounded-full">
-                </div>
+                    <!-- Profile Section -->
+                    <div id="profileSection" class="flex items-center space-x-2 cursor-pointer"
+                        onclick="movePage('account')">
+                        <span class="text-black font-medium"><?php echo $full_name; ?></span>
+                        <img src="<?php echo $profilePic != null ? $profilePic : '../Assets/blankPic.png'; ?>"
+                            alt="User Profile Picture" class="w-10 h-10 rounded-full">
+                    </div>
                 <?php } ?>
             </div>
         </div>
@@ -225,19 +228,53 @@ try {
         </section>
 
         <!-- Famous and Random Restaurant Sections (as in previous example) -->
-        <!-- Famous Restaurants Section --> 
+        <!-- Famous Restaurants Section -->
         <section id="famous" class="mb-8 m-5">
             <h2 class="text-2xl font-semibold text-gray-800 mb-4">Famous Restaurants</h2>
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                <!-- Famous Restaurant Card -->
-                <div class="bg-white rounded-lg shadow-lg p-4 cursor-pointer" onclick="movePage('famous1')">
-                    <img src="https://via.placeholder.com/300x200" alt="Restaurant Image"
-                        class="w-full h-32 object-cover rounded-md">
-                    <h3 class="text-lg font-semibold mt-2">Restaurant Name</h3>
-                    <p class="text-gray-600">Category: Cafe</p>
-                    <p class="text-yellow-500">Rating: ★★★★☆</p>
-                </div>
-                <!-- Additional cards for other famous restaurants can be added here -->
+                <?php
+                // Query to get random restaurants with average rating > 4
+                $sql = "SELECT 
+                            r.id, 
+                            r.pictures, 
+                            r.restaurant_name, 
+                            r.categories, 
+                            COALESCE(AVG(rev.rating), 0) AS average_rating
+                        FROM 
+                            restaurants r
+                        LEFT JOIN 
+                            reviews rev ON r.id = rev.restaurant_id
+                        GROUP BY 
+                            r.id, r.pictures, r.restaurant_name, r.categories
+                        HAVING 
+                            AVG(rev.rating) > 4
+                        ORDER BY 
+                            RANDOM()
+                        LIMIT 4";
+                $stmt = $pdo->prepare($sql);
+                $stmt->execute();
+
+                $restaurants = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+                foreach ($restaurants as $restaurant) {
+                    $restaurant['restaurant_name'] = ucwords(strtolower($restaurant['restaurant_name']));
+                    $stars = str_repeat("<span class='text-yellow-400'>★</span>", floor($restaurant['average_rating'])) .
+                        str_repeat("<span class='text-gray-400'>☆</span>", 5 - floor($restaurant['average_rating']));
+
+                    echo "
+                    <a href='restaurant.php?item={$restaurant['id']}'>
+                        <div class='bg-white rounded-lg shadow-lg p-4 cursor-pointer'>
+                            <img src='{$restaurant['pictures']}' alt='Restaurant Image'
+                                class='w-full h-32 object-cover rounded-md'>
+                            <h3 class='text-lg font-semibold mt-2'>{$restaurant['restaurant_name']}</h3>
+                            <p class='text-gray-600'>Category: {$restaurant['categories']}</p>
+                            <p class='text-yellow-500'>{$stars}</p>
+                        </div>
+                    </a>
+                    ";
+
+                }
+                ?>
             </div>
         </section>
 
@@ -261,133 +298,263 @@ try {
             </div>
             <div class="Card-Filter All grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                 <?php
-                // Query to get full_name using uid
-                $sql = "SELECT * FROM restaurants ORDER BY RANDOM()";
+                // Query to fetch restaurants along with their average ratings
+                $sql = "SELECT 
+                            r.id, 
+                            r.pictures, 
+                            r.restaurant_name, 
+                            r.categories, 
+                            COALESCE(AVG(rev.rating), 0) AS average_rating
+                        FROM 
+                            restaurants r
+                        LEFT JOIN 
+                            reviews rev ON r.id = rev.restaurant_id
+                        GROUP BY 
+                            r.id, r.pictures, r.restaurant_name, r.categories
+                        ORDER BY 
+                            RANDOM()
+                        ";
                 $stmt = $pdo->prepare($sql);
                 $stmt->execute();
-                
                 $restaurants = $stmt->fetchAll(PDO::FETCH_ASSOC);
-                
 
+                // Loop through the restaurants and display the data
                 foreach ($restaurants as $restaurant) {
+                    $restaurant['restaurant_name'] = ucwords(strtolower($restaurant['restaurant_name']));
+                    $stars = str_repeat("<span class='text-yellow-400'>★</span>", floor($restaurant['average_rating'])) .
+                        str_repeat("<span class='text-gray-400'>☆</span>", 5 - floor($restaurant['average_rating']));
+
                     echo "
-                    <div class='bg-white rounded-lg shadow-lg p-4 cursor-pointer' onclick='movePage('famous1')'>
-                        <img src='{$restaurant['pictures']}' alt='Restaurant Image'
-                            class='w-full h-32 object-cover rounded-md'>
-                        <h3 class='text-lg font-semibold mt-2'>{$restaurant['restaurant_name']}</h3>
-                        <p class='text-gray-600'>Category: {$restaurant['categories']}</p>
-                        <p class='text-yellow-500'>Rating: ★★★★☆</p>
-                    </div>
+                    <a href='restaurant.php?item={$restaurant['id']}'>
+                        <div class='bg-white rounded-lg shadow-lg p-4 cursor-pointer'>
+                            <img src='{$restaurant['pictures']}' alt='Restaurant Image'
+                                class='w-full h-32 object-cover rounded-md'>
+                                <h3 class='text-lg font-semibold mt-2'>{$restaurant['restaurant_name']}</h3>
+                                <p class='text-gray-600'>Category: {$restaurant['categories']}</p>
+                                <p class='text-yellow-500'>{$stars}</p>
+                        </div>
+                    </a>
                     ";
                 }
                 ?>
             </div>
             <div class="Card-Filter Indonesian grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                 <?php
-                // Query to get full_name using uid
-                $sql = "SELECT * FROM restaurants WHERE categories ILIKE 'Indonesian'";
+                // Query to fetch restaurants along with their average ratings
+                $sql = "SELECT 
+                            r.id, 
+                            r.pictures, 
+                            r.restaurant_name, 
+                            r.categories, 
+                            COALESCE(AVG(rev.rating), 0) AS average_rating
+                        FROM 
+                            restaurants r
+                        LEFT JOIN 
+                            reviews rev ON r.id = rev.restaurant_id
+                        WHERE 
+                            r.categories ILIKE 'Indonesian'
+                        GROUP BY 
+                            r.id, r.pictures, r.restaurant_name, r.categories
+                        ORDER BY 
+                            RANDOM()
+                        ";
                 $stmt = $pdo->prepare($sql);
                 $stmt->execute();
-
                 $restaurants = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
+                // Loop through the restaurants and display the data
                 foreach ($restaurants as $restaurant) {
+                    $restaurant['restaurant_name'] = ucwords(strtolower($restaurant['restaurant_name']));
+                    $stars = str_repeat("<span class='text-yellow-400'>★</span>", floor($restaurant['average_rating'])) .
+                        str_repeat("<span class='text-gray-400'>☆</span>", 5 - floor($restaurant['average_rating']));
+
                     echo "
-                    <div class='bg-white rounded-lg shadow-lg p-4 cursor-pointer' onclick='movePage('famous1')'>
-                        <img src='{$restaurant['pictures']}' alt='Restaurant Image'
-                            class='w-full h-32 object-cover rounded-md'>
-                        <h3 class='text-lg font-semibold mt-2'>{$restaurant['restaurant_name']}</h3>
-                        <p class='text-gray-600'>Category: {$restaurant['categories']}</p>
-                        <p class='text-yellow-500'>Rating: ★★★★☆</p>
-                    </div>
+                    <a href='restaurant.php?item={$restaurant['id']}'>
+                        <div class='bg-white rounded-lg shadow-lg p-4 cursor-pointer'>
+                            <img src='{$restaurant['pictures']}' alt='Restaurant Image'
+                                class='w-full h-32 object-cover rounded-md'>
+                                <h3 class='text-lg font-semibold mt-2'>{$restaurant['restaurant_name']}</h3>
+                                <p class='text-gray-600'>Category: {$restaurant['categories']}</p>
+                                <p class='text-yellow-500'>{$stars}</p>
+                        </div>
+                    </a>
                     ";
+
                 }
                 ?>
             </div>
             <div class="Card-Filter Western grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 hidden">
                 <?php
-                // Query to get full_name using uid
-                $sql = "SELECT * FROM restaurants WHERE categories ILIKE 'Western'";
+                // Query to fetch restaurants along with their average ratings
+                $sql = "SELECT 
+                            r.id, 
+                            r.pictures, 
+                            r.restaurant_name, 
+                            r.categories, 
+                            COALESCE(AVG(rev.rating), 0) AS average_rating
+                        FROM 
+                            restaurants r
+                        LEFT JOIN 
+                            reviews rev ON r.id = rev.restaurant_id
+                        WHERE 
+                            r.categories ILIKE 'Western'
+                        GROUP BY 
+                            r.id, r.pictures, r.restaurant_name, r.categories
+                        ORDER BY 
+                            RANDOM()
+                        ";
                 $stmt = $pdo->prepare($sql);
                 $stmt->execute();
-
                 $restaurants = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
+                // Loop through the restaurants and display the data
                 foreach ($restaurants as $restaurant) {
+                    $restaurant['restaurant_name'] = ucwords(strtolower($restaurant['restaurant_name']));
+                    $stars = str_repeat("<span class='text-yellow-400'>★</span>", floor($restaurant['average_rating'])) .
+                        str_repeat("<span class='text-gray-400'>☆</span>", 5 - floor($restaurant['average_rating']));
+
                     echo "
-                    <div class='bg-white rounded-lg shadow-lg p-4 cursor-pointer' onclick='movePage('famous1')'>
-                        <img src='{$restaurant['pictures']}' alt='Restaurant Image'
-                            class='w-full h-32 object-cover rounded-md'>
-                        <h3 class='text-lg font-semibold mt-2'>{$restaurant['restaurant_name']}</h3>
-                        <p class='text-gray-600'>Category: {$restaurant['categories']}</p>
-                        <p class='text-yellow-500'>Rating: ★★★★☆</p>
-                    </div>
+                    <a href='restaurant.php?item={$restaurant['id']}'>
+                        <div class='bg-white rounded-lg shadow-lg p-4 cursor-pointer'>
+                            <img src='{$restaurant['pictures']}' alt='Restaurant Image'
+                                class='w-full h-32 object-cover rounded-md'>
+                                <h3 class='text-lg font-semibold mt-2'>{$restaurant['restaurant_name']}</h3>
+                                <p class='text-gray-600'>Category: {$restaurant['categories']}</p>
+                                <p class='text-yellow-500'>{$stars}</p>
+                        </div>
+                    </a>
                     ";
                 }
                 ?>
             </div>
             <div class="Card-Filter Chinese grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 hidden">
                 <?php
-                // Query to get full_name using uid
-                $sql = "SELECT * FROM restaurants WHERE categories ILIKE 'Chinese'";
+                // Query to fetch restaurants along with their average ratings
+                $sql = "SELECT 
+                            r.id, 
+                            r.pictures, 
+                            r.restaurant_name, 
+                            r.categories, 
+                            COALESCE(AVG(rev.rating), 0) AS average_rating
+                        FROM 
+                            restaurants r
+                        LEFT JOIN 
+                            reviews rev ON r.id = rev.restaurant_id
+                        WHERE 
+                            r.categories ILIKE 'Chinese'
+                        GROUP BY 
+                            r.id, r.pictures, r.restaurant_name, r.categories
+                        ORDER BY 
+                            RANDOM()
+                        ";
                 $stmt = $pdo->prepare($sql);
                 $stmt->execute();
-
                 $restaurants = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
+                // Loop through the restaurants and display the data
                 foreach ($restaurants as $restaurant) {
+                    $restaurant['restaurant_name'] = ucwords(strtolower($restaurant['restaurant_name']));
+                    $stars = str_repeat("<span class='text-yellow-400'>★</span>", floor($restaurant['average_rating'])) .
+                        str_repeat("<span class='text-gray-400'>☆</span>", 5 - floor($restaurant['average_rating']));
+
                     echo "
-                    <div class='bg-white rounded-lg shadow-lg p-4 cursor-pointer' onclick='movePage('famous1')'>
-                        <img src='{$restaurant['pictures']}' alt='Restaurant Image'
-                            class='w-full h-32 object-cover rounded-md'>
-                        <h3 class='text-lg font-semibold mt-2'>{$restaurant['restaurant_name']}</h3>
-                        <p class='text-gray-600'>Category: {$restaurant['categories']}</p>
-                        <p class='text-yellow-500'>Rating: ★★★★☆</p>
-                    </div>
+                    <a href='restaurant.php?item={$restaurant['id']}'>
+                        <div class='bg-white rounded-lg shadow-lg p-4 cursor-pointer'>
+                            <img src='{$restaurant['pictures']}' alt='Restaurant Image'
+                                class='w-full h-32 object-cover rounded-md'>
+                                <h3 class='text-lg font-semibold mt-2'>{$restaurant['restaurant_name']}</h3>
+                                <p class='text-gray-600'>Category: {$restaurant['categories']}</p>
+                                <p class='text-yellow-500'>{$stars}</p>
+                        </div>
+                    </a>
                     ";
                 }
                 ?>
             </div>
             <div class="Card-Filter ME grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 hidden">
                 <?php
-                // Query to get full_name using uid
-                $sql = "SELECT * FROM restaurants WHERE categories ILIKE 'Middle East'";
+                // Query to fetch restaurants along with their average ratings
+                $sql = "SELECT 
+                            r.id, 
+                            r.pictures, 
+                            r.restaurant_name, 
+                            r.categories, 
+                            COALESCE(AVG(rev.rating), 0) AS average_rating
+                        FROM 
+                            restaurants r
+                        LEFT JOIN 
+                            reviews rev ON r.id = rev.restaurant_id
+                        WHERE 
+                            r.categories ILIKE 'Middle East'
+                        GROUP BY 
+                            r.id, r.pictures, r.restaurant_name, r.categories
+                        ORDER BY 
+                            RANDOM()
+                        ";
                 $stmt = $pdo->prepare($sql);
                 $stmt->execute();
-
                 $restaurants = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
+                // Loop through the restaurants and display the data
                 foreach ($restaurants as $restaurant) {
+                    $restaurant['restaurant_name'] = ucwords(strtolower($restaurant['restaurant_name']));
+                    $stars = str_repeat("<span class='text-yellow-400'>★</span>", floor($restaurant['average_rating'])) .
+                        str_repeat("<span class='text-gray-400'>☆</span>", 5 - floor($restaurant['average_rating']));
+
                     echo "
-                    <div class='bg-white rounded-lg shadow-lg p-4 cursor-pointer' onclick='movePage('famous1')'>
-                        <img src='{$restaurant['pictures']}' alt='Restaurant Image'
-                            class='w-full h-32 object-cover rounded-md'>
-                        <h3 class='text-lg font-semibold mt-2'>{$restaurant['restaurant_name']}</h3>
-                        <p class='text-gray-600'>Category: {$restaurant['categories']}</p>
-                        <p class='text-yellow-500'>Rating: ★★★★☆</p>
-                    </div>
+                    <a href='restaurant.php?item={$restaurant['id']}'>
+                        <div class='bg-white rounded-lg shadow-lg p-4 cursor-pointer'>
+                            <img src='{$restaurant['pictures']}' alt='Restaurant Image'
+                                class='w-full h-32 object-cover rounded-md'>
+                                <h3 class='text-lg font-semibold mt-2'>{$restaurant['restaurant_name']}</h3>
+                                <p class='text-gray-600'>Category: {$restaurant['categories']}</p>
+                                <p class='text-yellow-500'>{$stars}</p>
+                        </div>
+                    </a>
                     ";
                 }
                 ?>
             </div>
             <div class="Card-Filter Others grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 hidden">
                 <?php
-                // Query to get full_name using uid
-                $sql = "SELECT * FROM restaurants WHERE categories ILIKE 'Others'";
+                // Query to fetch restaurants along with their average ratings
+                $sql = "SELECT 
+                            r.id, 
+                            r.pictures, 
+                            r.restaurant_name, 
+                            r.categories, 
+                            COALESCE(AVG(rev.rating), 0) AS average_rating
+                        FROM 
+                            restaurants r
+                        LEFT JOIN 
+                            reviews rev ON r.id = rev.restaurant_id
+                        WHERE 
+                            r.categories ILIKE 'Others'
+                        GROUP BY 
+                            r.id, r.pictures, r.restaurant_name, r.categories
+                        ORDER BY 
+                            RANDOM()
+                        ";
                 $stmt = $pdo->prepare($sql);
                 $stmt->execute();
-
                 $restaurants = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
+                // Loop through the restaurants and display the data
                 foreach ($restaurants as $restaurant) {
+                    $restaurant['restaurant_name'] = ucwords(strtolower($restaurant['restaurant_name']));
+                    $stars = str_repeat("<span class='text-yellow-400'>★</span>", floor($restaurant['average_rating'])) .
+                        str_repeat("<span class='text-gray-400'>☆</span>", 5 - floor($restaurant['average_rating']));
+
                     echo "
-                    <div class='bg-white rounded-lg shadow-lg p-4 cursor-pointer' onclick='movePage('famous1')'>
-                        <img src='{$restaurant['pictures']}' alt='Restaurant Image'
-                            class='w-full h-32 object-cover rounded-md'>
-                        <h3 class='text-lg font-semibold mt-2'>{$restaurant['restaurant_name']}</h3>
-                        <p class='text-gray-600'>Category: {$restaurant['categories']}</p>
-                        <p class='text-yellow-500'>Rating: ★★★★☆</p>
-                    </div>
+                    <a href='restaurant.php?item={$restaurant['id']}'>
+                        <div class='bg-white rounded-lg shadow-lg p-4 cursor-pointer'>
+                            <img src='{$restaurant['pictures']}' alt='Restaurant Image'
+                                class='w-full h-32 object-cover rounded-md'>
+                                <h3 class='text-lg font-semibold mt-2'>{$restaurant['restaurant_name']}</h3>
+                                <p class='text-gray-600'>Category: {$restaurant['categories']}</p>
+                                <p class='text-yellow-500'>{$stars}</p>
+                        </div>
+                    </a>
                     ";
                 }
                 ?>
@@ -598,20 +765,20 @@ try {
 
 
         // Responsive menu actions
-        document.getElementById("hamburgerMenu").addEventListener("click", function() {
+        document.getElementById("hamburgerMenu").addEventListener("click", function () {
             document.getElementById("responsiveMenu").classList.toggle("hidden");
         });
 
-        document.getElementById("closeMenu").addEventListener("click", function() {
+        document.getElementById("closeMenu").addEventListener("click", function () {
             document.getElementById("responsiveMenu").classList.add("hidden");
         });
 
         // Responsive modal triggers
-        document.getElementById("openModalResponsive").addEventListener("click", function() {
+        document.getElementById("openModalResponsive").addEventListener("click", function () {
             loginModal.classList.add("show");
         });
 
-        document.getElementById("openSignUpResponsive").addEventListener("click", function() {
+        document.getElementById("openSignUpResponsive").addEventListener("click", function () {
             signupModal.classList.add("show");
         });
     </script>
