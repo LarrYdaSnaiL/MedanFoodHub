@@ -41,20 +41,82 @@ try {
 
 <body class="bg-gray-100 font-sans">
 
-    <!-- Navbar (Same as index) -->
+    <!-- Navbar -->
     <nav class="bg-white shadow-md py-4">
         <div class="container mx-auto flex justify-between items-center px-6">
+            <!-- Logo -->
             <a href="../" class="text-2xl font-bold text-blue-600">
                 <img src="../Assets/Logo/text logo.png" width="200" alt="Text Logo">
             </a>
-            <div class="flex items-center">
-                <input type="text" placeholder="Search..."
-                    class="border rounded-lg px-4 py-1 mr-4 focus:outline-none focus:border-blue-600 w-80">
-                <button class="bg-blue-600 text-white px-4 py-1 rounded-lg">Search</button>
+
+            <!-- Hamburger Menu -->
+            <button id="hamburgerMenu" class="text-2xl lg:hidden focus:outline-none">
+                ☰
+            </button>
+
+            <!-- Full Menu -->
+            <div id="navMenu" class="hidden lg:flex lg:items-center lg:space-x-8">
+                <!-- Search Section -->
+                <div class="flex items-center space-x-2">
+                    <input type="text" placeholder="Search..."
+                        class="border rounded-lg px-4 py-1 focus:outline-none focus:border-blue-600 w-80">
+                    <button class="bg-blue-600 text-white px-4 py-1 rounded-lg">Search</button>
+                </div>
+
+                <!-- Auth Section -->
+                <?php if (!$_SESSION['login']) { ?>
+                <div class="flex items-center space-x-2">
+                    <button id="openModalResponsive"
+                        class="px-4 py-1 bg-blue-600 text-white rounded-lg hover:bg-blue-500 transition duration-200">Login</button>
+                    <span>|</span>
+                    <button id="openSignUpResponsive"
+                        class="px-4 py-1 border border-blue-600 text-blue-600 rounded-lg hover:bg-blue-600 hover:text-white transition duration-200">Register</button>
+                </div>
+                <?php } else { ?>
+                <!-- Profile Section -->
+                <div id="profileSection" class="flex items-center space-x-2 cursor-pointer"
+                    onclick="movePage('account')">
+                    <span class="text-black font-medium"><?php echo $full_name; ?></span>
+                    <img src="<?php echo $profilePic != null ? $profilePic : '../Assets/blankPic.png'; ?>"
+                        alt="User Profile Picture" class="w-10 h-10 rounded-full">
+                </div>
+                <?php } ?>
             </div>
-            <div id="profileSection" class="flex items-center space-x-2 cursor-pointer" onclick="movePage('account')">
-                <span class="text-black font-medium"><?php echo $full_name; ?></span>
-                <img src="<?php echo $profilePic; ?>" alt="User Profile Picture" class="w-8 h-8 rounded-full">
+        </div>
+
+        <!-- Responsive Menu -->
+        <div id="responsiveMenu"
+            class="hidden lg:hidden fixed top-0 right-0 h-full w-50% bg-white shadow-lg z-50 slide-enter">
+            <div class="flex flex-col p-4 space-y-4 items-center content-centere">
+                <!-- Close Button -->
+                <button id="closeMenu" class="self-end text-2xl">
+                    &times;
+                </button>
+
+                <!-- Search Section -->
+                <div>
+                    <input type="text" placeholder="Search..."
+                        class="border rounded-lg px-4 py-1 w-full focus:outline-none focus:border-blue-600">
+                    <button class="bg-blue-600 text-white px-4 py-1 rounded-lg w-full mt-2">Search</button>
+                </div>
+
+                <!-- Auth Section -->
+                <?php if (!$_SESSION['login']) { ?>
+                <div class="flex flex-row items-center gap-2 content-center item-center">
+                    <button id="openModal"
+                        class="w-30 bg-blue-600 text-white px-4 py-1 rounded-lg hover:bg-blue-500 transition duration-200">Login</button>
+                    <button id="openSignUp"
+                        class="w-30 border border-blue-600 text-blue-600 px-4 py-1 rounded-lg hover:bg-blue-600 hover:text-white transition duration-200">Register</button>
+                </div>
+                <?php } else { ?>
+                <!-- Profile Section -->
+                <div id="profileSection" class="flex items-center space-x-2 cursor-pointer"
+                    onclick="movePage('account')">
+                    <span class="text-black font-medium"><?php echo $full_name; ?></span>
+                    <img src="<?php echo $profilePic != null ? $profilePic : '../Assets/blankPic.png'; ?>"
+                        alt="User Profile Picture" class="w-10 h-10 rounded-full">
+                </div>
+                <?php } ?>
             </div>
         </div>
     </nav>
@@ -174,6 +236,30 @@ try {
     </footer>
 
     <script>
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const hamburgerMenu = document.getElementById('hamburgerMenu');
+            const responsiveMenu = document.getElementById('responsiveMenu');
+            const closeMenu = document.getElementById('closeMenu');
+
+            // Toggle responsive menu
+            hamburgerMenu.addEventListener('click', function () {
+                responsiveMenu.classList.remove('hidden');
+                responsiveMenu.classList.add('slide-enter-active');
+            });
+
+            closeMenu.addEventListener('click', function () {
+                responsiveMenu.classList.add('hidden');
+            });
+
+            // Close menu when clicking outside
+            document.addEventListener('click', function (e) {
+                if (!responsiveMenu.contains(e.target) && e.target !== hamburgerMenu) {
+                    responsiveMenu.classList.add('hidden');
+                }
+            });
+        });
+
         // Tab functionality for Bookmarks and Comments
         function showSection(section) {
             // Hide both sections
@@ -203,6 +289,24 @@ try {
 
         document.getElementById("editProfile").addEventListener("click", () => {
             window.location.href = "account-dashboard.php";
+        });
+
+        // Responsive menu actions
+        document.getElementById("hamburgerMenu").addEventListener("click", function() {
+            document.getElementById("responsiveMenu").classList.toggle("hidden");
+        });
+
+        document.getElementById("closeMenu").addEventListener("click", function() {
+            document.getElementById("responsiveMenu").classList.add("hidden");
+        });
+
+        // Responsive modal triggers
+        document.getElementById("openModalResponsive").addEventListener("click", function() {
+            loginModal.classList.add("show");
+        });
+
+        document.getElementById("openSignUpResponsive").addEventListener("click", function() {
+            signupModal.classList.add("show");
         });
     </script>
 

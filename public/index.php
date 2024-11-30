@@ -45,30 +45,82 @@ try {
 
 <body class="bg-gray-100 font-sans">
 
-    <!-- Navigation Bar -->
+    <!-- Navbar -->
     <nav class="bg-white shadow-md py-4">
         <div class="container mx-auto flex justify-between items-center px-6">
-            <a href="../" class="text-2xl font-bold text-blue-600"><img src="../Assets/Logo/text logo.png" width="200"
-                    alt="Text Logo"></a>
-            <div class="flex items-center">
-                <input type="text" placeholder="Search..."
-                    class="border rounded-lg px-4 py-1 mr-4 focus:outline-none focus:border-blue-600 w-80">
-                <button class="bg-blue-600 text-white px-4 py-1 rounded-lg">Search</button>
-            </div>
-            <div class="text-gray-700 <?php echo !$_SESSION['login'] ? '' : 'hidden'; ?>">
-                <button class="px-4 py-1 bg-blue-600 text-white rounded-lg hover:bg-blue-500 transition duration-200"
-                    id="openModal">Login</button>
-                <span>|</span>
-                <button class="px-4 py-1" id="openSignUp">Register</button>
-            </div>
+            <!-- Logo -->
+            <a href="../" class="text-2xl font-bold text-blue-600">
+                <img src="../Assets/Logo/text logo.png" width="200" alt="Text Logo">
+            </a>
 
-            <!-- Profile Section (displayed when logged in) -->
-            <div id="profileSection"
-                class="flex items-center space-x-2 cursor-pointer <?php echo $_SESSION['login'] ? '' : 'hidden'; ?>"
-                onclick="movePage('account')">
-                <span class="text-black font-medium"><?php echo $full_name; ?></span>
-                <img src="<?php echo $profilePic != null ? $profilePic : '../Assets/blankPic.png' ?>"
-                    alt="User Profile Picture" class="w-8 h-8 rounded-full">
+            <!-- Hamburger Menu -->
+            <button id="hamburgerMenu" class="text-2xl lg:hidden focus:outline-none">
+                ☰
+            </button>
+
+            <!-- Full Menu -->
+            <div id="navMenu" class="hidden lg:flex lg:items-center lg:space-x-8">
+                <!-- Search Section -->
+                <div class="flex items-center space-x-2">
+                    <input type="text" placeholder="Search..."
+                        class="border rounded-lg px-4 py-1 focus:outline-none focus:border-blue-600 w-80">
+                    <button class="bg-blue-600 text-white px-4 py-1 rounded-lg" style="color : white;">Search</button>
+                </div>
+
+                <!-- Auth Section -->
+                <?php if (!$_SESSION['login']) { ?>
+                <div class="flex items-center space-x-2">
+                    <button id="openModal"
+                        class="px-4 py-1 bg-blue-600 !text-white rounded-lg hover:bg-blue-500 transition duration-200" style="color : white;">Login</button>
+                    <span>|</span>
+                    <button id="openSignUp"
+                        class="px-4 py-1 border border-blue-600 text-blue-600 rounded-lg hover:bg-blue-600 hover:text-white transition duration-200">Register</button>
+                </div>
+                <?php } else { ?>
+                <!-- Profile Section -->
+                <div id="profileSection" class="flex items-center space-x-2 cursor-pointer"
+                    onclick="movePage('account')">
+                    <span class="text-black font-medium"><?php echo $full_name; ?></span>
+                    <img src="<?php echo $profilePic != null ? $profilePic : '../Assets/blankPic.png'; ?>"
+                        alt="User Profile Picture" class="w-10 h-10 rounded-full">
+                </div>
+                <?php } ?>
+            </div>
+        </div>
+
+        <!-- Responsive Menu -->
+        <div id="responsiveMenu"
+            class="hidden lg:hidden fixed top-0 right-0 h-full w-50% bg-white shadow-lg z-50 slide-enter">
+            <div class="flex flex-col p-4 space-y-4 items-center content-centere">
+                <!-- Close Button -->
+                <button id="closeMenu" class="self-end text-2xl">
+                    &times;
+                </button>
+
+                <!-- Search Section -->
+                <div>
+                    <input type="text" placeholder="Search..."
+                        class="border rounded-lg px-4 py-1 w-full focus:outline-none focus:border-blue-600">
+                    <button class="bg-blue-600 text-white px-4 py-1 rounded-lg w-full mt-2" style="color : white;">Search</button>
+                </div>
+
+                <!-- Auth Section -->
+                <?php if (!$_SESSION['login']) { ?>
+                <div class="flex flex-row items-center gap-2 content-center item-center">
+                    <button id="openModalResponsive"
+                        class="w-30 bg-blue-600  px-4 py-1 rounded-lg hover:bg-blue-500 transition duration-200" style="color : white;">Login</button>
+                    <button id="openSignUpResponsive"
+                        class="w-30 border border-blue-600 text-blue-600 px-4 py-1 rounded-lg hover:bg-blue-600 hover:text-white transition duration-200">Register</button>
+                </div>
+                <?php } else { ?>
+                <!-- Profile Section -->
+                <div id="profileSection" class="flex items-center space-x-2 cursor-pointer"
+                    onclick="movePage('account')">
+                    <span class="text-black font-medium"><?php echo $full_name; ?></span>
+                    <img src="<?php echo $profilePic != null ? $profilePic : '../Assets/blankPic.png'; ?>"
+                        alt="User Profile Picture" class="w-10 h-10 rounded-full">
+                </div>
+                <?php } ?>
             </div>
         </div>
     </nav>
@@ -382,6 +434,30 @@ try {
 
     <!-- JavaScript to filter the cards based on category -->
     <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const hamburgerMenu = document.getElementById('hamburgerMenu');
+            const responsiveMenu = document.getElementById('responsiveMenu');
+            const closeMenu = document.getElementById('closeMenu');
+
+            // Toggle responsive menu
+            hamburgerMenu.addEventListener('click', function () {
+                responsiveMenu.classList.remove('hidden');
+                responsiveMenu.classList.add('slide-enter-active');
+            });
+
+            closeMenu.addEventListener('click', function () {
+                responsiveMenu.classList.add('hidden');
+            });
+
+            // Close menu when clicking outside
+            document.addEventListener('click', function (e) {
+                if (!responsiveMenu.contains(e.target) && e.target !== hamburgerMenu) {
+                    responsiveMenu.classList.add('hidden');
+                }
+            });
+        });
+
+
         function filterCategory(category, button) {
             // Filter cards by category
             const cards = document.querySelectorAll('.Card-Filter');
@@ -519,6 +595,25 @@ try {
                     break;
             }
         }
+
+
+        // Responsive menu actions
+        document.getElementById("hamburgerMenu").addEventListener("click", function() {
+            document.getElementById("responsiveMenu").classList.toggle("hidden");
+        });
+
+        document.getElementById("closeMenu").addEventListener("click", function() {
+            document.getElementById("responsiveMenu").classList.add("hidden");
+        });
+
+        // Responsive modal triggers
+        document.getElementById("openModalResponsive").addEventListener("click", function() {
+            loginModal.classList.add("show");
+        });
+
+        document.getElementById("openSignUpResponsive").addEventListener("click", function() {
+            signupModal.classList.add("show");
+        });
     </script>
 </body>
 
