@@ -24,12 +24,61 @@ try {
         $phone = $user['phone'];
         $bio = $user['bio'];
         $is_owner = $user['is_owner'];
+        $bookmarks = $user['bookmarks'] ? json_decode($user['bookmarks'], true) : [];
     }
 } catch (Exception $e) {
     echo "Error: " . $e->getMessage();
     exit();
 }
 
+if (isset($_GET['item'])) {
+    $resto_id = $_GET['item'];
+
+    // Query to get restaurant details along with the average rating
+    $sql = '
+        SELECT 
+            r.*, 
+            COALESCE(AVG(rev.rating), 0) AS average_rating
+        FROM 
+            restaurants r
+        LEFT JOIN 
+            reviews rev ON r.id = rev.restaurant_id
+        WHERE 
+            r.id = :id
+        GROUP BY 
+            r.id, r.owner_id, r.pictures, r.restaurant_name, r.descriptions, r.categories';
+    $stmt = $pdo->prepare($sql);
+    $stmt->bindParam('id', $resto_id);
+    $stmt->execute();
+
+    $restaurant = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if ($restaurant) {
+        // Extract restaurant details
+        $restaurantName = $restaurant['restaurant_name'];
+        $ownerId = $restaurant['owner_id'];
+        $description = $restaurant['descriptions'];
+        $categories = $restaurant['categories'];
+        $averageRating = number_format($restaurant['average_rating'], 1); // Format rating to 1 decimal place
+
+        // Get owner information
+        $sql = 'SELECT * FROM users WHERE uid = :owner_id';
+        $stmt = $pdo->prepare($sql);
+        $stmt->bindParam('owner_id', $ownerId);
+        $stmt->execute();
+
+        $ownerInformation = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        $ownerName = $ownerInformation ? $ownerInformation['full_name'] : null;
+        $ownerPic = $ownerInformation ? $ownerInformation['profile_pic'] : null;
+    } else {
+        header("Location: ../");
+        exit;
+    }
+} else {
+    header("Location: ../");
+    exit;
+}
 ?>
 
 <!DOCTYPE html>
@@ -71,21 +120,21 @@ try {
 
                 <!-- Auth Section -->
                 <?php if (!$_SESSION['login']) { ?>
-                <div class="flex items-center space-x-2">
-                    <button id="openModal"
-                        class="px-4 py-1 bg-blue-600 text-white rounded-lg hover:bg-blue-500 transition duration-200">Login</button>
-                    <span>|</span>
-                    <button id="openSignUp"
-                        class="px-4 py-1 border border-blue-600 text-blue-600 rounded-lg hover:bg-blue-600 hover:text-white transition duration-200">Register</button>
-                </div>
+                    <div class="flex items-center space-x-2">
+                        <button id="openModal"
+                            class="px-4 py-1 bg-blue-600 text-white rounded-lg hover:bg-blue-500 transition duration-200">Login</button>
+                        <span>|</span>
+                        <button id="openSignUp"
+                            class="px-4 py-1 border border-blue-600 text-blue-600 rounded-lg hover:bg-blue-600 hover:text-white transition duration-200">Register</button>
+                    </div>
                 <?php } else { ?>
-                <!-- Profile Section -->
-                <div id="profileSection" class="flex items-center space-x-2 cursor-pointer"
-                    onclick="movePage('account')">
-                    <span class="text-black font-medium"><?php echo $full_name; ?></span>
-                    <img src="<?php echo $profilePic != null ? $profilePic : '../Assets/blankPic.png'; ?>"
-                        alt="User Profile Picture" class="w-10 h-10 rounded-full">
-                </div>
+                    <!-- Profile Section -->
+                    <div id="profileSection" class="flex items-center space-x-2 cursor-pointer"
+                        onclick="movePage('account')">
+                        <span class="text-black font-medium"><?php echo $full_name; ?></span>
+                        <img src="<?php echo $profilePic != null ? $profilePic : '../Assets/blankPic.png'; ?>"
+                            alt="User Profile Picture" class="w-10 h-10 rounded-full">
+                    </div>
                 <?php } ?>
             </div>
         </div>
@@ -108,20 +157,20 @@ try {
 
                 <!-- Auth Section -->
                 <?php if (!$_SESSION['login']) { ?>
-                <div class="flex flex-row items-center gap-2 content-center item-center">
-                    <button id="openModalResponsive"
-                        class="w-30 bg-blue-600 text-white px-4 py-1 rounded-lg hover:bg-blue-500 transition duration-200">Login</button>
-                    <button id="openSignUpResponsive"
-                        class="w-30 border border-blue-600 text-blue-600 px-4 py-1 rounded-lg hover:bg-blue-600 hover:text-white transition duration-200">Register</button>
-                </div>
+                    <div class="flex flex-row items-center gap-2 content-center item-center">
+                        <button id="openModalResponsive"
+                            class="w-30 bg-blue-600 text-white px-4 py-1 rounded-lg hover:bg-blue-500 transition duration-200">Login</button>
+                        <button id="openSignUpResponsive"
+                            class="w-30 border border-blue-600 text-blue-600 px-4 py-1 rounded-lg hover:bg-blue-600 hover:text-white transition duration-200">Register</button>
+                    </div>
                 <?php } else { ?>
-                <!-- Profile Section -->
-                <div id="profileSection" class="flex items-center space-x-2 cursor-pointer"
-                    onclick="movePage('account')">
-                    <span class="text-black font-medium"><?php echo $full_name; ?></span>
-                    <img src="<?php echo $profilePic != null ? $profilePic : '../Assets/blankPic.png'; ?>"
-                        alt="User Profile Picture" class="w-10 h-10 rounded-full">
-                </div>
+                    <!-- Profile Section -->
+                    <div id="profileSection" class="flex items-center space-x-2 cursor-pointer"
+                        onclick="movePage('account')">
+                        <span class="text-black font-medium"><?php echo $full_name; ?></span>
+                        <img src="<?php echo $profilePic != null ? $profilePic : '../Assets/blankPic.png'; ?>"
+                            alt="User Profile Picture" class="w-10 h-10 rounded-full">
+                    </div>
                 <?php } ?>
             </div>
         </div>
@@ -210,18 +259,63 @@ try {
         <!-- Restaurant Header -->
         <div class="flex justify-between items-center mb-4">
             <div>
-                <h1 class="text-3xl font-bold text-gray-800">Restaurant Name</h1>
+                <h1 class="text-3xl font-bold text-gray-800"><?php echo $restaurantName; ?></h1>
                 <div class="text-gray-600 flex items-center space-x-2">
-                    <span>★★★★☆</span>
+                    <?php
+                    $stars = str_repeat("<span class='text-yellow-400'>★</span>", floor($restaurant['average_rating'])) .
+                        str_repeat("<span class='text-gray-400'>☆</span>", 5 - floor($restaurant['average_rating']));
+
+                    echo $stars;
+                    ?>
                     <span>|</span>
-                    <span>Category: Cafe</span>
+                    <span>Category: <?php echo $categories; ?></span>
                 </div>
             </div>
             <div>
-                <button class="bg-blue-600 text-white px-4 py-2 rounded-lg"><i
-                        class="fa-solid fa-share"></i>&nbsp;&nbsp;Share</button>
-                <button class="bg-blue-600 text-white px-4 py-2 rounded-lg"><i
-                        class="fa-regular fa-bookmark"></i>&nbsp;&nbsp;Bookmark</button>
+                <form action="" method="POST">
+                    <button class="bg-blue-600 text-white px-4 py-2 rounded-lg" id="share-btn"><i
+                            class="fa-solid fa-share"></i>&nbsp;&nbsp;Share</button>
+                    <button class="bg-blue-600 text-white px-4 py-2 rounded-lg" name="bookmark" type="submit">
+                        <?php if (in_array($resto_id, $bookmarks)) {
+                            echo "<i class='fa-solid fa-bookmark'></i>";
+                        } else {
+                            echo "<i class='fa-regular fa-bookmark'></i>";
+                        } ?>
+                        &nbsp;&nbsp;Bookmark</button>
+                </form>
+
+                <?php
+                if (isset($_POST['bookmark'])) {
+                    try {
+                        $newRestaurantId = $_GET['item'];
+
+                        if (in_array($newRestaurantId, $bookmarks)) {
+                            // Remove the restaurant_id from bookmarks
+                            $sql = "UPDATE users SET bookmarks = to_jsonb(array_remove(ARRAY(SELECT jsonb_array_elements_text(bookmarks))::TEXT[], :restaurant_id)) WHERE uid = :uid";
+                            $action = "removed";
+                        } else {
+                            // Add the restaurant_id to bookmarks
+                            $sql = "UPDATE users SET bookmarks = COALESCE(bookmarks, '[]'::JSONB) || to_jsonb(CAST(:restaurant_id AS TEXT)) WHERE uid = :uid";
+                            $action = "added";
+                        }
+
+                        // Add new bookmark
+                        $stmt = $pdo->prepare($sql);
+                        $stmt->bindParam("restaurant_id", $_GET['item']);
+                        $stmt->bindParam('uid', $_SESSION['uid']);
+                        $added = $stmt->execute();
+                        if ($added) {
+                            echo "
+                            <script>
+                                location.href = 'restaurant.php?item=$resto_id';
+                            </script>
+                            ";
+                        }
+                    } catch (PDOException $e) {
+                        echo "Error: " . $e->getMessage();
+                    }
+                }
+                ?>
             </div>
         </div>
 
@@ -251,13 +345,13 @@ try {
         <section id="ownerInfo" class="flex items-center mb-4 mt-4">
             <!-- Owner Profile Picture -->
             <div class="flex-shrink-0 mr-4">
-                <img src="https://via.placeholder.com/100" alt="Owner Profile Picture"
+                <img src="<?php echo $ownerPic; ?>" alt="Owner Profile Picture"
                     class="w-16 h-16 rounded-full object-cover">
             </div>
 
             <!-- Owner Name -->
             <div>
-                <h3 class="text-xl font-semibold text-gray-800">Alexandra</h3>
+                <h3 class="text-xl font-semibold text-gray-800"><?php echo $ownerName; ?></h3>
             </div>
         </section>
 
@@ -266,16 +360,7 @@ try {
             <div class="bg-white p-6 rounded-lg shadow-lg">
                 <h2 class="text-2xl font-semibold text-gray-800 mb-4">About This Restaurant/Cafe</h2>
                 <p class="text-gray-700 leading-relaxed">
-                    <!-- Description text for the restaurant goes here -->
-                    Located in the heart of the city, this restaurant offers a unique blend of modern and traditional
-                    flavors. Known for its cozy atmosphere and quality ingredients, this spot is perfect for casual
-                    diners and food enthusiasts alike. The menu features a variety of dishes that highlight fresh,
-                    locally-sourced produce and innovative culinary techniques.
-                </p>
-                <p class="text-gray-700 mt-4 leading-relaxed">
-                    With a commitment to sustainability and customer satisfaction, this establishment is proud to serve
-                    delicious meals in a welcoming environment. Whether you’re stopping by for a quick coffee or a full
-                    meal, you'll find an inviting space where you can relax and enjoy great food.
+                    <?php echo $description; ?>
                 </p>
             </div>
         </section>
@@ -339,35 +424,102 @@ try {
                 <span onclick="setRating(5)" class="star text-gray-400 text-2xl cursor-pointer" id="star5">★</span>
             </div>
 
-            <form action="#" method="POST" class="space-y-4 mb-5">
+            <form action="" method="POST" class="space-y-4 mb-5">
+                <input type="hidden" name="rating" id="rating" value="0">
                 <!-- Comment Input -->
                 <textarea name="newComment" id="newComment" rows="5"
                     class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
                     placeholder="Write your comment here..." required></textarea>
 
                 <!-- Submit Button -->
-                <button type="submit"
+                <button type="submit" name="submit-comment"
                     class="bg-blue-600 text-white py-2 px-6 rounded-lg hover:bg-blue-500 transition duration-200">
                     Submit Comment
                 </button>
             </form>
 
+            <?php
+            if (isset($_POST["submit-comment"])) {
+                try {
+                    // $resto_id;
+                    // $_SESSION['uid'];
+            
+                    $rating = isset($_POST['rating']) ? (int) $_POST['rating'] : 0;
+                    $newComment = isset($_POST['newComment']) ? $_POST['newComment'] : '';
+
+                    if ($rating < 1 || $rating > 5 || empty($newComment)) {
+                        echo "
+                        <script>
+                            alert('Invalid Comment');
+                            location.href = 'restaurant.php?item=$resto_id';
+                        </script>
+                        ";
+                        exit;
+                    }
+
+                    $sql = "INSERT INTO reviews (id, restaurant_id, rating, review) VALUES (:uid, :restaurant_id, :rating, :comment)";
+                    $stmt = $pdo->prepare($sql);
+                    $stmt->bindParam(':uid', $_SESSION['uid']);
+                    $stmt->bindParam(':restaurant_id', $resto_id);
+                    $stmt->bindParam(":rating", $rating);
+                    $stmt->bindParam(':comment', $newComment);
+                    if ($stmt->execute()) {
+                        echo "
+                        <script>
+                            location.href = 'restaurant.php?item=$resto_id';
+                        </script>
+                        ";
+                    }
+                } catch (PDOException $e) {
+                    echo "Err: " . $e->getMessage();
+                }
+            }
+
+            ?>
+
             <!-- Individual Comments with Profile Pictures -->
             <div class="space-y-4">
-                <!-- Single Comment -->
-                <div class="flex items-start space-x-4 border-b pb-4">
-                    <!-- Profile Picture -->
-                    <img src="https://via.placeholder.com/50" alt="User Profile"
-                        class="w-12 h-12 rounded-full object-cover">
+                <?php
+                $sql = "SELECT 
+                            u.uid, rs.id AS restaurant_id, u.full_name, u.profile_pic, r.rating, r.review 
+                        FROM 
+                            users u 
+                        JOIN 
+                            reviews r ON r.id = u.uid 
+                        JOIN restaurants rs ON r.restaurant_id = rs.id 
+                        ORDER BY r.review_id DESC
+                        ";
+                $stmt = $pdo->prepare($sql);
+                $stmt->execute();
 
-                    <!-- Comment Content -->
-                    <div>
-                        <p class="text-gray-700 font-semibold">User Name</p>
-                        <p class="text-yellow-500">Rating: ★★★★★</p>
-                        <p class="text-gray-600 mt-2">"Great food and ambiance!"</p>
-                    </div>
-                </div>
-                <!-- Additional comments can be added here -->
+                $comments = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                foreach ($comments as $comment) {
+                    if ($comment['restaurant_id'] == $resto_id) {
+                        echo "
+                        <div class='flex items-start space-x-4 border-b pb-4'>
+                            <!-- Profile Picture -->
+                            <img src='$comment[profile_pic]' alt='User Profile'
+                                class='w-12 h-12 rounded-full object-cover'>
+    
+                            <!-- Comment Content -->
+                            <div>
+                                <p class='text-gray-700 font-semibold'>$comment[full_name]</p>
+                                <!-- Star Rating -->
+                                <div class='flex space-x-1 mb-4'>";
+                        for ($i = 1; $i <= 5; $i++) {
+                            echo $i <= $comment['rating']
+                                ? "<span class='text-yellow-400'>★</span>"
+                                : "<span class='text-gray-400'>☆</span>";
+                        }
+                        echo "
+                            </div>
+                                <p class='text-gray-600 mt-2'>$comment[review]</p>
+                            </div>
+                        </div>
+                        ";
+                    }
+                }
+                ?>
             </div>
         </div>
     </div>
@@ -557,20 +709,20 @@ try {
         }
 
         // Responsive menu actions
-        document.getElementById("hamburgerMenu").addEventListener("click", function() {
+        document.getElementById("hamburgerMenu").addEventListener("click", function () {
             document.getElementById("responsiveMenu").classList.toggle("hidden");
         });
 
-        document.getElementById("closeMenu").addEventListener("click", function() {
+        document.getElementById("closeMenu").addEventListener("click", function () {
             document.getElementById("responsiveMenu").classList.add("hidden");
         });
 
         // Responsive modal triggers
-        document.getElementById("openModalResponsive").addEventListener("click", function() {
+        document.getElementById("openModalResponsive").addEventListener("click", function () {
             loginModal.classList.add("show");
         });
 
-        document.getElementById("openSignUpResponsive").addEventListener("click", function() {
+        document.getElementById("openSignUpResponsive").addEventListener("click", function () {
             signupModal.classList.add("show");
         });
     </script>

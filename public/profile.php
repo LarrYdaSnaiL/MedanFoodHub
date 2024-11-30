@@ -255,6 +255,30 @@ try {
     </footer>
 
     <script>
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const hamburgerMenu = document.getElementById('hamburgerMenu');
+            const responsiveMenu = document.getElementById('responsiveMenu');
+            const closeMenu = document.getElementById('closeMenu');
+
+            // Toggle responsive menu
+            hamburgerMenu.addEventListener('click', function () {
+                responsiveMenu.classList.remove('hidden');
+                responsiveMenu.classList.add('slide-enter-active');
+            });
+
+            closeMenu.addEventListener('click', function () {
+                responsiveMenu.classList.add('hidden');
+            });
+
+            // Close menu when clicking outside
+            document.addEventListener('click', function (e) {
+                if (!responsiveMenu.contains(e.target) && e.target !== hamburgerMenu) {
+                    responsiveMenu.classList.add('hidden');
+                }
+            });
+        });
+
         // Tab functionality for Bookmarks and Comments
         function showSection(section) {
             // Hide both sections
@@ -285,7 +309,26 @@ try {
         document.getElementById("editProfile").addEventListener("click", () => {
             window.location.href = "account-dashboard.php";
         });
+
+        // Responsive menu actions
+        document.getElementById("hamburgerMenu").addEventListener("click", function () {
+            document.getElementById("responsiveMenu").classList.toggle("hidden");
+        });
+
+        document.getElementById("closeMenu").addEventListener("click", function () {
+            document.getElementById("responsiveMenu").classList.add("hidden");
+        });
+
+        // Responsive modal triggers
+        document.getElementById("openModalResponsive").addEventListener("click", function () {
+            loginModal.classList.add("show");
+        });
+
+        document.getElementById("openSignUpResponsive").addEventListener("click", function () {
+            signupModal.classList.add("show");
+        });
     </script>
+
 </body>
 
 </html>
