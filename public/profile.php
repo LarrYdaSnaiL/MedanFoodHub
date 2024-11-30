@@ -20,6 +20,7 @@ try {
         $bio = $user['bio'];
         $full_name = $user['full_name'];
         $profilePic = $user['profile_pic'] ?? '../Assets/blankPic.png';
+        $bookmarks = $user['bookmarks'] ? json_decode($user['bookmarks'], true) : [];
     }
 } catch (Exception $e) {
     echo "Error: " . $e->getMessage();
@@ -65,21 +66,21 @@ try {
 
                 <!-- Auth Section -->
                 <?php if (!$_SESSION['login']) { ?>
-                <div class="flex items-center space-x-2">
-                    <button id="openModalResponsive"
-                        class="px-4 py-1 bg-blue-600 text-white rounded-lg hover:bg-blue-500 transition duration-200">Login</button>
-                    <span>|</span>
-                    <button id="openSignUpResponsive"
-                        class="px-4 py-1 border border-blue-600 text-blue-600 rounded-lg hover:bg-blue-600 hover:text-white transition duration-200">Register</button>
-                </div>
+                    <div class="flex items-center space-x-2">
+                        <button id="openModalResponsive"
+                            class="px-4 py-1 bg-blue-600 text-white rounded-lg hover:bg-blue-500 transition duration-200">Login</button>
+                        <span>|</span>
+                        <button id="openSignUpResponsive"
+                            class="px-4 py-1 border border-blue-600 text-blue-600 rounded-lg hover:bg-blue-600 hover:text-white transition duration-200">Register</button>
+                    </div>
                 <?php } else { ?>
-                <!-- Profile Section -->
-                <div id="profileSection" class="flex items-center space-x-2 cursor-pointer"
-                    onclick="movePage('account')">
-                    <span class="text-black font-medium"><?php echo $full_name; ?></span>
-                    <img src="<?php echo $profilePic != null ? $profilePic : '../Assets/blankPic.png'; ?>"
-                        alt="User Profile Picture" class="w-10 h-10 rounded-full">
-                </div>
+                    <!-- Profile Section -->
+                    <div id="profileSection" class="flex items-center space-x-2 cursor-pointer"
+                        onclick="movePage('account')">
+                        <span class="text-black font-medium"><?php echo $full_name; ?></span>
+                        <img src="<?php echo $profilePic != null ? $profilePic : '../Assets/blankPic.png'; ?>"
+                            alt="User Profile Picture" class="w-10 h-10 rounded-full">
+                    </div>
                 <?php } ?>
             </div>
         </div>
@@ -102,20 +103,20 @@ try {
 
                 <!-- Auth Section -->
                 <?php if (!$_SESSION['login']) { ?>
-                <div class="flex flex-row items-center gap-2 content-center item-center">
-                    <button id="openModal"
-                        class="w-30 bg-blue-600 text-white px-4 py-1 rounded-lg hover:bg-blue-500 transition duration-200">Login</button>
-                    <button id="openSignUp"
-                        class="w-30 border border-blue-600 text-blue-600 px-4 py-1 rounded-lg hover:bg-blue-600 hover:text-white transition duration-200">Register</button>
-                </div>
+                    <div class="flex flex-row items-center gap-2 content-center item-center">
+                        <button id="openModal"
+                            class="w-30 bg-blue-600 text-white px-4 py-1 rounded-lg hover:bg-blue-500 transition duration-200">Login</button>
+                        <button id="openSignUp"
+                            class="w-30 border border-blue-600 text-blue-600 px-4 py-1 rounded-lg hover:bg-blue-600 hover:text-white transition duration-200">Register</button>
+                    </div>
                 <?php } else { ?>
-                <!-- Profile Section -->
-                <div id="profileSection" class="flex items-center space-x-2 cursor-pointer"
-                    onclick="movePage('account')">
-                    <span class="text-black font-medium"><?php echo $full_name; ?></span>
-                    <img src="<?php echo $profilePic != null ? $profilePic : '../Assets/blankPic.png'; ?>"
-                        alt="User Profile Picture" class="w-10 h-10 rounded-full">
-                </div>
+                    <!-- Profile Section -->
+                    <div id="profileSection" class="flex items-center space-x-2 cursor-pointer"
+                        onclick="movePage('account')">
+                        <span class="text-black font-medium"><?php echo $full_name; ?></span>
+                        <img src="<?php echo $profilePic != null ? $profilePic : '../Assets/blankPic.png'; ?>"
+                            alt="User Profile Picture" class="w-10 h-10 rounded-full">
+                    </div>
                 <?php } ?>
             </div>
         </div>
@@ -146,7 +147,7 @@ try {
                 class="text-lg font-semibold pb-2 border-b-4 focus:outline-none text-blue-600 border-blue-600"
                 onclick="showSection('bookmarks')">Bookmarks</button>
             <button id="commentsTab"
-                class="text-lg font-semibold pb-2 border-b-4 focus:outline-none text-gray-600 border-transparent"
+                class="text-lg font-semibold pb-2 border-b-4 focus:outline-none text-gray-600 border-transparent hidden"
                 onclick="showSection('comments')">Comments</button>
         </div>
 
@@ -154,15 +155,33 @@ try {
         <div id="bookmarksSection" class="px-4">
             <h3 class="text-xl font-semibold mb-4">Your Bookmarks</h3>
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                <!-- Famous Restaurant Card -->
-                <div class="bg-white rounded-lg shadow-lg p-4 cursor-pointer" onclick="movePage('famous1')">
-                    <img src="https://via.placeholder.com/300x200" alt="Restaurant Image"
-                        class="w-full h-32 object-cover rounded-md">
-                    <h3 class="text-lg font-semibold mt-2">Restaurant Name</h3>
-                    <p class="text-gray-600">Category: Cafe</p>
-                    <p class="text-yellow-500">Rating: ★★★★☆</p>
-                </div>
-                <!-- Additional cards for other famous restaurants can be added here -->
+                <?php
+                if ($bookmarks) {
+                    // Query to get full_name using uid
+                    $sql = "SELECT * FROM restaurants";
+                    $stmt = $pdo->prepare($sql);
+                    $stmt->execute();
+
+                    $restaurants = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                    foreach ($restaurants as $restaurant) {
+                        foreach ($bookmarks as $bookmark) {
+                            if ($restaurant['id'] == $bookmark) {
+                                echo "
+                                    <a href='restaurant.php?item={$restaurant['id']}'>
+                                        <div class='bg-white rounded-lg shadow-lg p-4 cursor-pointer'>
+                                            <img src='{$restaurant['pictures']}' alt='Restaurant Image'
+                                                class='w-full h-32 object-cover rounded-md'>
+                                            <h3 class='text-lg font-semibold mt-2'>{$restaurant['restaurant_name']}</h3>
+                                            <p class='text-gray-600'>Category: {$restaurant['categories']}</p>
+                                            <p class='text-yellow-500'>Rating: ★★★★☆</p>
+                                        </div>
+                                    </a>
+                                ";
+                            }
+                        }
+                    }
+                }
+                ?>
             </div>
         </div>
 
@@ -236,30 +255,6 @@ try {
     </footer>
 
     <script>
-
-        document.addEventListener('DOMContentLoaded', function () {
-            const hamburgerMenu = document.getElementById('hamburgerMenu');
-            const responsiveMenu = document.getElementById('responsiveMenu');
-            const closeMenu = document.getElementById('closeMenu');
-
-            // Toggle responsive menu
-            hamburgerMenu.addEventListener('click', function () {
-                responsiveMenu.classList.remove('hidden');
-                responsiveMenu.classList.add('slide-enter-active');
-            });
-
-            closeMenu.addEventListener('click', function () {
-                responsiveMenu.classList.add('hidden');
-            });
-
-            // Close menu when clicking outside
-            document.addEventListener('click', function (e) {
-                if (!responsiveMenu.contains(e.target) && e.target !== hamburgerMenu) {
-                    responsiveMenu.classList.add('hidden');
-                }
-            });
-        });
-
         // Tab functionality for Bookmarks and Comments
         function showSection(section) {
             // Hide both sections
@@ -290,26 +285,7 @@ try {
         document.getElementById("editProfile").addEventListener("click", () => {
             window.location.href = "account-dashboard.php";
         });
-
-        // Responsive menu actions
-        document.getElementById("hamburgerMenu").addEventListener("click", function() {
-            document.getElementById("responsiveMenu").classList.toggle("hidden");
-        });
-
-        document.getElementById("closeMenu").addEventListener("click", function() {
-            document.getElementById("responsiveMenu").classList.add("hidden");
-        });
-
-        // Responsive modal triggers
-        document.getElementById("openModalResponsive").addEventListener("click", function() {
-            loginModal.classList.add("show");
-        });
-
-        document.getElementById("openSignUpResponsive").addEventListener("click", function() {
-            signupModal.classList.add("show");
-        });
     </script>
-
 </body>
 
 </html>
