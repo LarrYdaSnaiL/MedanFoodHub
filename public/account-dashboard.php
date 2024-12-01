@@ -262,17 +262,18 @@ try {
                         }
                     }
                 } else {
-                    echo "
-                    <p class='text-gray-700 mb-6'>
+                    echo '
+                    <p class="text-gray-700 mb-6">
                         You are verified!
                     </p>
-
+                
                     <!-- Button to start verification process -->
-                    <button class='bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-500 transition duration-200'
-                        onclick='business()'>
+                    <button class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-500 transition duration-200"
+                        onclick="window.location.href=\'business-dashboard.php\'">
                         Manage Your Business
-                    </button>";
-                } ?>
+                    </button>';
+                }
+                ?>
             </section>
 
         </main>
