@@ -35,7 +35,7 @@ try {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Profile - MedanFoodHub</title>
-    <link rel="icon" href="/assets/Logo/icon.png" type="image/x-icon">
+    <link rel="icon" href="../Assets/Logo/icon.png" type="image/x-icon">
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link rel="stylesheet" href="../Assets/style.css">
 </head>
