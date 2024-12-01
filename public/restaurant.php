@@ -2,6 +2,9 @@
 include "../database/connection.php";
 session_start();
 
+$protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http";
+$currentUrl = $protocol . "://" . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+
 // Check if the user is logged in
 if (!isset($_SESSION['login'])) {
     header("Location: ../");
@@ -359,9 +362,14 @@ if (isset($_GET['item'])) {
         <section class="mb-4">
             <div class="bg-white p-6 rounded-lg shadow-lg">
                 <h2 class="text-2xl font-semibold text-gray-800 mb-4">About This Restaurant/Cafe</h2>
-                <p class="text-gray-700 leading-relaxed">
+                <p class="text-gray-700 leading-relaxed mb-5">
                     <?php echo $description; ?>
                 </p>
+
+                <a href="" target="_blank"
+                    class="inline-block bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition duration-200">
+                    View in Google Maps
+                </a>
             </div>
         </section>
 
@@ -370,44 +378,54 @@ if (isset($_GET['item'])) {
             <h2 class="text-2xl font-semibold mb-4">Ratings and Comments</h2>
 
             <!-- Ratings Summary -->
+            <?php
+            // Query to get the count of ratings and total reviews for the restaurant
+            $sql = "
+                    SELECT 
+                        rating, 
+                        COUNT(*) AS count 
+                    FROM 
+                        reviews 
+                    WHERE 
+                        restaurant_id = :restaurant_id 
+                    GROUP BY 
+                        rating
+                ";
+            $stmt = $pdo->prepare($sql);
+            $stmt->bindParam(":restaurant_id", $resto_id, PDO::PARAM_STR);
+            $stmt->execute();
+
+            // Fetch all rating counts
+            $ratings = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+            // Calculate percentages
+            $totalQuery = "SELECT COUNT(*) AS total_reviews FROM reviews WHERE restaurant_id = :restaurant_id";
+            $totalStmt = $pdo->prepare($totalQuery);
+            $totalStmt->bindParam(":restaurant_id", $resto_id, PDO::PARAM_STR);
+            $totalStmt->execute();
+            $totalResult = $totalStmt->fetch(PDO::FETCH_ASSOC);
+            $totalReviews = $totalResult['total_reviews'];
+
+            $percentages = [1 => 0, 2 => 0, 3 => 0, 4 => 0, 5 => 0];
+            if ($totalReviews > 0) {
+                foreach ($ratings as $rating) {
+                    $percentages[$rating['rating']] = ($rating['count'] / $totalReviews) * 100;
+                }
+            }
+            ?>
             <div class="mb-6">
                 <h3 class="text-lg font-semibold text-gray-800">Rating Breakdown</h3>
                 <div class="space-y-2 mt-4">
-                    <div class="flex items-center">
-                        <span class="text-yellow-500 mr-2">★★★★★</span>
-                        <div class="w-64 bg-gray-200 rounded-full h-2 mr-2">
-                            <div class="bg-yellow-500 h-2 rounded-full" style="width: 80%;"></div>
+                    <?php foreach ([5, 4, 3, 2, 1] as $star): ?>
+                        <div class="flex items-center">
+                            <span class="text-yellow-500 mr-2"><?php echo str_repeat('★', $star); ?></span>
+                            <div class="w-64 bg-gray-200 rounded-full h-2 mr-2">
+                                <div class="bg-yellow-500 h-2 rounded-full"
+                                    style="width: <?php echo $percentages[$star]; ?>%;"></div>
+                            </div>
+                            <span><?php echo round($percentages[$star], 0); ?>%</span>
                         </div>
-                        <span>80%</span> <!-- Example percentage -->
-                    </div>
-                    <div class="flex items-center">
-                        <span class="text-yellow-500 mr-2">★★★★</span>
-                        <div class="w-64 bg-gray-200 rounded-full h-2 mr-2">
-                            <div class="bg-yellow-500 h-2 rounded-full" style="width: 10%;"></div>
-                        </div>
-                        <span>10%</span>
-                    </div>
-                    <div class="flex items-center">
-                        <span class="text-yellow-500 mr-2">★★★</span>
-                        <div class="w-64 bg-gray-200 rounded-full h-2 mr-2">
-                            <div class="bg-yellow-500 h-2 rounded-full" style="width: 5%;"></div>
-                        </div>
-                        <span>5%</span>
-                    </div>
-                    <div class="flex items-center">
-                        <span class="text-yellow-500 mr-2">★★</span>
-                        <div class="w-64 bg-gray-200 rounded-full h-2 mr-2">
-                            <div class="bg-yellow-500 h-2 rounded-full" style="width: 3%;"></div>
-                        </div>
-                        <span>3%</span>
-                    </div>
-                    <div class="flex items-center">
-                        <span class="text-yellow-500 mr-2">★</span>
-                        <div class="w-64 bg-gray-200 rounded-full h-2 mr-2">
-                            <div class="bg-yellow-500 h-2 rounded-full" style="width: 2%;"></div>
-                        </div>
-                        <span>2%</span>
-                    </div>
+                    <?php endforeach; ?>
                 </div>
             </div>
 
@@ -481,14 +499,14 @@ if (isset($_GET['item'])) {
             <div class="space-y-4">
                 <?php
                 $sql = "SELECT 
-                            u.uid, rs.id AS restaurant_id, u.full_name, u.profile_pic, r.rating, r.review 
+                            u.uid, rs.id AS restaurant_id, u.full_name, u.profile_pic, r.rating, r.review, r.review_id
                         FROM 
                             users u 
                         JOIN 
                             reviews r ON r.id = u.uid 
-                        JOIN restaurants rs ON r.restaurant_id = rs.id 
-                        ORDER BY r.review_id DESC
-                        ";
+                        JOIN 
+                            restaurants rs ON r.restaurant_id = rs.id 
+                        ORDER BY r.review_id DESC";
                 $stmt = $pdo->prepare($sql);
                 $stmt->execute();
 
@@ -496,14 +514,13 @@ if (isset($_GET['item'])) {
                 foreach ($comments as $comment) {
                     if ($comment['restaurant_id'] == $resto_id) {
                         echo "
-                        <div class='flex items-start space-x-4 border-b pb-4'>
+                        <div class='flex items-start space-x-4 border-b pb-4 relative'>
                             <!-- Profile Picture -->
-                            <img src='$comment[profile_pic]' alt='User Profile'
-                                class='w-12 h-12 rounded-full object-cover'>
-    
+                            <img src='{$comment['profile_pic']}' alt='User Profile' class='w-12 h-12 rounded-full object-cover'>
+                
                             <!-- Comment Content -->
                             <div>
-                                <p class='text-gray-700 font-semibold'>$comment[full_name]</p>
+                                <p class='text-gray-700 font-semibold'>" . ucfirst($comment['full_name']) . "</p>
                                 <!-- Star Rating -->
                                 <div class='flex space-x-1 mb-4'>";
                         for ($i = 1; $i <= 5; $i++) {
@@ -512,11 +529,32 @@ if (isset($_GET['item'])) {
                                 : "<span class='text-gray-400'>☆</span>";
                         }
                         echo "
+                                </div>
+                                <p class='text-gray-600 mt-2'>{$comment['review']}</p>
                             </div>
-                                <p class='text-gray-600 mt-2'>$comment[review]</p>
-                            </div>
-                        </div>
+                
+                            <!-- 3 Dots Menu -->
+                            <div class='relative'>
+                                <span onclick='toggleMenu({$comment['review_id']})' class='cursor-pointer text-gray-400 hover:text-gray-600'>
+                                    &#x22EE; <!-- 3 vertical dots symbol -->
+                                </span>
+                                <div id='menu-{$comment['review_id']}' class='absolute right-0 bg-white border shadow-md rounded-lg p-2 hidden'>
                         ";
+                        if ($comment['uid'] == $_SESSION['uid']) {
+                            // If it's the logged-in user's comment
+                            echo "<a href='../config/comment_delete.php?res={$comment['review_id']}/{$comment['restaurant_id']}/{$_GET['item']}' class='block text-red-500 hover:bg-gray-100 px-4 py-2'>
+                                    Delete
+                                  </a>";
+                        } else {
+                            // If it's someone else's comment
+                            echo "<a href='../config/comment_report.php' class='block text-red-500 hover:bg-gray-100 px-4 py-2'>
+                                    Report
+                                  </a>";
+                        }
+                        echo "
+                                </div>
+                            </div>
+                        </div>";
                     }
                 }
                 ?>
@@ -563,6 +601,44 @@ if (isset($_GET['item'])) {
 
     <!-- JavaScript for Show More Gallery and Image Slider -->
     <script>
+
+        // Get the current URL from PHP
+        const currentUrl = "<?php echo $currentUrl; ?>";
+
+        // Reference the button and status message
+        const shareButton = document.getElementById("share-btn");
+
+        // Add a click event to the Share Button
+        shareButton.addEventListener("click", async () => {
+            try {
+                // Copy the URL to the clipboard
+                await navigator.clipboard.writeText(currentUrl);
+                alert("Link copied to clipboard!");
+
+                // Show a success message
+            } catch (error) {
+                // Show an error message
+                console.error("Error copying link:", error);
+            }
+        });
+
+        document.addEventListener('click', function (e) {
+            // Close all dropdowns if clicked outside
+            const dropdowns = document.querySelectorAll('.dropdown-menu');
+            dropdowns.forEach((dropdown) => dropdown.classList.add('hidden'));
+
+            // Open the specific dropdown if clicked on its toggle
+            if (e.target.matches('.dropdown-toggle')) {
+                const menuId = e.target.getAttribute('data-menu-id');
+                const menu = document.getElementById(`menu-${menuId}`);
+                menu.classList.toggle('hidden');
+            }
+        });
+
+        function toggleMenu(reviewId) {
+            const menu = document.getElementById(`menu-${reviewId}`);
+            menu.classList.toggle('hidden');
+        }
 
         document.addEventListener('DOMContentLoaded', function () {
             const hamburgerMenu = document.getElementById('hamburgerMenu');
@@ -679,11 +755,8 @@ if (isset($_GET['item'])) {
             }
         }
 
-        // Function to set the rating
-        let currentRating = 0;
-
         function setRating(rating) {
-            currentRating = rating;
+            document.getElementById('rating').value = rating;
 
             // Update star colors based on rating
             for (let i = 1; i <= 5; i++) {
