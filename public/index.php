@@ -62,9 +62,21 @@ try {
             <div id="navMenu" class="hidden lg:flex lg:items-center lg:space-x-8">
                 <!-- Search Section -->
                 <div class="flex items-center space-x-2">
-                    <input type="text" placeholder="Search..."
-                        class="border rounded-lg px-4 py-1 focus:outline-none focus:border-blue-600 w-80">
-                    <button class="bg-blue-600 text-white px-4 py-1 rounded-lg" style="color : white;">Search</button>
+                    <form action="" method="POST">
+                        <input type="text" placeholder="Search..." name="search"
+                            class="border rounded-lg px-4 py-1 focus:outline-none focus:border-blue-600 w-80">
+                        <button class="bg-blue-600 text-white px-4 py-1 rounded-lg" name="submit" type="submit"
+                            style="color : white;">Search</button>
+                    </form>
+
+                    <?php
+                    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+                        if (isset($_POST['submit'])) {
+                            $search = $_POST['search'];
+                            header("Location: search.php?search=$search");
+                        }
+                    }
+                    ?>
                 </div>
 
                 <!-- Auth Section -->
@@ -101,10 +113,21 @@ try {
 
                 <!-- Search Section -->
                 <div>
-                    <input type="text" placeholder="Search..."
-                        class="border rounded-lg px-4 py-1 w-full focus:outline-none focus:border-blue-600">
-                    <button class="bg-blue-600 text-white px-4 py-1 rounded-lg w-full mt-2"
-                        style="color : white;">Search</button>
+                    <form action="" method="POST">
+                        <input type="text" placeholder="Search..." name="search"
+                            class="border rounded-lg px-4 py-1 focus:outline-none focus:border-blue-600 w-80">
+                        <button class="bg-blue-600 text-white px-4 py-1 rounded-lg" name="submit" type="submit"
+                            style="color : white;">Search</button>
+                    </form>
+
+                    <?php
+                    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+                        if (isset($_POST['submit'])) {
+                            $search = $_POST['search'];
+                            header("Location: search.php?search=$search");
+                        }
+                    }
+                    ?>
                 </div>
 
                 <!-- Auth Section -->

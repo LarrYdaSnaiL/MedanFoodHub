@@ -62,9 +62,21 @@ try {
             <div id="navMenu" class="hidden lg:flex lg:items-center lg:space-x-8">
                 <!-- Search Section -->
                 <div class="flex items-center space-x-2">
-                    <input type="text" placeholder="Search..."
-                        class="border rounded-lg px-4 py-1 focus:outline-none focus:border-blue-600 w-80">
-                    <button class="bg-blue-600 text-white px-4 py-1 rounded-lg" style="color : white;">Search</button>
+                    <form action="" method="POST">
+                        <input type="text" placeholder="Search..." name="search"
+                            class="border rounded-lg px-4 py-1 focus:outline-none focus:border-blue-600 w-80">
+                        <button class="bg-blue-600 text-white px-4 py-1 rounded-lg" name="submit" type="submit"
+                            style="color : white;">Search</button>
+                    </form>
+
+                    <?php
+                    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+                        if (isset($_POST['submit'])) {
+                            $search = $_POST['search'];
+                            header("Location: search.php?search=$search");
+                        }
+                    }
+                    ?>
                 </div>
 
                 <!-- Auth Section -->
@@ -100,10 +112,21 @@ try {
 
                 <!-- Search Section -->
                 <div>
-                    <input type="text" placeholder="Search..."
-                        class="border rounded-lg px-4 py-1 w-full focus:outline-none focus:border-blue-600">
-                    <button class="bg-blue-600 text-white px-4 py-1 rounded-lg w-full mt-2"
-                        style="color : white;">Search</button>
+                    <form action="" method="POST">
+                        <input type="text" placeholder="Search..." name="search"
+                            class="border rounded-lg px-4 py-1 focus:outline-none focus:border-blue-600 w-80">
+                        <button class="bg-blue-600 text-white px-4 py-1 rounded-lg" name="submit" type="submit"
+                            style="color : white;">Search</button>
+                    </form>
+
+                    <?php
+                    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+                        if (isset($_POST['submit'])) {
+                            $search = $_POST['search'];
+                            header("Location: search.php?search=$search");
+                        }
+                    }
+                    ?>
                 </div>
 
                 <!-- Auth Section -->
@@ -205,6 +228,97 @@ try {
                 class="absolute top-2 right-2 text-gray-600 hover:text-gray-900">&times;</button>
         </div>
     </div>
+
+    <div class="container mx-auto py-8">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            <?php
+            $searchTerm = isset($_GET['search']) ? $_GET['search'] : '';
+            // Prepare SQL query with a placeholder for the search term
+            $sql = "
+                SELECT 
+                    r.id, 
+                    r.pictures, 
+                    r.restaurant_name, 
+                    r.categories, 
+                    COALESCE(AVG(rev.rating), 0) AS average_rating
+                FROM 
+                    restaurants r
+                LEFT JOIN 
+                    reviews rev ON r.id = rev.restaurant_id
+                WHERE 
+                    r.restaurant_name ILIKE :searchTerm
+                GROUP BY 
+                    r.id, r.pictures, r.restaurant_name, r.categories
+                ORDER BY 
+                    RANDOM()
+            ";
+
+            $stmt = $pdo->prepare($sql);
+            $searchWithWildcards = '%' . $searchTerm . '%';
+            $stmt->bindParam(':searchTerm', $searchWithWildcards, PDO::PARAM_STR);
+            $stmt->execute();
+            $restaurants = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+            // Loop through the restaurants and display the data
+            foreach ($restaurants as $restaurant) {
+                $restaurant['restaurant_name'] = ucwords(strtolower($restaurant['restaurant_name']));
+                $stars = str_repeat("<span class='text-yellow-400'>★</span>", floor($restaurant['average_rating'])) .
+                    str_repeat("<span class='text-gray-400'>☆</span>", 5 - floor($restaurant['average_rating']));
+                $pictures = $restaurant['pictures'] ? json_decode($restaurant['pictures'], true) : [];
+                $firstPicture = isset($pictures[0]) ? $pictures[0] : 'https://via.placeholder.com/300';
+
+                echo "
+                <a href='restaurant.php?item={$restaurant['id']}'>
+                    <div class='bg-white rounded-lg shadow-lg p-4 cursor-pointer'>
+                        <img src='{$firstPicture}' alt='Restaurant Image'
+                            class='w-full h-32 object-cover rounded-md'>
+                            <h3 class='text-lg font-semibold mt-2'>{$restaurant['restaurant_name']}</h3>
+                            <p class='text-gray-600'>Category: {$restaurant['categories']}</p>
+                            <p class='text-yellow-500'>{$stars}</p>
+                    </div>
+                </a>
+            ";
+            }
+            ?>
+        </div>
+    </div>
+
+    <!-- Footer Section -->
+    <footer class="bg-blue-600 text-gray-100 py-8 mt-12">
+        <div
+            class="container mx-auto grid grid-cols-1 md:grid-cols-2 gap-6 px-6 justify-center items-center text-center">
+            <!-- About Us Section -->
+            <div>
+                <h3 class="text-lg font-semibold mb-2">About MedanFoodHub</h3>
+                <p class="text-white text-sm">MedanFoodHub is your go-to platform to discover the best restaurants
+                    around Medan. Find top-rated, trending, and unique eateries all in one place.</p>
+            </div>
+
+            <!-- Contact Section -->
+            <div>
+                <h3 class="text-lg font-semibold mb-2">Contact Us</h3>
+                <p class="text-white text-sm">Email: <a href="mailto:info@medanfoodhub.com"
+                        class="hover:text-white">info@medanfoodhub.com</a></p>
+                <p class="text-white text-sm">Phone: <a href="tel:+620123456789" class="hover:text-white">+62 012 345
+                        6789</a></p>
+                <div class="flex space-x-4 mt-4 justify-center">
+                    <a href="https://facebook.com" target="_blank" class="text-gray-400 hover:text-white">
+                        <i class="fab fa-facebook-f"></i>
+                    </a>
+                    <a href="https://twitter.com" target="_blank" class="text-gray-400 hover:text-white">
+                        <i class="fab fa-twitter"></i>
+                    </a>
+                    <a href="https://instagram.com" target="_blank" class="text-gray-400 hover:text-white">
+                        <i class="fab fa-instagram"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="border-t border-gray-300 mt-6 pt-4 text-center text-white text-sm">
+            &copy; 2024 MedanFoodHub. All rights reserved.
+        </div>
+    </footer>
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {
