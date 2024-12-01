@@ -104,7 +104,7 @@ try {
                         <img src="<?php echo $profilePic != null ? $profilePic : '../Assets/blankPic.png' ?>"
                             alt="Current Profile Picture" id="profilePic"
                             class="w-32 h-32 rounded-full mx-auto object-cover mb-3">
-                        <input type="file" id="profilePicture" name="profilePicture"
+                        <input type="file" id="profilePicture" name="profilePicture" accept="image/*"
                             class="block w-full text-sm text-gray-500 border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-600">
                     </div>
 
@@ -126,7 +126,7 @@ try {
                         <label for="email" class="block text-gray-700 font-medium mb-2">Email</label>
                         <input type="email" id="email" name="email"
                             class="block w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-600"
-                            placeholder="example@gmail.com" value="<?php echo htmlspecialchars($email); ?>">
+                            placeholder="example@gmail.com" value="<?php echo htmlspecialchars($email); ?>" readonly>
                     </div>
 
                     <div class="mb-4">
@@ -246,19 +246,25 @@ try {
                         } else if ($owner['status'] == 'rejected') {
                             echo "
                             <p class='text-gray-700 mb-6'>
-                                Account verification is required if you are a restaurant or cafe owner and want to list your
-                                business on our platform. Verifying your account allows you to manage your restaurant's details,
-                                including menu items, hours, and special offers.
-                                Verified owners gain control over their establishment's profile, ensuring accurate and up-to-date
-                                information for users. To get verified, please submit your business documentation, and our team will
-                                review and approve your request within a few business days.
+                                Your verification request has been rejected with rejection message: \"{$owner['message']}\". Please, submit a new request.
                             </p>
         
                             <!-- Button to start verification process -->
                             <button class='bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-500 transition duration-200'
                                 onclick='verif()'>
-                                Start Verification Process
+                                Start Verification Again
                             </button>";
+                        } else if ($owner["status"] == "approved" && !$is_owner) {
+                            $sql = "UPDATE users SET is_owner = true WHERE uid = :uid";
+                            $stmt = $pdo->prepare($sql);
+                            $stmt->bindParam(':uid', $_SESSION['uid']);
+                            if ($stmt->execute()) {
+                                echo "
+                                <script>
+                                    window.location.href = 'account-dashboard.php';
+                                </script>
+                                ";
+                            }
                         }
                     }
                 } else {

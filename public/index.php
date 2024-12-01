@@ -79,12 +79,13 @@ try {
                     </div>
                 <?php } else { ?>
                     <!-- Profile Section -->
-                    <div id="profileSection" class="flex items-center space-x-2 cursor-pointer"
-                        onclick="movePage('account')">
-                        <span class="text-black font-medium"><?php echo $full_name; ?></span>
-                        <img src="<?php echo $profilePic != null ? $profilePic : '../Assets/blankPic.png'; ?>"
-                            alt="User Profile Picture" class="w-10 h-10 rounded-full">
-                    </div>
+                    <a href="profile.php">
+                        <div id="profileSection" class="flex items-center space-x-2 cursor-pointer">
+                            <span class="text-black font-medium"><?php echo $full_name; ?></span>
+                            <img src="<?php echo $profilePic != null ? $profilePic : '../Assets/blankPic.png'; ?>"
+                                alt="User Profile Picture" class="w-10 h-10 rounded-full">
+                        </div>
+                    </a>
                 <?php } ?>
             </div>
         </div>
@@ -260,17 +261,19 @@ try {
                     $restaurant['restaurant_name'] = ucwords(strtolower($restaurant['restaurant_name']));
                     $stars = str_repeat("<span class='text-yellow-400'>★</span>", floor($restaurant['average_rating'])) .
                         str_repeat("<span class='text-gray-400'>☆</span>", 5 - floor($restaurant['average_rating']));
+                    $pictures = $restaurant['pictures'] ? json_decode($restaurant['pictures'], true) : [];
+                    $firstPicture = isset($pictures[0]) ? $pictures[0] : 'https://via.placeholder.com/300';
 
                     echo "
-                    <a href='restaurant.php?item={$restaurant['id']}'>
-                        <div class='bg-white rounded-lg shadow-lg p-4 cursor-pointer'>
-                            <img src='{$restaurant['pictures']}' alt='Restaurant Image'
-                                class='w-full h-32 object-cover rounded-md'>
-                            <h3 class='text-lg font-semibold mt-2'>{$restaurant['restaurant_name']}</h3>
-                            <p class='text-gray-600'>Category: {$restaurant['categories']}</p>
-                            <p class='text-yellow-500'>{$stars}</p>
-                        </div>
-                    </a>
+                        <a href='restaurant.php?item={$restaurant['id']}'>
+                            <div class='bg-white rounded-lg shadow-lg p-4 cursor-pointer'>
+                                <img src='{$firstPicture}' alt='Restaurant Image'
+                                    class='w-full h-32 object-cover rounded-md'>
+                                    <h3 class='text-lg font-semibold mt-2'>{$restaurant['restaurant_name']}</h3>
+                                    <p class='text-gray-600'>Category: {$restaurant['categories']}</p>
+                                    <p class='text-yellow-500'>{$stars}</p>
+                            </div>
+                        </a>
                     ";
 
                 }
@@ -323,11 +326,13 @@ try {
                     $restaurant['restaurant_name'] = ucwords(strtolower($restaurant['restaurant_name']));
                     $stars = str_repeat("<span class='text-yellow-400'>★</span>", floor($restaurant['average_rating'])) .
                         str_repeat("<span class='text-gray-400'>☆</span>", 5 - floor($restaurant['average_rating']));
+                    $pictures = $restaurant['pictures'] ? json_decode($restaurant['pictures'], true) : [];
+                    $firstPicture = isset($pictures[0]) ? $pictures[0] : 'https://via.placeholder.com/300';
 
                     echo "
                     <a href='restaurant.php?item={$restaurant['id']}'>
                         <div class='bg-white rounded-lg shadow-lg p-4 cursor-pointer'>
-                            <img src='{$restaurant['pictures']}' alt='Restaurant Image'
+                            <img src='{$firstPicture}' alt='Restaurant Image'
                                 class='w-full h-32 object-cover rounded-md'>
                                 <h3 class='text-lg font-semibold mt-2'>{$restaurant['restaurant_name']}</h3>
                                 <p class='text-gray-600'>Category: {$restaurant['categories']}</p>
@@ -367,19 +372,20 @@ try {
                     $restaurant['restaurant_name'] = ucwords(strtolower($restaurant['restaurant_name']));
                     $stars = str_repeat("<span class='text-yellow-400'>★</span>", floor($restaurant['average_rating'])) .
                         str_repeat("<span class='text-gray-400'>☆</span>", 5 - floor($restaurant['average_rating']));
+                    $pictures = $restaurant['pictures'] ? json_decode($restaurant['pictures'], true) : [];
+                    $firstPicture = isset($pictures[0]) ? $pictures[0] : 'https://via.placeholder.com/300';
 
                     echo "
-                    <a href='restaurant.php?item={$restaurant['id']}'>
-                        <div class='bg-white rounded-lg shadow-lg p-4 cursor-pointer'>
-                            <img src='{$restaurant['pictures']}' alt='Restaurant Image'
-                                class='w-full h-32 object-cover rounded-md'>
-                                <h3 class='text-lg font-semibold mt-2'>{$restaurant['restaurant_name']}</h3>
-                                <p class='text-gray-600'>Category: {$restaurant['categories']}</p>
-                                <p class='text-yellow-500'>{$stars}</p>
-                        </div>
-                    </a>
+                        <a href='restaurant.php?item={$restaurant['id']}'>
+                            <div class='bg-white rounded-lg shadow-lg p-4 cursor-pointer'>
+                                <img src='{$firstPicture}' alt='Restaurant Image'
+                                    class='w-full h-32 object-cover rounded-md'>
+                                    <h3 class='text-lg font-semibold mt-2'>{$restaurant['restaurant_name']}</h3>
+                                    <p class='text-gray-600'>Category: {$restaurant['categories']}</p>
+                                    <p class='text-yellow-500'>{$stars}</p>
+                            </div>
+                        </a>
                     ";
-
                 }
                 ?>
             </div>
@@ -412,17 +418,19 @@ try {
                     $restaurant['restaurant_name'] = ucwords(strtolower($restaurant['restaurant_name']));
                     $stars = str_repeat("<span class='text-yellow-400'>★</span>", floor($restaurant['average_rating'])) .
                         str_repeat("<span class='text-gray-400'>☆</span>", 5 - floor($restaurant['average_rating']));
+                    $pictures = $restaurant['pictures'] ? json_decode($restaurant['pictures'], true) : [];
+                    $firstPicture = isset($pictures[0]) ? $pictures[0] : 'https://via.placeholder.com/300';
 
                     echo "
-                    <a href='restaurant.php?item={$restaurant['id']}'>
-                        <div class='bg-white rounded-lg shadow-lg p-4 cursor-pointer'>
-                            <img src='{$restaurant['pictures']}' alt='Restaurant Image'
-                                class='w-full h-32 object-cover rounded-md'>
-                                <h3 class='text-lg font-semibold mt-2'>{$restaurant['restaurant_name']}</h3>
-                                <p class='text-gray-600'>Category: {$restaurant['categories']}</p>
-                                <p class='text-yellow-500'>{$stars}</p>
-                        </div>
-                    </a>
+                        <a href='restaurant.php?item={$restaurant['id']}'>
+                            <div class='bg-white rounded-lg shadow-lg p-4 cursor-pointer'>
+                                <img src='{$firstPicture}' alt='Restaurant Image'
+                                    class='w-full h-32 object-cover rounded-md'>
+                                    <h3 class='text-lg font-semibold mt-2'>{$restaurant['restaurant_name']}</h3>
+                                    <p class='text-gray-600'>Category: {$restaurant['categories']}</p>
+                                    <p class='text-yellow-500'>{$stars}</p>
+                            </div>
+                        </a>
                     ";
                 }
                 ?>
@@ -456,17 +464,19 @@ try {
                     $restaurant['restaurant_name'] = ucwords(strtolower($restaurant['restaurant_name']));
                     $stars = str_repeat("<span class='text-yellow-400'>★</span>", floor($restaurant['average_rating'])) .
                         str_repeat("<span class='text-gray-400'>☆</span>", 5 - floor($restaurant['average_rating']));
+                    $pictures = $restaurant['pictures'] ? json_decode($restaurant['pictures'], true) : [];
+                    $firstPicture = isset($pictures[0]) ? $pictures[0] : 'https://via.placeholder.com/300';
 
                     echo "
-                    <a href='restaurant.php?item={$restaurant['id']}'>
-                        <div class='bg-white rounded-lg shadow-lg p-4 cursor-pointer'>
-                            <img src='{$restaurant['pictures']}' alt='Restaurant Image'
-                                class='w-full h-32 object-cover rounded-md'>
-                                <h3 class='text-lg font-semibold mt-2'>{$restaurant['restaurant_name']}</h3>
-                                <p class='text-gray-600'>Category: {$restaurant['categories']}</p>
-                                <p class='text-yellow-500'>{$stars}</p>
-                        </div>
-                    </a>
+                        <a href='restaurant.php?item={$restaurant['id']}'>
+                            <div class='bg-white rounded-lg shadow-lg p-4 cursor-pointer'>
+                                <img src='{$firstPicture}' alt='Restaurant Image'
+                                    class='w-full h-32 object-cover rounded-md'>
+                                    <h3 class='text-lg font-semibold mt-2'>{$restaurant['restaurant_name']}</h3>
+                                    <p class='text-gray-600'>Category: {$restaurant['categories']}</p>
+                                    <p class='text-yellow-500'>{$stars}</p>
+                            </div>
+                        </a>
                     ";
                 }
                 ?>
@@ -500,17 +510,19 @@ try {
                     $restaurant['restaurant_name'] = ucwords(strtolower($restaurant['restaurant_name']));
                     $stars = str_repeat("<span class='text-yellow-400'>★</span>", floor($restaurant['average_rating'])) .
                         str_repeat("<span class='text-gray-400'>☆</span>", 5 - floor($restaurant['average_rating']));
+                    $pictures = $restaurant['pictures'] ? json_decode($restaurant['pictures'], true) : [];
+                    $firstPicture = isset($pictures[0]) ? $pictures[0] : 'https://via.placeholder.com/300';
 
                     echo "
-                    <a href='restaurant.php?item={$restaurant['id']}'>
-                        <div class='bg-white rounded-lg shadow-lg p-4 cursor-pointer'>
-                            <img src='{$restaurant['pictures']}' alt='Restaurant Image'
-                                class='w-full h-32 object-cover rounded-md'>
-                                <h3 class='text-lg font-semibold mt-2'>{$restaurant['restaurant_name']}</h3>
-                                <p class='text-gray-600'>Category: {$restaurant['categories']}</p>
-                                <p class='text-yellow-500'>{$stars}</p>
-                        </div>
-                    </a>
+                        <a href='restaurant.php?item={$restaurant['id']}'>
+                            <div class='bg-white rounded-lg shadow-lg p-4 cursor-pointer'>
+                                <img src='{$firstPicture}' alt='Restaurant Image'
+                                    class='w-full h-32 object-cover rounded-md'>
+                                    <h3 class='text-lg font-semibold mt-2'>{$restaurant['restaurant_name']}</h3>
+                                    <p class='text-gray-600'>Category: {$restaurant['categories']}</p>
+                                    <p class='text-yellow-500'>{$stars}</p>
+                            </div>
+                        </a>
                     ";
                 }
                 ?>
@@ -544,17 +556,19 @@ try {
                     $restaurant['restaurant_name'] = ucwords(strtolower($restaurant['restaurant_name']));
                     $stars = str_repeat("<span class='text-yellow-400'>★</span>", floor($restaurant['average_rating'])) .
                         str_repeat("<span class='text-gray-400'>☆</span>", 5 - floor($restaurant['average_rating']));
+                    $pictures = $restaurant['pictures'] ? json_decode($restaurant['pictures'], true) : [];
+                    $firstPicture = isset($pictures[0]) ? $pictures[0] : 'https://via.placeholder.com/300';
 
                     echo "
-                    <a href='restaurant.php?item={$restaurant['id']}'>
-                        <div class='bg-white rounded-lg shadow-lg p-4 cursor-pointer'>
-                            <img src='{$restaurant['pictures']}' alt='Restaurant Image'
-                                class='w-full h-32 object-cover rounded-md'>
-                                <h3 class='text-lg font-semibold mt-2'>{$restaurant['restaurant_name']}</h3>
-                                <p class='text-gray-600'>Category: {$restaurant['categories']}</p>
-                                <p class='text-yellow-500'>{$stars}</p>
-                        </div>
-                    </a>
+                        <a href='restaurant.php?item={$restaurant['id']}'>
+                            <div class='bg-white rounded-lg shadow-lg p-4 cursor-pointer'>
+                                <img src='{$firstPicture}' alt='Restaurant Image'
+                                    class='w-full h-32 object-cover rounded-md'>
+                                    <h3 class='text-lg font-semibold mt-2'>{$restaurant['restaurant_name']}</h3>
+                                    <p class='text-gray-600'>Category: {$restaurant['categories']}</p>
+                                    <p class='text-yellow-500'>{$stars}</p>
+                            </div>
+                        </a>
                     ";
                 }
                 ?>
@@ -746,23 +760,6 @@ try {
                 dot.style.transform = 'translateX(0)'; // Move the dot back when unchecked
             }
         }
-
-        function movePage(name) {
-            switch (name) {
-                case 'famous1':
-                    window.location.href = "restaurant.php";
-                    break;
-                case 'random1':
-                    window.location.href = "restaurant.php";
-                    break;
-                case 'account':
-                    window.location.href = "profile.php";
-                    break;
-                default:
-                    break;
-            }
-        }
-
 
         // Responsive menu actions
         document.getElementById("hamburgerMenu").addEventListener("click", function () {
