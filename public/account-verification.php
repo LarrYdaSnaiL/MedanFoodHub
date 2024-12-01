@@ -2,6 +2,8 @@
 include "../database/connection.php";
 session_start();
 
+use Cloudinary\Api\Upload\UploadApi;
+
 // Check if the user is logged in
 if (!isset($_SESSION['login']) || !$_SESSION['login']) {
     header("Location: ../");
@@ -42,81 +44,162 @@ try {
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 </head>
 
-<body class="bg-gray-100 min-h-screen flex">
-    <!-- Sidebar -->
-    <aside class="w-64 bg-white shadow-lg">
-        <div class="p-6">
-            <h2 class="text-2xl font-semibold text-gray-800">Dashboard</h2>
-            <nav class="mt-8 space-y-4">
-                <a href="account-dashboard.php#profileSettings"
-                    class="block px-4 py-2 text-gray-700 hover:bg-blue-600 hover:text-white rounded-lg">Profile
-                    Settings</a>
-                <a href="account-dashboard.php#verifyAccount"
-                    class="block px-4 py-2 text-gray-700 hover:bg-blue-600 hover:text-white rounded-lg">Verify
-                    Account</a>
-                <a href="#logout" class="block px-4 py-2 text-gray-700 hover:bg-red-600 hover:text-white rounded-lg">Log
-                    Out</a>
-            </nav>
+<body class="bg-gray-100 font-sans antialiased">
+    <div class="flex min-h-screen">
+        <!-- Sidebar -->
+        <aside class="w-64 bg-white shadow-lg">
+            <div class="p-6">
+                <h2 class="text-2xl font-semibold text-gray-800">Dashboard</h2>
+                <nav class="mt-8 space-y-4">
+                    <a href="account-dashboard.php"
+                        class="block px-4 py-2 text-gray-700 hover:bg-blue-600 hover:text-white rounded-lg">Profile
+                        Settings</a>
+                    <a href="../config/logout.php"
+                        class="block px-4 py-2 text-gray-700 hover:bg-red-600 hover:text-white rounded-lg">Log
+                        Out</a>
+                    <a id="deleteAccount" href="#"
+                        class="block px-4 py-2 text-gray-700 hover:bg-red-600 hover:text-white rounded-lg text-red-600">Delete
+                        Account</a>
+                </nav>
+            </div>
+        </aside>
+
+        <!-- Delete Account Modal -->
+        <div id="deleteAccountModal"
+            class="modal hidden fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden z-50">
+            <div class="bg-white rounded-lg shadow-lg p-8 w-96">
+                <h2 class="text-2xl font-semibold text-gray-800 mb-4 text-center">Confirm Account Deletion</h2>
+                <p class="text-sm text-gray-600 mb-6 text-center">Please re-enter your email to confirm account
+                    deletion.</p>
+
+                <form id="deleteAccountForm" method="POST" action="../config/delete_account.php">
+                    <label for="confirmEmail" class="block text-gray-700">Email</label>
+                    <input type="email" id="confirmEmail" name="confirm_email" required
+                        class="mt-1 block w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-red-600"
+                        placeholder="example@gmail.com">
+
+                    <button type="submit"
+                        class="mt-4 w-full bg-red-600 text-white py-2 rounded-lg hover:bg-red-500 transition duration-200">Delete
+                        Account</button>
+                </form>
+
+                <div class="flex justify-center mt-4">
+                    <button id="closeDeleteModal" class="text-gray-600 hover:text-gray-900">Cancel</button>
+                </div>
+            </div>
         </div>
-    </aside>
 
-    <!-- Verification Form Section -->
-    <main class="flex-1 p-8">
-        <div class="bg-white p-6 rounded-lg shadow-md">
-            <h2 class="text-3xl font-semibold text-gray-800 mb-6 text-center">Verify Your Account</h2>
-            <p class="text-gray-600 mb-8 text-center">Submit the required details to verify your account and manage your
-                restaurant/cafe on the platform.</p>
+        <!-- Verification Form Section -->
+        <main class="flex-1 p-8">
+            <div class="bg-white p-6 rounded-lg shadow-md">
+                <h2 class="text-3xl font-semibold text-gray-800 mb-6 text-center">Verify Your Account</h2>
+                <p class="text-gray-600 mb-8 text-center">Submit the required details to verify your account and manage
+                    your restaurant/cafe on the platform.</p>
 
-            <form action="/submit-verification" method="POST" enctype="multipart/form-data" class="space-y-6">
-                <!-- Owner Identification Section -->
-                <div>
-                    <label for="ownerID" class="block text-gray-700 font-medium">Government-issued ID</label>
-                    <input type="file" id="ownerID" name="ownerID" required
-                        class="mt-2 w-full text-gray-700 border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-600">
-                    <small class="text-gray-500">Upload a clear photo or scanned copy of your ID.</small>
-                </div>
+                <form action="" method="POST" enctype="multipart/form-data" class="space-y-6">
+                    <!-- Owner Identification Section -->
+                    <div>
+                        <label for="ownerID" class="block text-gray-700 font-medium">National ID Card</label>
+                        <input type="file" accept=".pdf" id="ownerID" name="ownerID" required
+                            class="mt-2 w-full text-gray-700 border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-600">
+                        <small class="text-gray-500">Upload a clear photo or scanned copy of your ID.</small>
+                    </div>
 
-                <!-- Business Registration Section -->
-                <div>
-                    <label for="businessLicense" class="block text-gray-700 font-medium">Business Registration
-                        Document</label>
-                    <input type="file" id="businessLicense" name="businessLicense" required
-                        class="mt-2 w-full text-gray-700 border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-600">
-                    <small class="text-gray-500">Upload your business license or registration certificate.</small>
-                </div>
+                    <!-- Business Registration Section -->
+                    <div>
+                        <label for="businessLicense" class="block text-gray-700 font-medium">Taxpayer Identification
+                            Number (TIN)</label>
+                        <input type="file" accept=".pdf" id="businessLicense" name="businessLicense" required
+                            class="mt-2 w-full text-gray-700 border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-600">
+                        <small class="text-gray-500">Upload your taxpayer Identification number.</small>
+                    </div>
 
-                <!-- Proof of Ownership Section -->
-                <div>
-                    <label for="proofOfOwnership" class="block text-gray-700 font-medium">Proof of Ownership</label>
-                    <input type="file" id="proofOfOwnership" name="proofOfOwnership" required
-                        class="mt-2 w-full text-gray-700 border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-600">
-                    <small class="text-gray-500">Upload a document showing ownership, such as a utility bill or lease
-                        agreement.</small>
-                </div>
+                    <!-- Proof of Ownership Section -->
+                    <div>
+                        <label for="proofOfOwnership" class="block text-gray-700 font-medium">Proof of Ownership</label>
+                        <input type="file" accept=".pdf" id="proofOfOwnership" name="proofOfOwnership" required
+                            class="mt-2 w-full text-gray-700 border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-600">
+                        <small class="text-gray-500">Upload a document showing ownership, such as a utility bill or
+                            lease
+                            agreement.</small>
+                    </div>
 
-                <!-- Contact Information Section -->
-                <div>
-                    <label for="phoneNumber" class="block text-gray-700 font-medium">Contact Number</label>
-                    <input type="tel" id="phoneNumber" name="phoneNumber" required
-                        class="mt-2 w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-600"
-                        placeholder="Enter your contact number">
-                </div>
+                    <!-- Submit Button -->
+                    <button type="submit"
+                        class="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-500 transition duration-200">
+                        Submit for Verification
+                    </button>
+                </form>
 
-                <div>
-                    <label for="businessEmail" class="block text-gray-700 font-medium">Business Email</label>
-                    <input type="email" id="businessEmail" name="businessEmail" required
-                        class="mt-2 w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-600"
-                        placeholder="Enter your business email address">
-                </div>
+                <?php
+                if ($_SERVER['REQUEST_METHOD'] === "POST") {
+                    // Handle form submission
+                    $ownerID = $_FILES['ownerID'];
+                    $businessLicense = $_FILES['businessLicense'];
+                    $proofOfOwnership = $_FILES['proofOfOwnership'];
 
-                <!-- Submit Button -->
-                <button type="submit"
-                    class="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-500 transition duration-200">
-                    Submit for Verification
-                </button>
-            </form>
-        </div>
-    </main>
+                    try {
+                        if (
+                            (isset($_FILES['ownerID']) && $_FILES['ownerID']['error'] === UPLOAD_ERR_OK)
+                            && (isset($_FILES['businessLicense']) && $_FILES['businessLicense']['error'] === UPLOAD_ERR_OK)
+                            && (isset($_FILES['proofOfOwnership']) && $_FILES['proofOfOwnership']['error'] === UPLOAD_ERR_OK)
+                        ) {
+                            $ownerTmpPath = $_FILES['businessLicense']['tmp_name'];
+                            $ownerName = $_FILES['businessLicense'][$full_name];
+
+                            $businessTmpPath = $_FILES['businessLicense']['tmp_name'];
+                            $businessName = $_FILES['businessLicense'][$full_name];
+
+                            $proofTmpPath = $_FILES['proofOfOwnership']['tmp_name'];
+                            $proofName = $_FILES['proofOfOwnership'][$full_name];
+
+                            try {
+                                $upload = new UploadApi();
+                                $resultOwnerID = $upload->upload($ownerTmpPath, [
+                                    "folder" => "MedanFoodHub/Business Owner/{$_SESSION['uid']}",
+                                    "public_id" => $_SESSION['uid'] . "_ownerID"
+                                ]);
+
+                                $resultBusiness = $upload->upload($businessTmpPath, [
+                                    "folder" => "MedanFoodHub/Business Owner/{$_SESSION['uid']}",
+                                    "public_id" => $_SESSION['uid'] . "_businessLicense"
+                                ]);
+
+                                $resultProof = $upload->upload($proofTmpPath, [
+                                    "folder" => "MedanFoodHub/Business Owner/{$_SESSION['uid']}",
+                                    "public_id" => $_SESSION['uid'] . "_ProofOfOwnership"
+                                ]);
+
+                                $downloadOwner = $resultOwnerID['secure_url'];
+                                $downloadBusiness = $resultBusiness['secure_url'];
+                                $downloadProof = $resultProof['secure_url'];
+
+                            } catch (Exception $e) {
+                                echo 'Upload Error: ' . $e->getMessage();
+                            }
+                        }
+
+                        $stmt = $pdo->prepare("INSERT INTO businessowner (id, identity_card, taxpayer_number, proof_ownership, status) VALUES (:uid, :owner_id, :business_license, :proof_ownership, 'in request')");
+                        $stmt->execute([
+                            'uid' => $_SESSION['uid'],
+                            'owner_id' => $downloadOwner,
+                            'business_license' => $downloadBusiness,
+                            'proof_ownership' => $downloadProof
+                        ]);
+
+                        $result = $stmt->fetchAll();
+                        if (count($result) > 0) {
+                            echo "Account verification submitted successfully!";
+                        }
+
+                    } catch (Exception $e) {
+                        echo 'Err: ' . $e->getMessage();
+                    }
+                }
+                ?>
+            </div>
+        </main>
+    </div>
 
     <!-- Footer Section -->
     <footer class="bg-blue-600 text-gray-100 py-8">
@@ -155,7 +238,15 @@ try {
         </div>
     </footer>
 
+    <script>
+        document.getElementById('deleteAccount').addEventListener('click', function () {
+            document.getElementById('deleteAccountModal').classList.remove('hidden');
+        });
 
+        document.getElementById('closeDeleteModal').addEventListener('click', function () {
+            document.getElementById('deleteAccountModal').classList.add('hidden');
+        });
+    </script>
 </body>
 
 </html>

@@ -145,10 +145,10 @@ try {
         <div class="flex justify-center space-x-8 mb-8">
             <button id="bookmarksTab"
                 class="text-lg font-semibold pb-2 border-b-4 focus:outline-none text-blue-600 border-blue-600"
-                onclick="showSection('bookmarks')">Bookmarks</button>
+                onclick="showSection('bookmarks')">Your Bookmarks</button>
             <button id="commentsTab"
                 class="text-lg font-semibold pb-2 border-b-4 focus:outline-none text-gray-600 border-transparent hidden"
-                onclick="showSection('comments')">Comments</button>
+                onclick="showSection('comments')">Your Comments</button>
         </div>
 
         <!-- Content Sections -->
@@ -158,7 +158,19 @@ try {
                 <?php
                 if ($bookmarks) {
                     // Query to get full_name using uid
-                    $sql = "SELECT * FROM restaurants";
+                    $sql = "SELECT 
+                                r.id, 
+                                r.pictures, 
+                                r.restaurant_name, 
+                                r.categories, 
+                                COALESCE(AVG(rev.rating), 0) AS average_rating
+                            FROM 
+                                restaurants r
+                            LEFT JOIN 
+                                reviews rev ON r.id = rev.restaurant_id
+                            GROUP BY 
+                                r.id, r.pictures, r.restaurant_name, r.categories
+                            ";
                     $stmt = $pdo->prepare($sql);
                     $stmt->execute();
 
@@ -166,6 +178,9 @@ try {
                     foreach ($restaurants as $restaurant) {
                         foreach ($bookmarks as $bookmark) {
                             if ($restaurant['id'] == $bookmark) {
+                                $stars = str_repeat("<span class='text-yellow-400'>★</span>", floor($restaurant['average_rating'])) .
+                                    str_repeat("<span class='text-gray-400'>☆</span>", 5 - floor($restaurant['average_rating']));
+
                                 echo "
                                     <a href='restaurant.php?item={$restaurant['id']}'>
                                         <div class='bg-white rounded-lg shadow-lg p-4 cursor-pointer'>
@@ -173,7 +188,7 @@ try {
                                                 class='w-full h-32 object-cover rounded-md'>
                                             <h3 class='text-lg font-semibold mt-2'>{$restaurant['restaurant_name']}</h3>
                                             <p class='text-gray-600'>Category: {$restaurant['categories']}</p>
-                                            <p class='text-yellow-500'>Rating: ★★★★☆</p>
+                                            <p class='text-yellow-500'>$stars</p>
                                         </div>
                                     </a>
                                 ";
