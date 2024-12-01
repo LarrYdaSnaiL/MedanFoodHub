@@ -90,7 +90,7 @@ if (isset($_GET['item'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Restaurant Details - MedanFoodHub</title>
+    <title><?php echo $restaurantName ?> - MedanFoodHub</title>
     <link rel="icon" href="/assets/Logo/icon.png" type="image/x-icon">
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" rel="stylesheet">
@@ -324,18 +324,26 @@ if (isset($_GET['item'])) {
 
         <!-- Restaurant Gallery with Thumbnails -->
         <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
-            <img src="https://via.placeholder.com/300x200" alt="Gallery Image"
-                class="thumbnail w-full h-32 object-cover rounded-md cursor-pointer"
-                data-full="https://via.placeholder.com/800x600">
-            <img src="https://via.placeholder.com/300x200" alt="Gallery Image"
-                class="thumbnail w-full h-32 object-cover rounded-md cursor-pointer"
-                data-full="https://via.placeholder.com/800x600/ff0000">
-            <img src="https://via.placeholder.com/300x200" alt="Gallery Image"
-                class="thumbnail w-full h-32 object-cover rounded-md cursor-pointer"
-                data-full="https://via.placeholder.com/800x600/00ff00">
-            <img src="https://via.placeholder.com/300x200" alt="Gallery Image"
-                class="thumbnail w-full h-32 object-cover rounded-md cursor-pointer"
-                data-full="https://via.placeholder.com/800x600/0000ff">
+            <?php
+            $sql = "SELECT * FROM restaurants WHERE id = :id";
+            $stmt = $pdo->prepare($sql);
+            $stmt->bindParam(":id", $resto_id);
+            $stmt->execute();
+
+            $restaurant = $stmt->fetch(PDO::FETCH_ASSOC);
+            $pictures = $restaurant['pictures'] ? json_decode($restaurant['pictures'], true) : [];
+
+            if (isset($pictures)) {
+                foreach ($pictures as $picture) {
+                    echo "
+                    <div class='relative'>
+                        <img src='$picture' alt='Restaurant Image' class='w-full h-32 object-cover rounded-lg cursor-pointer'
+                            onclick='openModal(\"$picture\")'>
+                    </div>
+                    ";
+                }
+            }
+            ?>
         </div>
 
         <!-- Full-Screen Modal -->

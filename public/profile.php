@@ -180,11 +180,13 @@ try {
                             if ($restaurant['id'] == $bookmark) {
                                 $stars = str_repeat("<span class='text-yellow-400'>★</span>", floor($restaurant['average_rating'])) .
                                     str_repeat("<span class='text-gray-400'>☆</span>", 5 - floor($restaurant['average_rating']));
+                                $pictures = $restaurant['pictures'] ? json_decode($restaurant['pictures'], true) : [];
+                                $firstPicture = isset($pictures[0]) ? $pictures[0] : 'https://via.placeholder.com/300';
 
                                 echo "
                                     <a href='restaurant.php?item={$restaurant['id']}'>
                                         <div class='bg-white rounded-lg shadow-lg p-4 cursor-pointer'>
-                                            <img src='{$restaurant['pictures']}' alt='Restaurant Image'
+                                            <img src='{$firstPicture}' alt='Restaurant Image'
                                                 class='w-full h-32 object-cover rounded-md'>
                                             <h3 class='text-lg font-semibold mt-2'>{$restaurant['restaurant_name']}</h3>
                                             <p class='text-gray-600'>Category: {$restaurant['categories']}</p>

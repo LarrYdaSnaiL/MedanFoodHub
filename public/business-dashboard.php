@@ -28,7 +28,7 @@ $sql = "SELECT
         WHERE 
             r.owner_id = :owner_id  -- Filter berdasarkan owner_id yang sama dengan session
         GROUP BY 
-            r.id, r.pictures, r.restaurant_name, r.categories"; 
+            r.id, r.pictures, r.restaurant_name, r.categories";
 
 $stmt = $pdo->prepare($sql);
 
@@ -57,9 +57,13 @@ $restaurants = $stmt->fetchAll(PDO::FETCH_ASSOC);
             <div class="p-6">
                 <h2 class="text-2xl font-semibold text-gray-800">Dashboard</h2>
                 <nav class="mt-8 space-y-4">
-                    <a href="index.php" class="block px-4 py-2 text-gray-700 hover:bg-blue-600 hover:text-white rounded-lg">Home</a>
-                    <a href="account-dashboard.php" class="block px-4 py-2 text-gray-700 hover:bg-blue-600 hover:text-white rounded-lg">Profile Settings</a>
-                    <a href="../config/logout.php" class="block px-4 py-2 text-gray-700 hover:bg-red-600 hover:text-white rounded-lg">Log Out</a>
+                    <a href="index.php"
+                        class="block px-4 py-2 text-gray-700 hover:bg-blue-600 hover:text-white rounded-lg">Home</a>
+                    <a href="account-dashboard.php"
+                        class="block px-4 py-2 text-gray-700 hover:bg-blue-600 hover:text-white rounded-lg">Profile
+                        Settings</a>
+                    <a href="../config/logout.php"
+                        class="block px-4 py-2 text-gray-700 hover:bg-red-600 hover:text-white rounded-lg">Log Out</a>
                 </nav>
             </div>
         </aside>
@@ -69,37 +73,41 @@ $restaurants = $stmt->fetchAll(PDO::FETCH_ASSOC);
             <!-- Header Section -->
             <section class="bg-white p-6 rounded-lg shadow-md">
                 <h3 class="text-3xl font-semibold text-gray-800 mb-6">Your Business</h3>
-                <button class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-500 transition duration-200 mb-6">
-                    <a href="add-business.php">Add New Business</a>
-                </button>
-
+                <a href="add-business.php">
+                    <button
+                        class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-500 transition duration-200 mb-6">
+                        Add New Business
+                    </button>
+                </a>
                 <!-- Business Cards -->
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                <?php
-                foreach ($restaurants as $restaurant) {
-                // Format the restaurant name
-                $restaurant['restaurant_name'] = ucwords(strtolower($restaurant['restaurant_name']));
-    
-                // Generate stars for ratings
-                $stars = str_repeat("<span class='text-yellow-400'>★</span>", floor($restaurant['average_rating'])) . 
-                         str_repeat("<span class='text-gray-400'>☆</span>", 5 - floor($restaurant['average_rating']));
+                    <?php
+                    foreach ($restaurants as $restaurant) {
+                        // Format the restaurant name
+                        $restaurant['restaurant_name'] = ucwords(strtolower($restaurant['restaurant_name']));
+                        $pictures = $restaurant['pictures'] ? json_decode($restaurant['pictures'], true) : [];
+                        $firstPicture = isset($pictures[0]) ? $pictures[0] : 'https://via.placeholder.com/300';
 
-                echo "
-                <div class='bg-white rounded-lg shadow-lg p-4'>
-                 <img src='{$restaurant['pictures']}' alt='Restaurant Image'
-                class='w-full h-32 object-cover rounded-md'>
-        <h3 class='text-lg font-semibold mt-2'>{$restaurant['restaurant_name']}</h3>
-        <p class='text-gray-600'>Category: {$restaurant['categories']}</p>
-        <p class='text-yellow-500'>{$stars}</p>
-        <div class='mt-4'>
-          <a href='edit-business.php?id={$restaurant['id']}' class='bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-500 transition duration-200'>
-                 Manage Restaurant
-                    </a>
-              </div>
-           </div>  
-                       ";
+                        // Generate stars for ratings
+                        $stars = str_repeat("<span class='text-yellow-400'>★</span>", floor($restaurant['average_rating'])) .
+                            str_repeat("<span class='text-gray-400'>☆</span>", 5 - floor($restaurant['average_rating']));
+
+                        echo "
+                        <div class='bg-white rounded-lg shadow-lg p-4'>
+                            <img src='{$firstPicture}' alt='Restaurant Image'
+                                class='w-full h-32 object-cover rounded-md'>
+                            <h3 class='text-lg font-semibold mt-2'>{$restaurant['restaurant_name']}</h3>
+                            <p class='text-gray-600'>Category: {$restaurant['categories']}</p>
+                            <p class='text-yellow-500'>{$stars}</p>
+                            <div class='mt-4'>
+                                <a href='edit-business.php?edit={$restaurant['id']}' class='bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-500 transition duration-200'>
+                                    Manage Restaurant
+                                </a>
+                            </div>
+                        </div>  
+                        ";
                     }
-                ?>
+                    ?>
                 </div>
             </section>
         </main>
@@ -107,15 +115,19 @@ $restaurants = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     <!-- Footer Section -->
     <footer class="bg-blue-600 text-gray-100 py-8">
-        <div class="container mx-auto grid grid-cols-1 md:grid-cols-2 gap-6 px-6 justify-center items-center text-center">
+        <div
+            class="container mx-auto grid grid-cols-1 md:grid-cols-2 gap-6 px-6 justify-center items-center text-center">
             <div>
                 <h3 class="text-lg font-semibold mb-2">About MedanFoodHub</h3>
-                <p class="text-white text-sm">MedanFoodHub is your go-to platform to discover the best restaurants around Medan. Find top-rated, trending, and unique eateries all in one place.</p>
+                <p class="text-white text-sm">MedanFoodHub is your go-to platform to discover the best restaurants
+                    around Medan. Find top-rated, trending, and unique eateries all in one place.</p>
             </div>
             <div>
                 <h3 class="text-lg font-semibold mb-2">Contact Us</h3>
-                <p class="text-white text-sm">Email: <a href="mailto:info@medanfoodhub.com" class="hover:text-white">info@medanfoodhub.com</a></p>
-                <p class="text-white text-sm">Phone: <a href="tel:+620123456789" class="hover:text-white">+62 012 345 6789</a></p>
+                <p class="text-white text-sm">Email: <a href="mailto:info@medanfoodhub.com"
+                        class="hover:text-white">info@medanfoodhub.com</a></p>
+                <p class="text-white text-sm">Phone: <a href="tel:+620123456789" class="hover:text-white">+62 012 345
+                        6789</a></p>
             </div>
         </div>
     </footer>

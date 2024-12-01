@@ -2,6 +2,8 @@
 include "../database/connection.php";
 session_start();
 
+use Cloudinary\Api\Upload\UploadApi;
+
 // Check if the user is logged in
 if (!isset($_SESSION['login'])) {
     header("Location: ../");
@@ -37,7 +39,7 @@ try {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Manage Business</title>
+    <title>Add Business - MedanFoodHub</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 </head>
 
@@ -63,11 +65,11 @@ try {
         <main class="flex-1 p-8">
             <div class="container mx-auto my-8 bg-white p-6 rounded-lg shadow-lg">
                 <h2 class="text-2xl font-semibold mb-6">Manage Business</h2>
-                <form action="" method="POST">
+                <form action="" method="POST" enctype="multipart/form-data">
                     <!-- Main Picture Upload with Preview -->
                     <div class="mb-4">
                         <label class="block text-gray-700 font-semibold mb-2">Main Picture (300x200 px)</label>
-                        <input type="file" id="main-picture" name="images[]" accept="image/*" class="border p-2 w-full"
+                        <input type="file" id="images" name="images[]" accept="image/*" class="border p-2 w-full"
                             onchange="previewMainImage(this)">
                         <p class="text-sm text-gray-500 mt-1">Only images with 300x200 pixels are accepted.</p>
                         <div id="main-image-preview" class="mt-4"></div>
@@ -103,75 +105,117 @@ try {
                         <label class="block text-gray-700 font-semibold mb-2">Categories</label>
                         <div class="flex flex-wrap gap-4">
                             <label class="inline-flex items-center">
-                                <input type="checkbox" name="categories[]" class="form-checkbox text-blue-500"
+                                <input type="radio" name="categories" class="form-radio text-blue-500"
                                     value="Indonesian">
                                 <span class="ml-2 text-gray-700">Indonesian</span>
                             </label>
                             <label class="inline-flex items-center">
-                                <input type="checkbox" name="categories[]" class="form-checkbox text-blue-500"
-                                    value="Western">
+                                <input type="radio" name="categories" class="form-radio text-blue-500" value="Western">
                                 <span class="ml-2 text-gray-700">Western</span>
                             </label>
                             <label class="inline-flex items-center">
-                                <input type="checkbox" name="categories[]" class="form-checkbox text-blue-500"
-                                    value="Chinese">
+                                <input type="radio" name="categories" class="form-radio text-blue-500" value="Chinese">
                                 <span class="ml-2 text-gray-700">Chinese</span>
                             </label>
                             <label class="inline-flex items-center">
-                                <input type="checkbox" name="categories[]" class="form-checkbox text-blue-500"
+                                <input type="radio" name="categories" class="form-radio text-blue-500"
                                     value="Middle East">
                                 <span class="ml-2 text-gray-700">Middle East</span>
                             </label>
                             <label class="inline-flex items-center">
-                                <input type="checkbox" name="categories[]" class="form-checkbox text-blue-500"
-                                    value="Others">
+                                <input type="radio" name="categories" class="form-radio text-blue-500" value="Others">
                                 <span class="ml-2 text-gray-700">Others</span>
                             </label>
                         </div>
                     </div>
 
                     <!-- Submit Button -->
-                    <button
+                    <button type="submit"
                         class="bg-blue-500 text-white font-semibold py-2 px-4 rounded hover:bg-blue-600">Save</button>
                 </form>
 
                 <?php
-                if ($_SERVER["REQUEST_METHOD"] === 'POST') {
+                if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     // Get the form data
-                    $restaurantName = $_POST['restaurantName'];
+                    $restaurantName = trim($_POST['restaurantName']);
                     $restaurantId = md5($restaurantName);
-                    $description = $_POST['description'];
-                    $categories = isset($_POST['categories']) ? implode(', ', $_POST['categories']) : '';
+                    $description = trim($_POST['description']);
+                    $categories = trim($_POST['categories']);
+                    $ownerId = $_SESSION['uid'];
 
+                    // Check if the business already exists
                     $dataCheck = "SELECT * FROM restaurants WHERE restaurant_name ILIKE :restaurantName";
-                    $dataCheckExecute = $pdo->prepare($dataCheck);
-                    $dataCheckExecute->bindParam(":restaurantName", $restaurantName);
+                    $stmt = $pdo->prepare($dataCheck);
+                    $stmt->bindParam(":restaurantName", $restaurantName);
+                    $stmt->execute();
 
-                    if ($dataCheckExecute->execute()) {
-                        $existed = $dataCheckExecute->fetchColumn();
+                    $data = $stmt->fetch(PDO::FETCH_ASSOC);
 
-                        if ($existed) {
-                            echo "<script>alert('Business already exists.');</script>";
-                        } else {
-                            // Prepare a SQL statement to insert the business
-                            $sql = "INSERT INTO restaurants (id, owner_id, pictures, restaurant_name, descriptions, categories) VALUES (:id, :owner_id, null, :restaurantName, :description, :categories)";
-                            $stmt = $pdo->prepare($sql);
-                            $stmt->bindParam(":id", $restaurantId);
-                            $stmt->bindParam(':owner_id', $_SESSION['uid']);
-                            $stmt->bindParam(':restaurantName', $restaurantName);
-                            $stmt->bindParam(':description', $description);
-                            $stmt->bindParam(':categories', $categories);
+                    if ($data) {
+                        echo "<script>alert('Business already exists.');</script>";
+                    } else {
+                        if (isset($_FILES['images']) && count($_FILES['images']['tmp_name']) > 0) {
+                            $images = $_FILES['images']; // Assign $_FILES['images'] to a variable for clarity
+                
+                            foreach ($images['tmp_name'] as $key => $tmpName) {
+                                // Check if the file is uploaded and has no error
+                                if (is_uploaded_file($tmpName) && $images['error'][$key] === UPLOAD_ERR_OK) {
+                                    try {
+                                        $upload = new UploadApi();
+                                        $result = $upload->upload($tmpName, [ // Use $tmpName here
+                                            "folder" => "MedanFoodHub/Restaurant/$restaurantId",
+                                            "public_id" => "{$restaurantId}{$uploadIndex}"
+                                        ]);
 
-                            // Execute the SQL statement
-                            if ($stmt->execute()) {
-                                echo "<script>alert('Business added successfully.');</script>";
-                            } else {
-                                echo "<script>alert('Failed to add business.');</script>";
+                                        $cloudinaryUrls[] = $result['secure_url']; // Collect the uploaded file URL
+                                        $uploadIndex++;
+                                    } catch (Exception $e) {
+                                        echo 'Error uploading file: ' . $e->getMessage();
+                                    }
+                                }
                             }
+
+                            // Check if any files were uploaded successfully
+                            if (!empty($cloudinaryUrls)) {
+                                $jsonUrls = json_encode($cloudinaryUrls);
+
+                                // Prepare a SQL statement to insert the business
+                                $sql = "INSERT INTO restaurants (id, owner_id, pictures, restaurant_name, descriptions, categories) VALUES (:id, :owner_id, :pictures, :restaurantName, :description, :categories)";
+                                $stmt = $pdo->prepare($sql);
+                                $stmt->bindParam(":id", $restaurantId);
+                                $stmt->bindParam(':owner_id', $_SESSION['uid']);
+                                $stmt->bindParam(':pictures', $jsonUrls);
+                                $stmt->bindParam(':restaurantName', $restaurantName);
+                                $stmt->bindParam(':description', $description);
+                                $stmt->bindParam(':categories', $categories);
+
+                                // Execute the SQL statement
+                                if ($stmt->execute()) {
+                                    echo "
+                                    <script>
+                                        alert('Business added successfully.');
+                                        window.location.href='business-dashboard.php';
+                                    </script>";
+                                } else {
+                                    echo "
+                                    <script>
+                                        alert('Failed to add business.');
+                                        window.location.href='business-dashboard.php';
+                                    </script>";
+                                }
+                            } else {
+                                echo "
+                                <script>
+                                    alert('No files were uploaded.');
+                                </script>";
+                            }
+                        } else {
+                            echo "<script>alert('Failed to upload image.');</script>";
                         }
                     }
                 }
                 ?>
+
             </div>
         </main>
     </div>
@@ -240,7 +284,7 @@ try {
         }
 
         function deleteMainImage() {
-            document.getElementById('main-picture').value = ""; // Clear file input
+            document.getElementById('images').value = ""; // Clear file input
             document.getElementById('main-image-preview').innerHTML = ""; // Clear preview
         }
 
