@@ -25,7 +25,6 @@ try {
         $email = $user['email'];
         $phone = $user['phone'];
         $bio = $user['bio'];
-        $is_owner = $user['is_owner'];
     }
 } catch (Exception $e) {
     echo "Error: " . $e->getMessage();

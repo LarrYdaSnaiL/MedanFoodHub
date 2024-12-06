@@ -25,7 +25,6 @@ try {
         $email = $user['email'];
         $phone = $user['phone'];
         $bio = $user['bio'];
-        $is_owner = $user['is_owner'];
     }
 } catch (Exception $e) {
     echo "Error: " . $e->getMessage();
@@ -146,13 +145,8 @@ try {
                             && (isset($_FILES['proofOfOwnership']) && $_FILES['proofOfOwnership']['error'] === UPLOAD_ERR_OK)
                         ) {
                             $ownerTmpPath = $_FILES['businessLicense']['tmp_name'];
-                            $ownerName = $_FILES['businessLicense'][$full_name];
-
                             $businessTmpPath = $_FILES['businessLicense']['tmp_name'];
-                            $businessName = $_FILES['businessLicense'][$full_name];
-
                             $proofTmpPath = $_FILES['proofOfOwnership']['tmp_name'];
-                            $proofName = $_FILES['proofOfOwnership'][$full_name];
 
                             try {
                                 $upload = new UploadApi();
@@ -190,7 +184,12 @@ try {
 
                         $result = $stmt->fetchAll();
                         if (count($result) > 0) {
-                            echo "Account verification submitted successfully!";
+                            echo "
+                            <script>
+                                alert('Your documents have been submitted for verification. You will receive an email once the process is complete.');
+                                window.location.href = 'account-dashboard.php';
+                            </script>
+                            ";
                         }
 
                     } catch (Exception $e) {

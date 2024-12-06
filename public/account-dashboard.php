@@ -24,7 +24,22 @@ try {
         $email = $user['email'];
         $phone = $user['phone'];
         $bio = $user['bio'];
-        $is_owner = $user['is_owner'];
+
+        $sql = "SELECT * FROM businessowner WHERE id = :uid";
+        $stmt = $pdo->prepare($sql);
+        $stmt->bindParam(':uid', $_SESSION['uid']);
+
+        if ($stmt->execute()) {
+            $owner = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            if ($owner) {
+                if ($owner['status'] === 'approved') {
+                    $is_owner = true;
+                } else {
+                    $is_owner = false;
+                }
+            }
+        }
     }
 } catch (Exception $e) {
     echo "Error: " . $e->getMessage();
@@ -230,55 +245,58 @@ try {
             <section id="verifyAccount" class="bg-white p-6 rounded-lg shadow-md mt-6">
                 <h3 class="text-2xl font-semibold text-gray-800 mb-4">Verify Account</h3>
 
-                <?php if (!$is_owner) {
-                    $sql = "SELECT * FROM businessowner WHERE id = :uid";
-                    $stmt = $pdo->prepare($sql);
-                    $stmt->bindParam(':uid', $_SESSION['uid']);
+                <?php
+                $sql = "SELECT * FROM businessowner WHERE id = :uid";
+                $stmt = $pdo->prepare($sql);
+                $stmt->bindParam(':uid', $_SESSION['uid']);
 
-                    if ($stmt->execute()) {
-                        $owner = $stmt->fetch(PDO::FETCH_ASSOC);
+                if ($stmt->execute()) {
+                    $owner = $stmt->fetch(PDO::FETCH_ASSOC);
 
-                        if ($owner['status'] == 'in request') {
-                            echo "
+                    if (!$owner) {
+                        echo "
                             <p class='text-gray-700 mb-6'>
-                                Your verification request is currently being reviewed. You will receive an email once your
-                                account has been verified.
-                            </p>";
-                        } else if ($owner['status'] == 'rejected') {
-                            echo "
-                            <p class='text-gray-700 mb-6'>
-                                Your verification request has been rejected with rejection message: \"{$owner['message']}\". Please, submit a new request.
+                                You are not a verified business owner. Please, submit a verification request to become a
+                                verified business owner.
                             </p>
         
                             <!-- Button to start verification process -->
                             <button class='bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-500 transition duration-200'
                                 onclick='verif()'>
-                                Start Verification Again
+                                Start Verification
                             </button>";
-                        } else if ($owner["status"] == "approved" && !$is_owner) {
-                            $sql = "UPDATE users SET is_owner = true WHERE uid = :uid";
-                            $stmt = $pdo->prepare($sql);
-                            $stmt->bindParam(':uid', $_SESSION['uid']);
-                            if ($stmt->execute()) {
-                                echo "
-                                <script>
-                                    window.location.href = 'account-dashboard.php';
-                                </script>
-                                ";
-                            }
-                        }
+                    } else if ($owner['status'] === 'in request') {
+                        echo "
+                            <p class='text-gray-700 mb-6'>
+                                Your verification request is currently pending. You will receive an email once your account
+                                has been verified.
+                            </p>";
+                    } else if ($owner['status'] === 'approved') {
+                        echo "
+                            <p class='text-gray-700 mb-6'>
+                                Your verification request has been approved. You are now a verified business owner.
+                            </p>
+        
+                            <!-- Button to start verification process -->
+                            <button class='bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-500 transition duration-200'
+                                onclick='window.location.href=\"business-dashboard.php\"'>
+                                Manage Your Business
+                            </button>";
+                    } else if ($owner['status'] === 'rejected') {
+                        echo "
+                            <p class='text-gray-700 mb-6'>
+                                Your request has been rejected with rejection message: \"{$owner['message']}\". Please, submit another verification request to become a
+                                verified business owner.
+                            </p>
+        
+                            <!-- Button to start verification process -->
+                            <button class='bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-500 transition duration-200'
+                                onclick='verif()'>
+                                Start Verification
+                            </button>";
                     }
                 } else {
-                    echo '
-                    <p class="text-gray-700 mb-6">
-                        You are verified!
-                    </p>
-                
-                    <!-- Button to start verification process -->
-                    <button class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-500 transition duration-200"
-                        onclick="window.location.href=\'business-dashboard.php\'">
-                        Manage Your Business
-                    </button>';
+                    echo "<p class='text-gray-700 mb-6'>An error occurred while fetching your verification status.</p>";
                 }
                 ?>
             </section>

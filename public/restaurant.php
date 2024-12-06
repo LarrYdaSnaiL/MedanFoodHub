@@ -26,7 +26,6 @@ try {
         $email = $user['email'];
         $phone = $user['phone'];
         $bio = $user['bio'];
-        $is_owner = $user['is_owner'];
         $bookmarks = $user['bookmarks'] ? json_decode($user['bookmarks'], true) : [];
     }
 } catch (Exception $e) {
@@ -258,7 +257,7 @@ if (isset($_GET['item'])) {
     </div>
 
     <!-- Restaurant Details Content -->
-    <div class="container mx-auto py-8 mb-12">
+    <div class="container mx-auto py-8 mb-12 px-5">
         <!-- Restaurant Header -->
         <div class="flex justify-between items-center mb-4">
             <div>

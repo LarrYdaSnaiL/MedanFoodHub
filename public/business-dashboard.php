@@ -87,7 +87,7 @@ $restaurants = $stmt->fetchAll(PDO::FETCH_ASSOC);
                         // Format the restaurant name
                         $restaurant['restaurant_name'] = ucwords(strtolower($restaurant['restaurant_name']));
                         $pictures = $restaurant['pictures'] ? json_decode($restaurant['pictures'], true) : [];
-                        $firstPicture = isset($pictures[0]) ? $pictures[0] : 'https://via.placeholder.com/300';
+                        $firstPicture = isset($pictures[0]) ? $pictures[0] : 'https://via.placeholder.com/300x200';
 
                         // Generate stars for ratings
                         $stars = str_repeat("<span class='text-yellow-400'>★</span>", floor($restaurant['average_rating'])) .

@@ -23,7 +23,6 @@ try {
         $email = $user['email'];
         $phone = $user['phone'];
         $bio = $user['bio'];
-        $is_owner = $user['is_owner'];
     }
 } catch (Exception $e) {
     echo "Error: " . $e->getMessage();
@@ -105,7 +104,7 @@ try {
         <!-- Responsive Menu -->
         <div id="responsiveMenu"
             class="hidden lg:hidden fixed top-0 right-0 h-full w-50% bg-white shadow-lg z-50 slide-enter">
-            <div class="flex flex-col p-4 space-y-4 items-center content-centere">
+            <div class="flex flex-col p-4 space-y-4 items-center content-center">
                 <!-- Close Button -->
                 <button id="closeMenu" class="self-end text-2xl">
                     &times;
@@ -235,11 +234,17 @@ try {
         <!-- Carousel Section -->
         <section id="carousel" class="mb-8 relative">
             <div class="overflow-hidden rounded-lg shadow-lg">
-                <div class="carousel-images flex transition-transform duration-500">
-                    <img src="https://via.placeholder.com/800x400?text=1200x384" class="w-full h-64 object-cover">
-                    <img src="https://via.placeholder.com/800x400?text=1200x384"
+                <div class="carousel-images transition-transform duration-500">
+                    <img src="../Assets/1.png" class="w-full h-64 object-cover">
+                    <img src="../Assets/2.png"
                         class="w-full h-64 object-cover hidden">
-                    <img src="https://via.placeholder.com/800x400?text=1200x384"
+                    <img src="../Assets/3.png"
+                        class="w-full h-64 object-cover hidden">
+                    <img src="../Assets/4.png"
+                        class="w-full h-64 object-cover hidden">
+                    <img src="../Assets/5.png"
+                        class="w-full h-64 object-cover hidden">
+                    <img src="../Assets/6.png"
                         class="w-full h-64 object-cover hidden">
                 </div>
             </div>
@@ -285,7 +290,7 @@ try {
                     $stars = str_repeat("<span class='text-yellow-400'>★</span>", floor($restaurant['average_rating'])) .
                         str_repeat("<span class='text-gray-400'>☆</span>", 5 - floor($restaurant['average_rating']));
                     $pictures = $restaurant['pictures'] ? json_decode($restaurant['pictures'], true) : [];
-                    $firstPicture = isset($pictures[0]) ? $pictures[0] : 'https://via.placeholder.com/300';
+                    $firstPicture = isset($pictures[0]) ? $pictures[0] : 'https://via.placeholder.com/300x200';
 
                     echo "
                         <a href='restaurant.php?item={$restaurant['id']}'>
@@ -350,7 +355,7 @@ try {
                     $stars = str_repeat("<span class='text-yellow-400'>★</span>", floor($restaurant['average_rating'])) .
                         str_repeat("<span class='text-gray-400'>☆</span>", 5 - floor($restaurant['average_rating']));
                     $pictures = $restaurant['pictures'] ? json_decode($restaurant['pictures'], true) : [];
-                    $firstPicture = isset($pictures[0]) ? $pictures[0] : 'https://via.placeholder.com/300';
+                    $firstPicture = isset($pictures[0]) ? $pictures[0] : 'https://via.placeholder.com/300x200';
 
                     echo "
                     <a href='restaurant.php?item={$restaurant['id']}'>
@@ -396,7 +401,7 @@ try {
                     $stars = str_repeat("<span class='text-yellow-400'>★</span>", floor($restaurant['average_rating'])) .
                         str_repeat("<span class='text-gray-400'>☆</span>", 5 - floor($restaurant['average_rating']));
                     $pictures = $restaurant['pictures'] ? json_decode($restaurant['pictures'], true) : [];
-                    $firstPicture = isset($pictures[0]) ? $pictures[0] : 'https://via.placeholder.com/300';
+                    $firstPicture = isset($pictures[0]) ? $pictures[0] : 'https://via.placeholder.com/300x200';
 
                     echo "
                         <a href='restaurant.php?item={$restaurant['id']}'>
@@ -442,7 +447,7 @@ try {
                     $stars = str_repeat("<span class='text-yellow-400'>★</span>", floor($restaurant['average_rating'])) .
                         str_repeat("<span class='text-gray-400'>☆</span>", 5 - floor($restaurant['average_rating']));
                     $pictures = $restaurant['pictures'] ? json_decode($restaurant['pictures'], true) : [];
-                    $firstPicture = isset($pictures[0]) ? $pictures[0] : 'https://via.placeholder.com/300';
+                    $firstPicture = isset($pictures[0]) ? $pictures[0] : 'https://via.placeholder.com/300x200';
 
                     echo "
                         <a href='restaurant.php?item={$restaurant['id']}'>
@@ -488,7 +493,7 @@ try {
                     $stars = str_repeat("<span class='text-yellow-400'>★</span>", floor($restaurant['average_rating'])) .
                         str_repeat("<span class='text-gray-400'>☆</span>", 5 - floor($restaurant['average_rating']));
                     $pictures = $restaurant['pictures'] ? json_decode($restaurant['pictures'], true) : [];
-                    $firstPicture = isset($pictures[0]) ? $pictures[0] : 'https://via.placeholder.com/300';
+                    $firstPicture = isset($pictures[0]) ? $pictures[0] : 'https://via.placeholder.com/300x200';
 
                     echo "
                         <a href='restaurant.php?item={$restaurant['id']}'>
@@ -534,7 +539,7 @@ try {
                     $stars = str_repeat("<span class='text-yellow-400'>★</span>", floor($restaurant['average_rating'])) .
                         str_repeat("<span class='text-gray-400'>☆</span>", 5 - floor($restaurant['average_rating']));
                     $pictures = $restaurant['pictures'] ? json_decode($restaurant['pictures'], true) : [];
-                    $firstPicture = isset($pictures[0]) ? $pictures[0] : 'https://via.placeholder.com/300';
+                    $firstPicture = isset($pictures[0]) ? $pictures[0] : 'https://via.placeholder.com/300x200';
 
                     echo "
                         <a href='restaurant.php?item={$restaurant['id']}'>
@@ -580,7 +585,7 @@ try {
                     $stars = str_repeat("<span class='text-yellow-400'>★</span>", floor($restaurant['average_rating'])) .
                         str_repeat("<span class='text-gray-400'>☆</span>", 5 - floor($restaurant['average_rating']));
                     $pictures = $restaurant['pictures'] ? json_decode($restaurant['pictures'], true) : [];
-                    $firstPicture = isset($pictures[0]) ? $pictures[0] : 'https://via.placeholder.com/300';
+                    $firstPicture = isset($pictures[0]) ? $pictures[0] : 'https://via.placeholder.com/300x200';
 
                     echo "
                         <a href='restaurant.php?item={$restaurant['id']}'>

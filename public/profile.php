@@ -181,7 +181,7 @@ try {
                                 $stars = str_repeat("<span class='text-yellow-400'>★</span>", floor($restaurant['average_rating'])) .
                                     str_repeat("<span class='text-gray-400'>☆</span>", 5 - floor($restaurant['average_rating']));
                                 $pictures = $restaurant['pictures'] ? json_decode($restaurant['pictures'], true) : [];
-                                $firstPicture = isset($pictures[0]) ? $pictures[0] : 'https://via.placeholder.com/300';
+                                $firstPicture = isset($pictures[0]) ? $pictures[0] : 'https://via.placeholder.com/300x200';
 
                                 echo "
                                     <a href='restaurant.php?item={$restaurant['id']}'>
