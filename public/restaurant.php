@@ -48,7 +48,7 @@ if (isset($_GET['item'])) {
         WHERE 
             r.id = :id
         GROUP BY 
-            r.id, r.owner_id, r.pictures, r.restaurant_name, r.descriptions, r.categories';
+            r.id, r.id, r.pictures, r.restaurant_name, r.descriptions, r.categories';
     $stmt = $pdo->prepare($sql);
     $stmt->bindParam('id', $resto_id);
     $stmt->execute();
@@ -58,7 +58,7 @@ if (isset($_GET['item'])) {
     if ($restaurant) {
         // Extract restaurant details
         $restaurantName = $restaurant['restaurant_name'];
-        $ownerId = $restaurant['owner_id'];
+        $ownerId = $restaurant['uid'];
         $description = $restaurant['descriptions'];
         $categories = $restaurant['categories'];
         $averageRating = number_format($restaurant['average_rating'], 1); // Format rating to 1 decimal place
@@ -90,10 +90,10 @@ if (isset($_GET['item'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo $restaurantName ?> - MedanFoodHub</title>
-    <link rel="icon" href="../Assets/Logo/icon.png" type="image/x-icon">
+    <link rel="icon" href="./assets/Logo/icon.png" type="image/x-icon">
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="../Assets/style.css">
+    <link rel="stylesheet" href="./assets/style.css">
 </head>
 
 <body class="bg-gray-100 font-sans">
@@ -103,7 +103,7 @@ if (isset($_GET['item'])) {
         <div class="container mx-auto flex justify-between items-center px-6">
             <!-- Logo -->
             <a href="../" class="text-2xl font-bold text-blue-600">
-                <img src="../Assets/Logo/text logo.png" width="200" alt="Text Logo">
+                <img src="./assets/Logo/text logo.png" width="200" alt="Text Logo">
             </a>
 
             <!-- Hamburger Menu -->
@@ -134,7 +134,7 @@ if (isset($_GET['item'])) {
                     <div id="profileSection" class="flex items-center space-x-2 cursor-pointer"
                         onclick="movePage('account')">
                         <span class="text-black font-medium"><?php echo $full_name; ?></span>
-                        <img src="<?php echo $profilePic != null ? $profilePic : '../Assets/blankPic.png'; ?>"
+                        <img src="<?php echo $profilePic != null ? $profilePic : './assets/blankPic.png'; ?>"
                             alt="User Profile Picture" class="w-10 h-10 rounded-full">
                     </div>
                 <?php } ?>
@@ -170,7 +170,7 @@ if (isset($_GET['item'])) {
                     <div id="profileSection" class="flex items-center space-x-2 cursor-pointer"
                         onclick="movePage('account')">
                         <span class="text-black font-medium"><?php echo $full_name; ?></span>
-                        <img src="<?php echo $profilePic != null ? $profilePic : '../Assets/blankPic.png'; ?>"
+                        <img src="<?php echo $profilePic != null ? $profilePic : './assets/blankPic.png'; ?>"
                             alt="User Profile Picture" class="w-10 h-10 rounded-full">
                     </div>
                 <?php } ?>
@@ -249,7 +249,7 @@ if (isset($_GET['item'])) {
                     </div>
                 </div>
                 <button type="submit"
-                    class="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-500 transition duration-200">Login</button>
+                    class="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-500 transition duration-200">Register</button>
             </form>
             <button id="closeSignUpModal"
                 class="absolute top-2 right-2 text-gray-600 hover:text-gray-900">&times;</button>
@@ -275,46 +275,61 @@ if (isset($_GET['item'])) {
             </div>
             <div>
                 <form action="" method="POST">
-                    <button class="bg-blue-600 text-white px-4 py-2 rounded-lg" id="share-btn"><i
-                            class="fa-solid fa-share"></i>&nbsp;&nbsp;Share</button>
+                    <button class="bg-blue-600 text-white px-4 py-2 rounded-lg" id="share-btn">
+                        <i class="fa-solid fa-share"></i>&nbsp;&nbsp;Share</button>
                     <button class="bg-blue-600 text-white px-4 py-2 rounded-lg" name="bookmark" type="submit">
-                        <?php if (in_array($resto_id, $bookmarks)) {
-                            echo "<i class='fa-solid fa-bookmark'></i>";
+                        <?php
+                        if ($_SESSION['login']) {
+                            if (in_array($resto_id, $bookmarks)) {
+                                echo "<i class='fa-solid fa-bookmark'></i>";
+                            } else {
+                                echo "<i class='fa-regular fa-bookmark'></i>";
+                            }
                         } else {
                             echo "<i class='fa-regular fa-bookmark'></i>";
-                        } ?>
+                        }
+                        ?>
                         &nbsp;&nbsp;Bookmark</button>
                 </form>
 
                 <?php
                 if (isset($_POST['bookmark'])) {
-                    try {
-                        $newRestaurantId = $_GET['item'];
+                    if ($_SESSION['login']) {
+                        try {
+                            $newRestaurantId = $_GET['item'];
 
-                        if (in_array($newRestaurantId, $bookmarks)) {
-                            // Remove the restaurant_id from bookmarks
-                            $sql = "UPDATE users SET bookmarks = to_jsonb(array_remove(ARRAY(SELECT jsonb_array_elements_text(bookmarks))::TEXT[], :restaurant_id)) WHERE uid = :uid";
-                            $action = "removed";
-                        } else {
-                            // Add the restaurant_id to bookmarks
-                            $sql = "UPDATE users SET bookmarks = COALESCE(bookmarks, '[]'::JSONB) || to_jsonb(CAST(:restaurant_id AS TEXT)) WHERE uid = :uid";
-                            $action = "added";
-                        }
+                            if (in_array($newRestaurantId, $bookmarks)) {
+                                // Remove the restaurant_id from bookmarks
+                                $sql = "UPDATE users SET bookmarks = to_jsonb(array_remove(ARRAY(SELECT jsonb_array_elements_text(bookmarks))::TEXT[], :restaurant_id)) WHERE uid = :uid";
+                                $action = "removed";
+                            } else {
+                                // Add the restaurant_id to bookmarks
+                                $sql = "UPDATE users SET bookmarks = COALESCE(bookmarks, '[]'::JSONB) || to_jsonb(CAST(:restaurant_id AS TEXT)) WHERE uid = :uid";
+                                $action = "added";
+                            }
 
-                        // Add new bookmark
-                        $stmt = $pdo->prepare($sql);
-                        $stmt->bindParam("restaurant_id", $_GET['item']);
-                        $stmt->bindParam('uid', $_SESSION['uid']);
-                        $added = $stmt->execute();
-                        if ($added) {
-                            echo "
-                            <script>
-                                location.href = 'restaurant.php?item=$resto_id';
-                            </script>
-                            ";
+                            // Add new bookmark
+                            $stmt = $pdo->prepare($sql);
+                            $stmt->bindParam("restaurant_id", $_GET['item']);
+                            $stmt->bindParam('uid', $_SESSION['uid']);
+                            $added = $stmt->execute();
+                            if ($added) {
+                                echo "
+                                <script>
+                                    location.href = 'restaurant?item=$resto_id';
+                                </script>
+                                ";
+                            }
+                        } catch (PDOException $e) {
+                            echo "Error: " . $e->getMessage();
                         }
-                    } catch (PDOException $e) {
-                        echo "Error: " . $e->getMessage();
+                    } else {
+                        echo "
+                        <script>
+                            alert('Please login to bookmark this restaurant');
+                            location.href = 'restaurant?item=$resto_id';
+                        </script>
+                        ";
                     }
                 }
                 ?>
@@ -336,8 +351,7 @@ if (isset($_GET['item'])) {
                 foreach ($pictures as $picture) {
                     echo "
                     <div class='relative'>
-                        <img src='$picture' alt='Restaurant Image' class='w-full h-32 object-cover rounded-lg cursor-pointer'
-                            onclick='openModal(\"$picture\")'>
+                        <img src='$picture' alt='Restaurant Image' class='w-full h-32 object-cover rounded-lg cursor-pointer thumbnail' data-full='$picture'>
                     </div>
                     ";
                 }
@@ -465,52 +479,60 @@ if (isset($_GET['item'])) {
 
             <?php
             if (isset($_POST["submit-comment"])) {
-                try {
-                    // $resto_id;
-                    // $_SESSION['uid'];
+                if ($_SESSION['login']) {
+                    try {
+                        // $resto_id;
+                        // $_SESSION['uid'];
             
-                    $rating = isset($_POST['rating']) ? (int) $_POST['rating'] : 0;
-                    $newComment = isset($_POST['newComment']) ? $_POST['newComment'] : '';
+                        $rating = isset($_POST['rating']) ? (int) $_POST['rating'] : 0;
+                        $newComment = isset($_POST['newComment']) ? $_POST['newComment'] : '';
 
-                    if ($rating < 1 || $rating > 5 || empty($newComment)) {
-                        echo "
-                        <script>
-                            alert('Invalid Comment');
-                            location.href = 'restaurant.php?item=$resto_id';
-                        </script>
-                        ";
-                        exit;
-                    }
+                        if ($rating < 1 || $rating > 5 || empty($newComment)) {
+                            echo "
+                            <script>
+                                alert('Invalid Comment');
+                                location.href = 'restaurant?item=$resto_id';
+                            </script>
+                            ";
+                            exit;
+                        }
 
-                    $sql = "INSERT INTO reviews (id, restaurant_id, rating, review) VALUES (:uid, :restaurant_id, :rating, :comment)";
-                    $stmt = $pdo->prepare($sql);
-                    $stmt->bindParam(':uid', $_SESSION['uid']);
-                    $stmt->bindParam(':restaurant_id', $resto_id);
-                    $stmt->bindParam(":rating", $rating);
-                    $stmt->bindParam(':comment', $newComment);
-                    if ($stmt->execute()) {
-                        echo "
-                        <script>
-                            location.href = 'restaurant.php?item=$resto_id';
-                        </script>
-                        ";
+                        $sql = "INSERT INTO reviews (uid, restaurant_id, rating, review) VALUES (:uid, :restaurant_id, :rating, :comment)";
+                        $stmt = $pdo->prepare($sql);
+                        $stmt->bindParam(':uid', $_SESSION['uid']);
+                        $stmt->bindParam(':restaurant_id', $resto_id);
+                        $stmt->bindParam(":rating", $rating);
+                        $stmt->bindParam(':comment', $newComment);
+                        if ($stmt->execute()) {
+                            echo "
+                            <script>
+                                location.href = 'restaurant?item=$resto_id';
+                            </script>
+                            ";
+                        }
+                    } catch (PDOException $e) {
+                        echo "Err: " . $e->getMessage();
                     }
-                } catch (PDOException $e) {
-                    echo "Err: " . $e->getMessage();
+                } else {
+                    echo "
+                    <script>
+                        alert('Please login to comment');
+                        location.href = 'restaurant?item=$resto_id';
+                    </script>
+                    ";
                 }
             }
-
             ?>
 
             <!-- Individual Comments with Profile Pictures -->
             <div class="space-y-4">
                 <?php
                 $sql = "SELECT 
-                            u.uid, rs.id AS restaurant_id, u.full_name, u.profile_pic, r.rating, r.review, r.review_id
+                            u.uid, r.restaurant_id, u.full_name, u.profile_pic, r.rating, r.review, r.review_id
                         FROM 
                             users u 
                         JOIN 
-                            reviews r ON r.id = u.uid 
+                            reviews r ON r.uid = u.uid 
                         JOIN 
                             restaurants rs ON r.restaurant_id = rs.id 
                         ORDER BY r.review_id DESC";
@@ -536,7 +558,7 @@ if (isset($_GET['item'])) {
                                 : "<span class='text-gray-400'>☆</span>";
                         }
                         echo "
-                                </div>
+                            </div>
                                 <p class='text-gray-600 mt-2'>{$comment['review']}</p>
                             </div>
                 
@@ -609,25 +631,47 @@ if (isset($_GET['item'])) {
     <!-- JavaScript for Show More Gallery and Image Slider -->
     <script>
 
-        // Get the current URL from PHP
-        const currentUrl = "<?php echo $currentUrl; ?>";
+        document.addEventListener("DOMContentLoaded", () => {
+            const shareButton = document.getElementById("share-btn");
+            const currentUrl = "<?php echo $currentUrl; ?>";
 
-        // Reference the button and status message
-        const shareButton = document.getElementById("share-btn");
-
-        // Add a click event to the Share Button
-        shareButton.addEventListener("click", async () => {
-            try {
-                // Copy the URL to the clipboard
-                await navigator.clipboard.writeText(currentUrl);
-                alert("Link copied to clipboard!");
-
-                // Show a success message
-            } catch (error) {
-                // Show an error message
-                console.error("Error copying link:", error);
+            if (shareButton) {
+                shareButton.addEventListener("click", async () => {
+                    try {
+                        if (navigator.clipboard && navigator.clipboard.writeText) {
+                            await navigator.clipboard.writeText(currentUrl);
+                            alert("Link copied to clipboard!");
+                        } else {
+                            // Fallback for unsupported Clipboard API
+                            fallbackCopyTextToClipboard(currentUrl);
+                        }
+                    } catch (error) {
+                        console.error("Error copying link:", error);
+                        alert("Could not copy the link.");
+                    }
+                });
             }
         });
+
+        // Fallback if Clipboard API isn't supported
+        function fallbackCopyTextToClipboard(text) {
+            const textArea = document.createElement("textarea");
+            textArea.value = text;
+            textArea.style.position = "fixed";
+            document.body.appendChild(textArea);
+            textArea.focus();
+            textArea.select();
+
+            try {
+                document.execCommand("copy");
+                alert("Link copied to clipboard using fallback method.");
+            } catch (error) {
+                console.error("Fallback copy failed", error);
+                alert("Could not copy the link.");
+            }
+
+            document.body.removeChild(textArea);
+        }
 
         document.addEventListener('click', function (e) {
             // Close all dropdowns if clicked outside
@@ -781,7 +825,7 @@ if (isset($_GET['item'])) {
         function movePage(name) {
             switch (name) {
                 case 'account':
-                    window.location.href = "profile.php";
+                    window.location.href = "profile";
                     break;
                 default:
                     break;

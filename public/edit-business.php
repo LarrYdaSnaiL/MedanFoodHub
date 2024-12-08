@@ -6,7 +6,7 @@ include "../database/connection.php";// Make sure to include your database conne
 $restaurantId = $_GET['edit'] ?? null;
 
 if (!$restaurantId) {
-    echo "<script>alert('Invalid request.'); window.location.href = 'account-dashboard.php';</script>";
+    echo "<script>alert('Invalid request.'); window.location.href = 'account';</script>";
     exit;
 }
 
@@ -17,7 +17,7 @@ $stmt->execute();
 $restaurant = $stmt->fetch();
 
 if (!$restaurant) {
-    echo "<script>alert('Restaurant not found.'); window.location.href = 'account-dashboard.php';</script>";
+    echo "<script>alert('Restaurant not found.'); window.location.href = 'account';</script>";
     exit;
 }
 
@@ -35,7 +35,7 @@ if ($_SERVER["REQUEST_METHOD"] === 'POST') {
     $updateStmt->bindParam(':restaurantId', $restaurantId);
 
     if ($updateStmt->execute()) {
-        echo "<script>alert('Business updated successfully.'); window.location.href = 'business-dashboard.php';</script>";
+        echo "<script>alert('Business updated successfully.'); window.location.href = 'business';</script>";
     } else {
         echo "<script>alert('Failed to update business.');</script>";
     }
@@ -51,7 +51,8 @@ if ($_SERVER["REQUEST_METHOD"] === 'POST') {
     <title>Edit <?php echo $restaurant['restaurant_name'] ?> - MedanFoodHub</title>
     <link rel="icon" href="../Assets/Logo/icon.png" type="image/x-icon">
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-</head>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" rel="stylesheet">
+    </head>
 
 <body class="bg-gray-100 font-sans antialiased">
     <div class="flex min-h-screen">
@@ -60,9 +61,9 @@ if ($_SERVER["REQUEST_METHOD"] === 'POST') {
             <div class="p-6">
                 <h2 class="text-2xl font-semibold text-gray-800">Dashboard</h2>
                 <nav class="mt-8 space-y-4">
-                    <a href="account-dashboard.php"
+                    <a href="account"
                         class="block px-4 py-2 text-gray-700 hover:bg-blue-600 hover:text-white rounded-lg">Back</a>
-                    <a href="account-dashboard.php"
+                    <a href="account"
                         class="block px-4 py-2 text-gray-700 hover:bg-blue-600 hover:text-white rounded-lg">Profile
                         Settings</a>
                     <a href="../config/logout.php"

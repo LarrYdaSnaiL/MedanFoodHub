@@ -19,7 +19,7 @@ try {
     if ($user) {
         $bio = $user['bio'];
         $full_name = $user['full_name'];
-        $profilePic = $user['profile_pic'] ?? '../Assets/blankPic.png';
+        $profilePic = $user['profile_pic'] ?? './assets/blankPic.png';
         $bookmarks = $user['bookmarks'] ? json_decode($user['bookmarks'], true) : [];
     }
 } catch (Exception $e) {
@@ -35,10 +35,11 @@ try {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Profile - MedanFoodHub</title>
-    <link rel="icon" href="../Assets/Logo/icon.png" type="image/x-icon">
+    <link rel="icon" href="./assets/Logo/icon.png" type="image/x-icon">
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="../Assets/style.css">
-</head>
+    <link rel="stylesheet" href="./assets/style.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" rel="stylesheet">
+    </head>
 
 <body class="bg-gray-100 font-sans">
 
@@ -47,7 +48,7 @@ try {
         <div class="container mx-auto flex justify-between items-center px-6">
             <!-- Logo -->
             <a href="../" class="text-2xl font-bold text-blue-600">
-                <img src="../Assets/Logo/text logo.png" width="200" alt="Text Logo">
+                <img src="./assets/Logo/text logo.png" width="200" alt="Text Logo">
             </a>
 
             <!-- Hamburger Menu -->
@@ -78,7 +79,7 @@ try {
                     <div id="profileSection" class="flex items-center space-x-2 cursor-pointer"
                         onclick="movePage('account')">
                         <span class="text-black font-medium"><?php echo $full_name; ?></span>
-                        <img src="<?php echo $profilePic != null ? $profilePic : '../Assets/blankPic.png'; ?>"
+                        <img src="<?php echo $profilePic != null ? $profilePic : './assets/blankPic.png'; ?>"
                             alt="User Profile Picture" class="w-10 h-10 rounded-full">
                     </div>
                 <?php } ?>
@@ -114,7 +115,7 @@ try {
                     <div id="profileSection" class="flex items-center space-x-2 cursor-pointer"
                         onclick="movePage('account')">
                         <span class="text-black font-medium"><?php echo $full_name; ?></span>
-                        <img src="<?php echo $profilePic != null ? $profilePic : '../Assets/blankPic.png'; ?>"
+                        <img src="<?php echo $profilePic != null ? $profilePic : './assets/blankPic.png'; ?>"
                             alt="User Profile Picture" class="w-10 h-10 rounded-full">
                     </div>
                 <?php } ?>
@@ -184,7 +185,7 @@ try {
                                 $firstPicture = isset($pictures[0]) ? $pictures[0] : 'https://via.placeholder.com/300x200';
 
                                 echo "
-                                    <a href='restaurant.php?item={$restaurant['id']}'>
+                                    <a href='restaurant?item={$restaurant['id']}'>
                                         <div class='bg-white rounded-lg shadow-lg p-4 cursor-pointer'>
                                             <img src='{$firstPicture}' alt='Restaurant Image'
                                                 class='w-full h-32 object-cover rounded-md'>
@@ -324,7 +325,7 @@ try {
         });
 
         document.getElementById("editProfile").addEventListener("click", () => {
-            window.location.href = "account-dashboard.php";
+            window.location.href = "account";
         });
 
         // Responsive menu actions

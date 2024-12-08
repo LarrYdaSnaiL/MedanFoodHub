@@ -17,16 +17,16 @@ $sql = "SELECT
             r.pictures, 
             r.restaurant_name, 
             r.categories, 
-            r.owner_id,
+            r.uid,
             COALESCE(AVG(rev.rating), 0) AS average_rating
         FROM 
             restaurants r
         LEFT JOIN 
             reviews rev ON r.id = rev.restaurant_id
         JOIN 
-            users u ON r.owner_id = u.uid  -- Menghubungkan restoran dengan pengguna berdasarkan owner_id dan uid
+            users u ON r.uid = u.uid  -- Menghubungkan restoran dengan pengguna berdasarkan owner_id dan uid
         WHERE 
-            r.owner_id = :owner_id  -- Filter berdasarkan owner_id yang sama dengan session
+            r.uid = :owner_id  -- Filter berdasarkan owner_id yang sama dengan session
         GROUP BY 
             r.id, r.pictures, r.restaurant_name, r.categories";
 
@@ -49,6 +49,7 @@ $restaurants = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <title>Business Dashboard - MedanFoodHub</title>
     <link rel="icon" href="../Assets/Logo/icon.png" type="image/x-icon">
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" rel="stylesheet">
 </head>
 
 <body class="bg-gray-100 font-sans antialiased">
@@ -58,9 +59,9 @@ $restaurants = $stmt->fetchAll(PDO::FETCH_ASSOC);
             <div class="p-6">
                 <h2 class="text-2xl font-semibold text-gray-800">Dashboard</h2>
                 <nav class="mt-8 space-y-4">
-                    <a href="index.php"
+                    <a href="/"
                         class="block px-4 py-2 text-gray-700 hover:bg-blue-600 hover:text-white rounded-lg">Home</a>
-                    <a href="account-dashboard.php"
+                    <a href="account"
                         class="block px-4 py-2 text-gray-700 hover:bg-blue-600 hover:text-white rounded-lg">Profile
                         Settings</a>
                     <a href="../config/logout.php"
@@ -74,7 +75,7 @@ $restaurants = $stmt->fetchAll(PDO::FETCH_ASSOC);
             <!-- Header Section -->
             <section class="bg-white p-6 rounded-lg shadow-md">
                 <h3 class="text-3xl font-semibold text-gray-800 mb-6">Your Business</h3>
-                <a href="add-business.php">
+                <a href="add-business">
                     <button
                         class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-500 transition duration-200 mb-6">
                         Add New Business
@@ -101,7 +102,7 @@ $restaurants = $stmt->fetchAll(PDO::FETCH_ASSOC);
                             <p class='text-gray-600'>Category: {$restaurant['categories']}</p>
                             <p class='text-yellow-500'>{$stars}</p>
                             <div class='mt-4'>
-                                <a href='edit-business.php?edit={$restaurant['id']}' class='bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-500 transition duration-200'>
+                                <a href='edit-business?edit={$restaurant['id']}' class='bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-500 transition duration-200'>
                                     Manage Restaurant
                                 </a>
                             </div>

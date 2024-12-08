@@ -40,9 +40,10 @@ try {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Account Verification - MedanFoodHub</title>
-    <link rel="icon" href="../Assets/Logo/icon.png" type="image/x-icon">
+    <link rel="icon" href="./assets/Logo/icon.png" type="image/x-icon">
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-</head>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" rel="stylesheet">
+    </head>
 
 <body class="bg-gray-100 font-sans antialiased">
     <div class="flex min-h-screen">
@@ -51,7 +52,7 @@ try {
             <div class="p-6">
                 <h2 class="text-2xl font-semibold text-gray-800">Dashboard</h2>
                 <nav class="mt-8 space-y-4">
-                    <a href="account-dashboard.php"
+                    <a href="account"
                         class="block px-4 py-2 text-gray-700 hover:bg-blue-600 hover:text-white rounded-lg">Profile
                         Settings</a>
                     <a href="../config/logout.php"
@@ -174,7 +175,7 @@ try {
                             }
                         }
 
-                        $stmt = $pdo->prepare("INSERT INTO businessowner (id, identity_card, taxpayer_number, proof_ownership, status) VALUES (:uid, :owner_id, :business_license, :proof_ownership, 'in request')");
+                        $stmt = $pdo->prepare("INSERT INTO businessowner (uid, identity_card, taxpayer_number, proof_ownership, status) VALUES (:uid, :owner_id, :business_license, :proof_ownership, 'in request')");
                         $stmt->execute([
                             'uid' => $_SESSION['uid'],
                             'owner_id' => $downloadOwner,
@@ -187,7 +188,7 @@ try {
                             echo "
                             <script>
                                 alert('Your documents have been submitted for verification. You will receive an email once the process is complete.');
-                                window.location.href = 'account-dashboard.php';
+                                window.location.href = 'account';
                             </script>
                             ";
                         }

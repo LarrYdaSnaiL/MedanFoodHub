@@ -16,7 +16,7 @@ if (isset($_GET['res'])) {
         if ($stmt->execute()) {
             echo "
                 <script>
-                    window.location.href='../public/restaurant.php?item={$split_res[2]}';
+                    window.location.href='../public/restaurant?item={$split_res[2]}';
                 </script>
             ";
         }

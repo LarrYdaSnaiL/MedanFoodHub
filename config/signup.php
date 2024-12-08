@@ -28,8 +28,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (!$user) {
         try {
             // Prepare the INSERT statement with default values for phone_number (NULL) and is_owner (FALSE)
-            $stmt = $pdo->prepare("INSERT INTO users (uid, full_name, email, password, phone, is_owner) 
-                                   VALUES (:uid, :full_name, :email, :password, NULL, FALSE)");
+            $stmt = $pdo->prepare("INSERT INTO users (uid, full_name, email, password, phone, is_admin) 
+                                   VALUES (:uid, :full_name, :email, :password, NULL, false)");
             $stmt->bindParam(':uid', $uid);
             $stmt->bindParam(':full_name', $full_name);
             $stmt->bindParam(':email', $email);

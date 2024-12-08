@@ -41,7 +41,8 @@ try {
     <title>Add Business - MedanFoodHub</title>
     <link rel="icon" href="../Assets/Logo/icon.png" type="image/x-icon">
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-</head>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" rel="stylesheet">
+    </head>
 
 <body class="bg-gray-100">
     <div class="flex min-h-screen">
@@ -50,9 +51,9 @@ try {
             <div class="p-6">
                 <h2 class="text-2xl font-semibold text-gray-800">Dashboard</h2>
                 <nav class="mt-8 space-y-4">
-                    <a href="business-dashboard.php"
+                    <a href="business"
                         class="block px-4 py-2 text-gray-700 hover:bg-blue-600 hover:text-white rounded-lg">Back</a>
-                    <a href="account-dashboard.php"
+                    <a href="account"
                         class="block px-4 py-2 text-gray-700 hover:bg-blue-600 hover:text-white rounded-lg">Profile
                         Settings</a>
                     <a href="../config/logout.php"
@@ -180,7 +181,7 @@ try {
                                 $jsonUrls = json_encode($cloudinaryUrls);
 
                                 // Prepare a SQL statement to insert the business
-                                $sql = "INSERT INTO restaurants (id, owner_id, pictures, restaurant_name, descriptions, categories) VALUES (:id, :owner_id, :pictures, :restaurantName, :description, :categories)";
+                                $sql = "INSERT INTO restaurants (uid, owner_id, pictures, restaurant_name, descriptions, categories) VALUES (:id, :owner_id, :pictures, :restaurantName, :description, :categories)";
                                 $stmt = $pdo->prepare($sql);
                                 $stmt->bindParam(":id", $restaurantId);
                                 $stmt->bindParam(':owner_id', $_SESSION['uid']);
@@ -194,13 +195,13 @@ try {
                                     echo "
                                     <script>
                                         alert('Business added successfully.');
-                                        window.location.href='business-dashboard.php';
+                                        window.location.href='business';
                                     </script>";
                                 } else {
                                     echo "
                                     <script>
                                         alert('Failed to add business.');
-                                        window.location.href='business-dashboard.php';
+                                        window.location.href='business';
                                     </script>";
                                 }
                             } else {

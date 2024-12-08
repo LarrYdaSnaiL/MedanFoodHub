@@ -24,8 +24,9 @@ try {
         $email = $user['email'];
         $phone = $user['phone'];
         $bio = $user['bio'];
+        $is_admin = $user['is_admin'];
 
-        $sql = "SELECT * FROM businessowner WHERE id = :uid";
+        $sql = "SELECT * FROM businessowner WHERE uid = :uid";
         $stmt = $pdo->prepare($sql);
         $stmt->bindParam(':uid', $_SESSION['uid']);
 
@@ -54,8 +55,9 @@ try {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Account Dashboard - MedanFoodHub</title>
-    <link rel="icon" href="../Assets/Logo/icon.png" type="image/x-icon">
+    <link rel="icon" href="./assets/Logo/icon.png" type="image/x-icon">
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" rel="stylesheet">
 </head>
 
 <body class="bg-gray-100 font-sans antialiased">
@@ -65,23 +67,32 @@ try {
             <div class="p-6">
                 <h2 class="text-2xl font-semibold text-gray-800">Dashboard</h2>
                 <nav class="mt-8 space-y-4">
-                    <a href="index.php"
+                    <a href="/"
                         class="block px-4 py-2 text-gray-700 hover:bg-blue-600 hover:text-white rounded-lg">Home</a>
-                    <a href="#profileSettings"
-                        class="block px-4 py-2 text-gray-700 hover:bg-blue-600 hover:text-white rounded-lg">Profile
-                        Settings</a>
+                    <?php
+                    if ($is_admin) {
+                        echo "
+                        <a href='admin'
+                            class='block px-4 py-2 text-gray-700 hover:bg-blue-600 hover:text-white rounded-lg'>Admin Dashboard</a>
+                        ";
+                    }
+                    ?>
                     <a href="#verifyAccount"
-                        class="block px-4 py-2 text-gray-700 hover:bg-blue-600 hover:text-white rounded-lg <?php echo $is_owner ? 'hidden' : ''; ?>">Verify
-                        Account</a>
-                    <a href="business-dashboard.php"
-                        class="block px-4 py-2 text-gray-700 hover:bg-blue-600 hover:text-white rounded-lg <?php echo $is_owner ? '' : 'hidden'; ?>">Your
-                        Business</a>
+                        class="block px-4 py-2 text-gray-700 hover:bg-blue-600 hover:text-white rounded-lg <?php echo $is_owner ? 'hidden' : ''; ?>">
+                        Verify Account
+                    </a>
+                    <a href="business"
+                        class="block px-4 py-2 text-gray-700 hover:bg-blue-600 hover:text-white rounded-lg <?php echo !$is_admin ? ($is_owner ? '' : 'hidden') : 'hidden'; ?>">
+                        Your Business
+                    </a>
                     <a href="../config/logout.php"
-                        class="block px-4 py-2 text-gray-700 hover:bg-red-600 hover:text-white rounded-lg">Log
-                        Out</a>
+                        class="block px-4 py-2 text-gray-700 hover:bg-red-600 hover:text-white rounded-lg">
+                        Log Out
+                    </a>
                     <a id="deleteAccount" href="#"
-                        class="block px-4 py-2 text-gray-700 hover:bg-red-600 hover:text-white rounded-lg text-red-600">Delete
-                        Account</a>
+                        class="block px-4 py-2 text-gray-700 hover:bg-red-600 hover:text-white rounded-lg text-red-600">
+                        Delete Account
+                    </a>
                 </nav>
             </div>
         </aside>
@@ -117,7 +128,7 @@ try {
                 <h3 class="text-2xl font-semibold text-gray-800 mb-6">Profile Settings</h3>
                 <form action="" method="POST" enctype="multipart/form-data">
                     <div class="mb-4">
-                        <img src="<?php echo $profilePic != null ? $profilePic : '../Assets/blankPic.png' ?>"
+                        <img src="<?php echo $profilePic != null ? $profilePic : './assets/blankPic.png' ?>"
                             alt="Current Profile Picture" id="profilePic"
                             class="w-32 h-32 rounded-full mx-auto object-cover mb-3">
                         <input type="file" id="profilePicture" name="profilePicture" accept="image/*"
@@ -210,7 +221,7 @@ try {
                                 echo "
                                     <script>
                                         alert('Email Exists');
-                                        window.location.href = './account-dashboard.php';
+                                        window.location.href = './account';
                                     </script>
                                     ";
                             }
@@ -225,7 +236,7 @@ try {
 
                         if ($stmt->execute()) {
                             $_SESSION['uid'] = $uid;
-                            echo "<script> window.location.href = './account-dashboard.php';</script>";
+                            echo "<script> window.location.href = './account';</script>";
                         } else {
                             echo "<script>alert('Failed to update profile.');</script>";
                         }
@@ -233,7 +244,7 @@ try {
                         if (strpos($e->getMessage(), "already exists") !== false) {
                             echo "<script>
                                     alert('Email already exists.');
-                                    window.location.href = './account-dashboard.php';
+                                    window.location.href = './account';
                                 </script>";
                         }
                     }
@@ -242,11 +253,11 @@ try {
             </section>
 
             <!-- Verify Account Section -->
-            <section id="verifyAccount" class="bg-white p-6 rounded-lg shadow-md mt-6">
+            <section id="verifyAccount" class="bg-white p-6 rounded-lg shadow-md mt-6 <?php echo $is_owner ? 'hidden' : ''; ?>">
                 <h3 class="text-2xl font-semibold text-gray-800 mb-4">Verify Account</h3>
 
                 <?php
-                $sql = "SELECT * FROM businessowner WHERE id = :uid";
+                $sql = "SELECT * FROM businessowner WHERE uid = :uid";
                 $stmt = $pdo->prepare($sql);
                 $stmt->bindParam(':uid', $_SESSION['uid']);
 
@@ -279,7 +290,7 @@ try {
         
                             <!-- Button to start verification process -->
                             <button class='bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-500 transition duration-200'
-                                onclick='window.location.href=\"business-dashboard.php\"'>
+                                onclick='window.location.href=\"business\"'>
                                 Manage Your Business
                             </button>";
                     } else if ($owner['status'] === 'rejected') {
@@ -352,7 +363,7 @@ try {
         });
 
         function verif() {
-            window.location.href = "account-verification.php";
+            window.location.href = "verification";
         }
 
         const profilePic = document.getElementById('profilePic');
