@@ -232,25 +232,30 @@ try {
 
     <!-- Dashboard Content -->
     <div class="container mx-auto py-8">
-        <!-- Carousel Section -->
-        <section id="carousel" class="mb-8 relative">
-            <div class="overflow-hidden rounded-lg shadow-lg">
-                <div class="carousel-images transition-transform duration-500">
-                    <img src="./assets/1.png" class="w-full h-64 object-cover">
-                    <img src="./assets/2.png" class="w-full h-64 object-cover hidden">
-                    <img src="./assets/3.png" class="w-full h-64 object-cover hidden">
-                    <img src="./assets/4.png" class="w-full h-64 object-cover hidden">
-                    <img src="./assets/5.png" class="w-full h-64 object-cover hidden">
-                    <img src="./assets/6.png" class="w-full h-64 object-cover hidden">
+        <div class="relative w-full rounded-lg">
+            <!-- Carousel Wrapper -->
+            <div class="overflow-hidden relative">
+                <!-- Slides -->
+                <div class="flex transition-transform duration-500 ease-in-out" id="carouselContainer">
+                    <!-- Slide 1 -->
+                    <div class="min-w-full">
+                        <img src="assets/main_banner.png" class="w-full h-128 rounded-lg">
+                    </div>
                 </div>
-            </div>
 
-            <!-- Carousel Navigation Buttons -->
-            <button id="prev"
-                class="absolute left-0 top-1/2 transform -translate-y-1/2 px-4 py-2 bg-blue-600 text-white rounded-r-lg">‹</button>
-            <button id="next"
-                class="absolute right-0 top-1/2 transform -translate-y-1/2 px-4 py-2 bg-blue-600 text-white rounded-l-lg">›</button>
-        </section>
+                <!-- Left Arrow -->
+                <button id="prev"
+                    class="absolute left-2 top-1/2 transform -translate-y-1/2 bg-white bg-opacity-75 px-3 py-2 rounded-full shadow-md hover:bg-opacity-100 focus:outline-none">
+                    &#10094;
+                </button>
+
+                <!-- Right Arrow -->
+                <button id="next"
+                    class="absolute right-2 top-1/2 transform -translate-y-1/2 bg-white bg-opacity-75 px-3 py-2 rounded-full shadow-md hover:bg-opacity-100 focus:outline-none">
+                    &#10095;
+                </button>
+            </div>
+        </div>
 
         <!-- Famous and Random Restaurant Sections (as in previous example) -->
         <!-- Famous Restaurants Section -->
@@ -691,32 +696,34 @@ try {
             filterCategory('All', allButton);
         });
 
-        let currentSlide = 0;
-        const slides = document.querySelectorAll(".carousel-images img");
-        const totalSlides = slides.length;
-        const nextButton = document.getElementById("next");
-        const prevButton = document.getElementById("prev");
-        const carouselImagesContainer = document.querySelector(".carousel-images");
+        document.addEventListener('DOMContentLoaded', () => {
+            const carouselContainer = document.getElementById('carouselContainer');
+            const slides = carouselContainer.children; // Array-like object for slide elements
+            const totalSlides = slides.length;
+            let currentIndex = 0;
 
-        function updateSlidePosition() {
-            carouselImagesContainer.style.transform = `translateX(-${currentSlide * 100}%)`;
-        }
+            const updateCarousel = () => {
+                const offset = -currentIndex * 100; // Calculate the offset percentage
+                carouselContainer.style.transform = `translateX(${offset}%)`;
+            };
 
-        function nextSlide() {
-            currentSlide = (currentSlide + 1) % totalSlides;
-            updateSlidePosition();
-        }
+            const nextSlide = () => {
+                currentIndex = (currentIndex + 1) % totalSlides; // Loop back to first slide when at the end
+                updateCarousel();
+            };
 
-        function prevSlide() {
-            currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
-            updateSlidePosition();
-        }
+            const prevSlide = () => {
+                currentIndex = (currentIndex - 1 + totalSlides) % totalSlides; // Loop to the last slide when at the beginning
+                updateCarousel();
+            };
 
-        nextButton.addEventListener("click", nextSlide);
-        prevButton.addEventListener("click", prevSlide);
+            // Attach event listeners
+            document.getElementById('next').addEventListener('click', nextSlide);
+            document.getElementById('prev').addEventListener('click', prevSlide);
 
-        // Auto-slide every 3 seconds
-        setInterval(nextSlide, 3000);
+            // Initialize carousel
+            updateCarousel();
+        });
 
         // Modal functionality
         const openModalButton = document.getElementById('openModal');

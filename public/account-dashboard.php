@@ -78,7 +78,7 @@ try {
                     }
                     ?>
                     <a href="#verifyAccount"
-                        class="block px-4 py-2 text-gray-700 hover:bg-blue-600 hover:text-white rounded-lg <?php echo $is_owner ? 'hidden' : ''; ?>">
+                        class="block px-4 py-2 text-gray-700 hover:bg-blue-600 hover:text-white rounded-lg <?php echo !$is_admin ? ($is_owner ? '' : 'hidden') : 'hidden'; ?>">
                         Verify Account
                     </a>
                     <a href="business"
@@ -253,7 +253,8 @@ try {
             </section>
 
             <!-- Verify Account Section -->
-            <section id="verifyAccount" class="bg-white p-6 rounded-lg shadow-md mt-6 <?php echo $is_owner ? 'hidden' : ''; ?>">
+            <section id="verifyAccount"
+                class="bg-white p-6 rounded-lg shadow-md mt-6 <?php echo !$is_admin ? ($is_owner ? '' : 'hidden') : 'hidden'; ?>">
                 <h3 class="text-2xl font-semibold text-gray-800 mb-4">Verify Account</h3>
 
                 <?php
