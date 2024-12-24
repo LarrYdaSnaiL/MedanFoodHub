@@ -4,3 +4,4 @@ database/*.sql
 composer.json
 composer.lock
 Backup/
+public/assets/myenv/

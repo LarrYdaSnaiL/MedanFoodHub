@@ -5,14 +5,14 @@ $request = strtok($request, '?'); // Strip query parameters
 
 // Define routing logic
 switch ($request) {
+    case '/public/':
+        require __DIR__ . '/home.php';
+        break;
     case '/public/admin':
         require __DIR__ . '/admin-dashboard.php';
         break;
     case '/public/banner':
         require __DIR__ . '/banners.php';
-        break;
-    case '/public/':
-        require __DIR__ . '/home.php';
         break;
     case '/public/index':
         require __DIR__ . '/home.php';

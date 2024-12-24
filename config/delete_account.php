@@ -26,7 +26,7 @@ try {
 
             try {
                 // Delete related user-related entries first
-                $tablesToDelete = ['reviews', 'restaurants', 'businessowner'];
+                $tablesToDelete = ['reviews', 'restaurants', 'businessowner', 'verification_code'];
                 foreach ($tablesToDelete as $table) {
                     $stmt = $pdo->prepare("DELETE FROM $table WHERE uid = :uid");
                     $stmt->bindParam(':uid', $uid);

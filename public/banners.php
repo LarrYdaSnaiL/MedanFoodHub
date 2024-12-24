@@ -8,6 +8,7 @@
     <link rel="icon" href="./assets/Logo/icon.png" type="image/x-icon">
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/tesseract.js@2.1.0/dist/tesseract.min.js"></script>
     <link rel="stylesheet" href="./assets/style.css">
 </head>
 
@@ -59,6 +60,36 @@
             </div>
         </main>
     </div>
+
+    <!-- Footer Section -->
+    <footer class="bg-blue-600 text-gray-100 py-8">
+        <div
+            class="container mx-auto grid grid-cols-1 md:grid-cols-2 gap-6 px-6 justify-center items-center text-center">
+            <div>
+                <h3 class="text-lg font-semibold mb-2">About MedanFoodHub</h3>
+                <p class="text-white text-sm">MedanFoodHub is your go-to platform to discover the best restaurants
+                    around Medan. Find top-rated, trending, and unique eateries all in one place.</p>
+            </div>
+            <div>
+                <h3 class="text-lg font-semibold mb-2">Contact Us</h3>
+                <p class="text-white text-sm">Email: <a href="mailto:info@medanfoodhub.com"
+                        class="hover:text-white">info@medanfoodhub.com</a></p>
+                <p class="text-white text-sm">Phone: <a href="tel:+6288262263417" class="hover:text-white">+62 882 6226
+                        3417</a></p>
+                <div class="flex space-x-4 mt-4 justify-center">
+                    <a href="https://facebook.com" target="_blank" class="text-gray-400 hover:text-white">
+                        <i class="fab fa-facebook-f"></i>
+                    </a>
+                    <a href="https://twitter.com" target="_blank" class="text-gray-400 hover:text-white">
+                        <i class="fab fa-twitter"></i>
+                    </a>
+                    <a href="https://instagram.com" target="_blank" class="text-gray-400 hover:text-white">
+                        <i class="fab fa-instagram"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </footer>
 </body>
 
 </html>

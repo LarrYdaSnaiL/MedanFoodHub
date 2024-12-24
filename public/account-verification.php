@@ -43,7 +43,8 @@ try {
     <link rel="icon" href="./assets/Logo/icon.png" type="image/x-icon">
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" rel="stylesheet">
-    </head>
+    <script src="https://cdn.jsdelivr.net/npm/tesseract.js@2.1.0/dist/tesseract.min.js"></script>
+</head>
 
 <body class="bg-gray-100 font-sans antialiased">
     <div class="flex min-h-screen">
@@ -97,7 +98,7 @@ try {
                 <p class="text-gray-600 mb-8 text-center">Submit the required details to verify your account and manage
                     your restaurant/cafe on the platform.</p>
 
-                <form action="" method="POST" enctype="multipart/form-data" class="space-y-6">
+                <form action="assets/app.py" method="POST" enctype="multipart/form-data" class="space-y-6">
                     <!-- Owner Identification Section -->
                     <div>
                         <label for="ownerID" class="block text-gray-700 font-medium">National ID Card</label>
@@ -120,9 +121,9 @@ try {
                         <label for="proofOfOwnership" class="block text-gray-700 font-medium">Proof of Ownership</label>
                         <input type="file" accept=".pdf" id="proofOfOwnership" name="proofOfOwnership" required
                             class="mt-2 w-full text-gray-700 border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-600">
-                        <small class="text-gray-500">Upload a document showing ownership, such as a utility bill or
-                            lease
-                            agreement.</small>
+                        <small class="text-gray-500">
+                            Upload a document showing ownership, such as a utility bill or lease agreement.
+                        </small>
                     </div>
 
                     <!-- Submit Button -->
@@ -131,73 +132,6 @@ try {
                         Submit for Verification
                     </button>
                 </form>
-
-                <?php
-                if ($_SERVER['REQUEST_METHOD'] === "POST") {
-                    // Handle form submission
-                    $ownerID = $_FILES['ownerID'];
-                    $businessLicense = $_FILES['businessLicense'];
-                    $proofOfOwnership = $_FILES['proofOfOwnership'];
-
-                    try {
-                        if (
-                            (isset($_FILES['ownerID']) && $_FILES['ownerID']['error'] === UPLOAD_ERR_OK)
-                            && (isset($_FILES['businessLicense']) && $_FILES['businessLicense']['error'] === UPLOAD_ERR_OK)
-                            && (isset($_FILES['proofOfOwnership']) && $_FILES['proofOfOwnership']['error'] === UPLOAD_ERR_OK)
-                        ) {
-                            $ownerTmpPath = $_FILES['businessLicense']['tmp_name'];
-                            $businessTmpPath = $_FILES['businessLicense']['tmp_name'];
-                            $proofTmpPath = $_FILES['proofOfOwnership']['tmp_name'];
-
-                            try {
-                                $upload = new UploadApi();
-                                $resultOwnerID = $upload->upload($ownerTmpPath, [
-                                    "folder" => "MedanFoodHub/Business Owner/{$_SESSION['uid']}",
-                                    "public_id" => $_SESSION['uid'] . "_ownerID"
-                                ]);
-
-                                $resultBusiness = $upload->upload($businessTmpPath, [
-                                    "folder" => "MedanFoodHub/Business Owner/{$_SESSION['uid']}",
-                                    "public_id" => $_SESSION['uid'] . "_businessLicense"
-                                ]);
-
-                                $resultProof = $upload->upload($proofTmpPath, [
-                                    "folder" => "MedanFoodHub/Business Owner/{$_SESSION['uid']}",
-                                    "public_id" => $_SESSION['uid'] . "_ProofOfOwnership"
-                                ]);
-
-                                $downloadOwner = $resultOwnerID['secure_url'];
-                                $downloadBusiness = $resultBusiness['secure_url'];
-                                $downloadProof = $resultProof['secure_url'];
-
-                            } catch (Exception $e) {
-                                echo 'Upload Error: ' . $e->getMessage();
-                            }
-                        }
-
-                        $stmt = $pdo->prepare("INSERT INTO businessowner (uid, identity_card, taxpayer_number, proof_ownership, status) VALUES (:uid, :owner_id, :business_license, :proof_ownership, 'in request')");
-                        $stmt->execute([
-                            'uid' => $_SESSION['uid'],
-                            'owner_id' => $downloadOwner,
-                            'business_license' => $downloadBusiness,
-                            'proof_ownership' => $downloadProof
-                        ]);
-
-                        $result = $stmt->fetchAll();
-                        if (count($result) > 0) {
-                            echo "
-                            <script>
-                                alert('Your documents have been submitted for verification. You will receive an email once the process is complete.');
-                                window.location.href = 'account';
-                            </script>
-                            ";
-                        }
-
-                    } catch (Exception $e) {
-                        echo 'Err: ' . $e->getMessage();
-                    }
-                }
-                ?>
             </div>
         </main>
     </div>
@@ -218,8 +152,8 @@ try {
                 <h3 class="text-lg font-semibold mb-2">Contact Us</h3>
                 <p class="text-white text-sm">Email: <a href="mailto:info@medanfoodhub.com"
                         class="hover:text-white">info@medanfoodhub.com</a></p>
-                <p class="text-white text-sm">Phone: <a href="tel:+620123456789" class="hover:text-white">+62 012 345
-                        6789</a></p>
+                <p class="text-white text-sm">Phone: <a href="tel:+6288262263417" class="hover:text-white">+62 882 6226
+                        3417</a></p>
                 <div class="flex space-x-4 mt-4 justify-center">
                     <a href="https://facebook.com" target="_blank" class="text-gray-400 hover:text-white">
                         <i class="fab fa-facebook-f"></i>
@@ -247,6 +181,8 @@ try {
         document.getElementById('closeDeleteModal').addEventListener('click', function () {
             document.getElementById('deleteAccountModal').classList.add('hidden');
         });
+
+
     </script>
 </body>
 

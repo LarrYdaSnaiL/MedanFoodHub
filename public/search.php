@@ -40,6 +40,7 @@ try {
     <link rel="icon" href="./assets/Logo/icon.png" type="image/x-icon">
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/tesseract.js@2.1.0/dist/tesseract.min.js"></script>
     <link rel="stylesheet" href="./assets/style.css">
 </head>
 
@@ -50,7 +51,7 @@ try {
         <div class="container mx-auto flex justify-between items-center px-6">
             <!-- Logo -->
             <a href="../" class="text-2xl font-bold text-blue-600">
-                <img src="./assets/Logo/text logo.png" width="200" alt="Text Logo">
+                <img src="./assets/Logo/text_logo.png" width="200" alt="Text Logo">
             </a>
 
             <!-- Hamburger Menu -->
@@ -299,8 +300,8 @@ try {
                 <h3 class="text-lg font-semibold mb-2">Contact Us</h3>
                 <p class="text-white text-sm">Email: <a href="mailto:info@medanfoodhub.com"
                         class="hover:text-white">info@medanfoodhub.com</a></p>
-                <p class="text-white text-sm">Phone: <a href="tel:+620123456789" class="hover:text-white">+62 012 345
-                        6789</a></p>
+                <p class="text-white text-sm">Phone: <a href="tel:+6288262263417" class="hover:text-white">+62 882 6226
+                        3417</a></p>
                 <div class="flex space-x-4 mt-4 justify-center">
                     <a href="https://facebook.com" target="_blank" class="text-gray-400 hover:text-white">
                         <i class="fab fa-facebook-f"></i>

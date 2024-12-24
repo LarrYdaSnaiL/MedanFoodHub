@@ -58,6 +58,7 @@ try {
     <link rel="icon" href="./assets/Logo/icon.png" type="image/x-icon">
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/tesseract.js@2.1.0/dist/tesseract.min.js"></script>
 </head>
 
 <body class="bg-gray-100 font-sans antialiased">
@@ -78,7 +79,7 @@ try {
                     }
                     ?>
                     <a href="#verifyAccount"
-                        class="block px-4 py-2 text-gray-700 hover:bg-blue-600 hover:text-white rounded-lg <?php echo !$is_admin ? ($is_owner ? '' : 'hidden') : 'hidden'; ?>">
+                        class="block px-4 py-2 text-gray-700 hover:bg-blue-600 hover:text-white rounded-lg <?php echo !$is_admin ? ($is_owner ? 'hidden' : '') : 'hidden'; ?>">
                         Verify Account
                     </a>
                     <a href="business"
@@ -154,6 +155,14 @@ try {
                         <input type="email" id="email" name="email"
                             class="block w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-600"
                             placeholder="example@gmail.com" value="<?php echo htmlspecialchars($email); ?>" readonly>
+                        <?php
+                        if (!$user['is_verified']) { ?>
+                            <button type="submit" name="verify_email"
+                                class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-500 transition duration-200 mt-2">
+                                Verify Email
+                            </button>
+                        <?php }
+                        ?>
                     </div>
 
                     <div class="mb-4">
@@ -164,88 +173,138 @@ try {
                             value="<?php echo htmlspecialchars($phone != null ? $phone : ''); ?>">
                     </div>
 
-                    <button type="submit"
+                    <button type="submit" name="save_changes"
                         class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-500 transition duration-200">Save
                         Changes</button>
                 </form>
                 <?php
                 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-                    $full_name = trim($_POST['full_name']);
-                    $bio = $_POST['bio'];
-                    $email = trim($_POST['email']);
-                    $phone = $_POST['phone'];
-                    $uid = md5($email);
-                    $downloadUrl = $profilePic;
-                    try {
-                        if (isset($_FILES['profilePicture']) && $_FILES['profilePicture']['error'] === UPLOAD_ERR_OK) {
-                            $fileTmpPath = $_FILES['profilePicture']['tmp_name'];
-                            $fileName = $_FILES['profilePicture'][$full_name];
+                    if (isset($_POST['save_changes'])) {
+                        $full_name = trim($_POST['full_name']);
+                        $bio = $_POST['bio'];
+                        $email = trim($_POST['email']);
+                        $phone = $_POST['phone'];
+                        $uid = md5($email);
+                        $downloadUrl = $profilePic;
+                        try {
+                            if (isset($_FILES['profilePicture']) && $_FILES['profilePicture']['error'] === UPLOAD_ERR_OK) {
+                                $fileTmpPath = $_FILES['profilePicture']['tmp_name'];
+                                $fileName = $_FILES['profilePicture'][$full_name];
 
-                            try {
-                                $upload = new UploadApi();
-                                $result = $upload->upload($fileTmpPath, [
-                                    "folder" => "MedanFoodHub/Profile Picture/",
-                                    "public_id" => $uid
-                                ]);
+                                try {
+                                    $upload = new UploadApi();
+                                    $result = $upload->upload($fileTmpPath, [
+                                        "folder" => "MedanFoodHub/Profile Picture/",
+                                        "public_id" => $uid
+                                    ]);
 
-                                $downloadUrl = $result['secure_url'];
+                                    $downloadUrl = $result['secure_url'];
 
-                            } catch (Exception $e) {
-                                echo 'Upload Error: ' . $e->getMessage();
+                                } catch (Exception $e) {
+                                    echo 'Upload Error: ' . $e->getMessage();
+                                }
                             }
-                        }
 
-                        if ($uid == $_SESSION['uid']) {
-                            $stmt = $pdo->prepare("UPDATE users SET full_name = :full_name, bio = :bio, email = :email, phone = :phone, profile_pic = :profile_pic WHERE uid = :uid");
-                        } else {
-                            // Prepare a SQL statement to retrieve the user
-                            $checkValidation = $pdo->prepare("SELECT * FROM users WHERE uid = :uid");
-                            $checkValidation->bindParam(':uid', $uid);
-                            $checkValidation->execute();
-
-                            // Fetch the user data
-                            $user = $checkValidation->fetch();
-
-                            if (!$user) {
-                                $upload = new UploadApi();
-                                $result = $upload->rename(
-                                    "MedanFoodHub/Profile Picture/" . $_SESSION['uid'],
-                                    "MedanFoodHub/Profile Picture/" . $uid
-                                );
-
-                                $downloadUrl = $result["secure_url"];
-
-                                $stmt = $pdo->prepare("UPDATE users SET uid = :new_uid, full_name = :full_name, bio = :bio, email = :email, phone = :phone, profile_pic = :profile_pic WHERE uid = :uid");
-                                $stmt->bindParam(':new_uid', $uid);
+                            if ($uid == $_SESSION['uid']) {
+                                $stmt = $pdo->prepare("UPDATE users SET full_name = :full_name, bio = :bio, email = :email, phone = :phone, profile_pic = :profile_pic WHERE uid = :uid");
                             } else {
-                                echo "
-                                    <script>
-                                        alert('Email Exists');
+                                // Prepare a SQL statement to retrieve the user
+                                $checkValidation = $pdo->prepare("SELECT * FROM users WHERE uid = :uid");
+                                $checkValidation->bindParam(':uid', $uid);
+                                $checkValidation->execute();
+
+                                // Fetch the user data
+                                $user = $checkValidation->fetch();
+
+                                if (!$user) {
+                                    $upload = new UploadApi();
+                                    $result = $upload->rename(
+                                        "MedanFoodHub/Profile Picture/" . $_SESSION['uid'],
+                                        "MedanFoodHub/Profile Picture/" . $uid
+                                    );
+
+                                    $downloadUrl = $result["secure_url"];
+
+                                    $stmt = $pdo->prepare("UPDATE users SET uid = :new_uid, full_name = :full_name, bio = :bio, email = :email, phone = :phone, profile_pic = :profile_pic WHERE uid = :uid");
+                                    $stmt->bindParam(':new_uid', $uid);
+                                } else {
+                                    echo "
+                                        <script>
+                                            alert('Email Exists');
+                                            window.location.href = './account';
+                                        </script>
+                                        ";
+                                }
+                            }
+
+                            $stmt->bindParam(':full_name', $full_name);
+                            $stmt->bindParam(':bio', $bio);
+                            $stmt->bindParam(':email', $email);
+                            $stmt->bindParam(':phone', $phone);
+                            $stmt->bindParam(':profile_pic', $downloadUrl);
+                            $stmt->bindParam(':uid', $_SESSION['uid']);
+
+                            if ($stmt->execute()) {
+                                $_SESSION['uid'] = $uid;
+                                echo "<script> window.location.href = './account';</script>";
+                            } else {
+                                echo "<script>alert('Failed to update profile.');</script>";
+                            }
+                        } catch (Exception $e) {
+                            if (strpos($e->getMessage(), "already exists") !== false) {
+                                echo "<script>
+                                        alert('Email already exists.');
                                         window.location.href = './account';
-                                    </script>
-                                    ";
+                                    </script>";
                             }
                         }
+                    }
 
-                        $stmt->bindParam(':full_name', $full_name);
-                        $stmt->bindParam(':bio', $bio);
-                        $stmt->bindParam(':email', $email);
-                        $stmt->bindParam(':phone', $phone);
-                        $stmt->bindParam(':profile_pic', $downloadUrl);
+                    if (isset($_POST['verify_email'])) {
+                        include '../config/phpmailer.php';
+
+                        $email = $_POST['email'];
+                        $verificationCode = rand(100000, 999999);
+
+                        $sql = "INSERT INTO verification_code (uid, user_email, verification_code, expires_at, is_used) VALUES (:uid, :email, :verificationCode, NOW() + INTERVAL '15 MINUTE', false)";
+                        $stmt = $pdo->prepare($sql);
                         $stmt->bindParam(':uid', $_SESSION['uid']);
+                        $stmt->bindParam(':email', $email);
+                        $stmt->bindParam(':verificationCode', $verificationCode);
+                        $stmt->bindParam(':email', $email);
+                        $result = $stmt->execute();
 
-                        if ($stmt->execute()) {
-                            $_SESSION['uid'] = $uid;
-                            echo "<script> window.location.href = './account';</script>";
+                        if ($result) {
+                            $mail->addAddress($email);
+                            $mail->isHTML(true);
+                            $mail->Subject = 'MedanFoodHub Verification Code';
+                            $mail->Body =
+                                "
+                                <div class='root'>
+                                    <a href='medanfoodhub.web.id' target='_blank'>
+                                        <img src='https://res.cloudinary.com/larry-yt/image/upload/v1733665299/MedanFoodHub/Logo/yolzenwjtanhusqbj4oj.png' width='300' style='display: flex; align-self: center; margin: auto;'>
+                                    </a>
+                                    <h2 style='text-align:center;'>MedanFoodHub</h2>
+
+                                    <center>
+                                        <div class='container'>
+                                            <a href='localhost.local/config/verify_email.php?verify={$verificationCode}' style='background: #3182ce; padding: 2rem;>
+                                                <strong>Click to Verify</strong>
+                                            </a>
+                                        </div>
+                                    </center>
+                                </div>
+                                ";
+                            $mail->send();
+
+                            echo "
+                                <script>
+                                    alert('Verification code sent to your email.');
+                                    window.location.href = '/public/account';
+                                </script>
+                                ";
                         } else {
-                            echo "<script>alert('Failed to update profile.');</script>";
-                        }
-                    } catch (Exception $e) {
-                        if (strpos($e->getMessage(), "already exists") !== false) {
-                            echo "<script>
-                                    alert('Email already exists.');
-                                    window.location.href = './account';
-                                </script>";
+                            echo "Error: Unable to update verification code.";
                         }
                     }
                 }
@@ -254,61 +313,68 @@ try {
 
             <!-- Verify Account Section -->
             <section id="verifyAccount"
-                class="bg-white p-6 rounded-lg shadow-md mt-6 <?php echo !$is_admin ? ($is_owner ? '' : 'hidden') : 'hidden'; ?>">
+                class="bg-white p-6 rounded-lg shadow-md mt-6 <?php echo $is_admin ? 'hidden' : ''; ?>">
                 <h3 class="text-2xl font-semibold text-gray-800 mb-4">Verify Account</h3>
 
                 <?php
-                $sql = "SELECT * FROM businessowner WHERE uid = :uid";
-                $stmt = $pdo->prepare($sql);
-                $stmt->bindParam(':uid', $_SESSION['uid']);
-
-                if ($stmt->execute()) {
-                    $owner = $stmt->fetch(PDO::FETCH_ASSOC);
-
-                    if (!$owner) {
-                        echo "
-                            <p class='text-gray-700 mb-6'>
-                                You are not a verified business owner. Please, submit a verification request to become a
-                                verified business owner.
-                            </p>
-        
-                            <!-- Button to start verification process -->
-                            <button class='bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-500 transition duration-200'
-                                onclick='verif()'>
-                                Start Verification
-                            </button>";
-                    } else if ($owner['status'] === 'in request') {
-                        echo "
-                            <p class='text-gray-700 mb-6'>
-                                Your verification request is currently pending. You will receive an email once your account
-                                has been verified.
-                            </p>";
-                    } else if ($owner['status'] === 'approved') {
-                        echo "
-                            <p class='text-gray-700 mb-6'>
-                                Your verification request has been approved. You are now a verified business owner.
-                            </p>
-        
-                            <!-- Button to start verification process -->
-                            <button class='bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-500 transition duration-200'
-                                onclick='window.location.href=\"business\"'>
-                                Manage Your Business
-                            </button>";
-                    } else if ($owner['status'] === 'rejected') {
-                        echo "
-                            <p class='text-gray-700 mb-6'>
-                                Your request has been rejected with rejection message: \"{$owner['message']}\". Please, submit another verification request to become a
-                                verified business owner.
-                            </p>
-        
-                            <!-- Button to start verification process -->
-                            <button class='bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-500 transition duration-200'
-                                onclick='verif()'>
-                                Start Verification
-                            </button>";
-                    }
+                if (!$user['is_verified']) {
+                    echo "
+                        <p class='text-gray-700 mb-6'>
+                            Your email is not verified. Please, verify your email to access all features.
+                        </p>";
                 } else {
-                    echo "<p class='text-gray-700 mb-6'>An error occurred while fetching your verification status.</p>";
+                    $sql = "SELECT * FROM businessowner WHERE uid = :uid";
+                    $stmt = $pdo->prepare($sql);
+                    $stmt->bindParam(':uid', $_SESSION['uid']);
+
+                    if ($stmt->execute()) {
+                        $owner = $stmt->fetch(PDO::FETCH_ASSOC);
+
+                        if (!$owner) {
+                            echo "
+                                <p class='text-gray-700 mb-6'>
+                                    You are not a verified business owner. Please, submit a verification request to become a
+                                    verified business owner.
+                                </p>
+            
+                                <!-- Button to start verification process -->
+                                <button class='bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-500 transition duration-200'
+                                    onclick='verif()'>
+                                    Start Verification
+                                </button>";
+                        } else if ($owner['status'] === 'in request') {
+                            echo "
+                                <p class='text-gray-700 mb-6'>
+                                    Your verification request is currently pending. You will receive an email once your account
+                                    has been verified.
+                                </p>";
+                        } else if ($owner['status'] === 'approved') {
+                            echo "
+                                <p class='text-gray-700 mb-6'>
+                                    Your verification request has been approved. You are now a verified business owner.
+                                </p>
+            
+                                <!-- Button to start verification process -->
+                                <button class='bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-500 transition duration-200'
+                                    onclick='window.location.href=\"business\"'>
+                                    Manage Your Business
+                                </button>";
+                        } else if ($owner['status'] === 'rejected') {
+                            echo "
+                                <p class='text-gray-700 mb-6'>
+                                    Your request has been rejected. Please, submit another verification request to become a verified business owner.
+                                </p>
+            
+                                <!-- Button to start verification process -->
+                                <button class='bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-500 transition duration-200'
+                                    onclick='verif()'>
+                                    Start Verification
+                                </button>";
+                        }
+                    } else {
+                        echo "<p class='text-gray-700 mb-6'>An error occurred while fetching your verification status.</p>";
+                    }
+
                 }
                 ?>
             </section>
@@ -333,8 +399,8 @@ try {
                 <h3 class="text-lg font-semibold mb-2">Contact Us</h3>
                 <p class="text-white text-sm">Email: <a href="mailto:info@medanfoodhub.com"
                         class="hover:text-white">info@medanfoodhub.com</a></p>
-                <p class="text-white text-sm">Phone: <a href="tel:+620123456789" class="hover:text-white">+62 012
-                        345 6789</a></p>
+                <p class="text-white text-sm">Phone: <a href="tel:+6288262263417" class="hover:text-white">+62 882 6226
+                        3417</a></p>
                 <div class="flex space-x-4 mt-4 justify-center">
                     <a href="https://facebook.com" target="_blank" class="text-gray-400 hover:text-white">
                         <i class="fab fa-facebook-f"></i>

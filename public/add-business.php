@@ -42,7 +42,8 @@ try {
     <link rel="icon" href="../Assets/Logo/icon.png" type="image/x-icon">
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" rel="stylesheet">
-    </head>
+    <script src="https://cdn.jsdelivr.net/npm/tesseract.js@2.1.0/dist/tesseract.min.js"></script>
+</head>
 
 <body class="bg-gray-100">
     <div class="flex min-h-screen">
@@ -99,6 +100,16 @@ try {
                         <label class="block text-gray-700 font-semibold mb-2">Description</label>
                         <textarea class="border p-2 w-full" name="description" rows="5"
                             placeholder="Enter description of the restaurant or cafe"></textarea>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="block text-gray-700 font-semibold mb-2">
+                            <div id="map"></div>
+                            <!-- Replace the value of the key parameter with your own API key. -->
+                            <script async defer
+                                src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCkUOdZ5y7hMm0yrcCQoCvLwzdM6M8s5qk&callback=initMap">
+                                </script>
+                        </label>
                     </div>
 
                     <!-- Category Checkboxes -->
@@ -181,7 +192,7 @@ try {
                                 $jsonUrls = json_encode($cloudinaryUrls);
 
                                 // Prepare a SQL statement to insert the business
-                                $sql = "INSERT INTO restaurants (uid, owner_id, pictures, restaurant_name, descriptions, categories) VALUES (:id, :owner_id, :pictures, :restaurantName, :description, :categories)";
+                                $sql = "INSERT INTO restaurants (id, uid, pictures, restaurant_name, descriptions, categories) VALUES (:id, :owner_id, :pictures, :restaurantName, :description, :categories)";
                                 $stmt = $pdo->prepare($sql);
                                 $stmt->bindParam(":id", $restaurantId);
                                 $stmt->bindParam(':owner_id', $_SESSION['uid']);
@@ -237,8 +248,8 @@ try {
                 <h3 class="text-lg font-semibold mb-2">Contact Us</h3>
                 <p class="text-white text-sm">Email: <a href="mailto:info@medanfoodhub.com"
                         class="hover:text-white">info@medanfoodhub.com</a></p>
-                <p class="text-white text-sm">Phone: <a href="tel:+620123456789" class="hover:text-white">+62 012 345
-                        6789</a></p>
+                <p class="text-white text-sm">Phone: <a href="tel:+6288262263417" class="hover:text-white">+62 882 6226
+                        3417</a></p>
                 <div class="flex space-x-4 mt-4 justify-center">
                     <a href="https://facebook.com" target="_blank" class="text-gray-400 hover:text-white">
                         <i class="fab fa-facebook-f"></i>
